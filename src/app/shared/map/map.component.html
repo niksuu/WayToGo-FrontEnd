@@ -1,0 +1,25 @@
+<google-map
+  height="80vh"
+  width="100%"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="onMapClick($event)"
+  (mapMousemove)="onMapMousemove($event)">
+
+  <map-marker
+    #marker="mapMarker"
+    *ngFor="let markerPosition of markerPositions"
+    [position]="markerPosition"
+    (mapClick)="onMarkerClick(marker)"
+    [options]="markerOptions">
+  </map-marker>
+
+  <map-info-window>
+    {{infoWindowText}}
+  </map-info-window>
+
+</google-map>
+<hr>
+<div>Latitude: {{cursorLatLng?.lat}}</div>
+<div>Longitude: {{cursorLatLng?.lng}}</div>
+
