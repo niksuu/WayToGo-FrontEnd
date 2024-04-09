@@ -1,2 +1,0 @@
-proxy.conf.json is added to remove a problem with CORS policy.
-proxy is added to proxyConfig field in angular.json in "  serve  " target
