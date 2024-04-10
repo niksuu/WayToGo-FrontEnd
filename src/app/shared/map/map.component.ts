@@ -1,6 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule} from "@angular/common";
+import {MapService} from "./map.service";
+import {MapLocation} from "../../map-location/map-location.model";
+import {MapLocationService} from "../../map-location/map-location.service";
 
 @Component({
   selector: 'app-map',
@@ -9,7 +12,7 @@ import {CommonModule} from "@angular/common";
   templateUrl: './map.component.html',
   styleUrl: './map.component.css'
 })
-export class MapComponent {
+export class MapComponent implements OnInit{
 
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
@@ -27,14 +30,18 @@ export class MapComponent {
   infoWindowText: string = '';
 
 
-  constructor() {}
-  ngOnInit(): void {}
+  constructor(private mapService: MapService) {}
+  ngOnInit(): void {
+    this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
+      this.handleRouteSelected(mapLocations);
+    });
+  }
 
 
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
     //this.moveMap($event);
-    this.addMarker($event);
+    this.addMarker($event.latLng.toJSON());
   }
 
   onMapMousemove($event: google.maps.MapMouseEvent) {
@@ -48,9 +55,8 @@ export class MapComponent {
   }
 
   //helpers
-
-  addMarker(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.markerPositions.push(event.latLng.toJSON());
+  addMarker(latLng: google.maps.LatLngLiteral) {
+    if (latLng != null) this.markerPositions.push(latLng);
   }
 
   //moves map so that the center is in the clicked point
@@ -61,6 +67,20 @@ export class MapComponent {
   //fetches the current cursor's coordinates
   getCursorLatLng(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.cursorLatLng = event.latLng.toJSON();
+  }
+
+  handleRouteSelected(mapLocations) {
+    this.markerPositions = [];
+    if(mapLocations.length == 0) {
+      return;
+    }
+    for(let mapLocation of mapLocations) {
+      let newMarkerLatLng: google.maps.LatLngLiteral = {
+        lat: mapLocation.coordinates.coordinates[0],
+        lng: mapLocation.coordinates.coordinates[1]
+      };
+      this.addMarker(newMarkerLatLng);
+    }
   }
 
 

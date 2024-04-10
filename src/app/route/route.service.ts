@@ -16,4 +16,9 @@ export class RouteService {
 
     return this.http.get<Page<Route>>('http://localhost:8090/api/v1/routes', { params });
   }
+
+  getRouteById(id: string) {
+    const url = `http://localhost:8090/api/v1/routes/${id}`;
+    return this.http.get<Route>(url);
+  }
 }

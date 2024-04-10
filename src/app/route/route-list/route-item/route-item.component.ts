@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {Route} from "../route.model";
+import {Route} from "../../route.model";
+
 
 @Component({
   selector: 'app-route-item',
