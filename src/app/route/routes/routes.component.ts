@@ -4,19 +4,22 @@ import {RouteService} from "../route.service";
 import {Route} from "../route.model";
 import {HttpClient} from "@angular/common/http";
 import {CommonModule} from "@angular/common";
-import {RouteItemComponent} from "../route-item/route-item.component";
+
 import {RouteListComponent} from "../route-list/route-list.component";
+import {RouteItemComponent} from "../route-list/route-item/route-item.component";
+import {RouterOutlet} from "@angular/router";
 
 
 
 @Component({
   selector: 'app-routes',
   standalone: true,
-  imports: [MapComponent, CommonModule, RouteItemComponent, RouteListComponent],
+  imports: [MapComponent, CommonModule, RouteItemComponent, RouteListComponent, RouterOutlet],
   templateUrl: './routes.component.html',
   styleUrl: './routes.component.css'
 })
 export class RoutesComponent {
+
 
 
 
