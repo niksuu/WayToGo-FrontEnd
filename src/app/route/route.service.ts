@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {map} from "rxjs";
 import {Route} from "./route.model";
 import{Page} from "../shared/page.model";
 
