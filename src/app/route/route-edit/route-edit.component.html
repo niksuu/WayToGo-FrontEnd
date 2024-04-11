@@ -46,5 +46,16 @@
         </div>
       </div>
     </form>
+    <hr>
+    <label>Points</label>
+    <div class="col-xs-12">
+      <div class="row">
+        <ul class="list-group">
+          <div class="list-group-item" *ngFor="let mapLocation of mapLocations">
+            <div>{{ mapLocation.name }}</div>
+          </div>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

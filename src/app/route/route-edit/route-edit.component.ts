@@ -5,18 +5,21 @@ import {RouteService} from "../route.service";
 import {Route} from "../route.model";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-route-edit',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgForOf
   ],
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
 })
 export class RouteEditComponent implements OnInit {
   id: string;
+  routeToEdit: Route;
   routeForm: FormGroup;
   userLogin: string;
   mapLocations: MapLocation[];
@@ -35,7 +38,20 @@ export class RouteEditComponent implements OnInit {
         this.initForm();
       }
     )
-
+    this.mapLocationService.getMapLocationsByRoute(0,1000,
+      new Route(
+        this.id,
+        '',
+        '',
+        null
+      )
+    ).subscribe(
+      response => {
+        this.mapLocations = response.content;
+        console.log("mapLocations: ");
+        console.log(this.mapLocations);
+      }
+    )
   }
 
   onSubmit() {
