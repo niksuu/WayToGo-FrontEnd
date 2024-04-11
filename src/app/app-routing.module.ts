@@ -6,6 +6,7 @@ import {UserProfileComponent} from "./user/user-profile/user-profile.component";
 import {RoutesComponent} from "./route/routes/routes.component";
 import {UserRoutesComponent} from "./route/user-routes/user-routes.component";
 import {RouteDetailComponent} from "./route/route-detail/route-detail.component";
+import {RouteEditComponent} from "./route/route-edit/route-edit.component";
 
 
 const routes: Routes = [
@@ -24,8 +25,12 @@ const routes: Routes = [
       {
         path: ':id',
         component: RouteDetailComponent,
-      }
+      },
     ]
+  },
+  {
+    path: 'routes/:id/edit',
+    component: RouteEditComponent
   },
   {
     path: 'users/:id/routes',
