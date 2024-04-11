@@ -16,7 +16,9 @@ export class RouteService {
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-        return this.http.get<Page<Route>>('http://localhost:8090/api/v1/routes', {params});
+        const url = `${backendUrl}/routes`
+
+        return this.http.get<Page<Route>>(url, {params});
     }
 
     getRouteById(id: string) {
