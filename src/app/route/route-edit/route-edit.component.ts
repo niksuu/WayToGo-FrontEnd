@@ -6,6 +6,7 @@ import {Route} from "../route.model";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {NgForOf} from "@angular/common";
+import {maxPageSize} from "../../shared/http.config";
 
 @Component({
   selector: 'app-route-edit',
@@ -38,7 +39,7 @@ export class RouteEditComponent implements OnInit {
         this.initForm();
       }
     )
-    this.mapLocationService.getMapLocationsByRoute(0,1000,
+    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize,
       new Route(
         this.id,
         '',
