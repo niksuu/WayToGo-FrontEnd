@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Route} from "../../route.model";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 @Component({
@@ -11,4 +12,12 @@ import {Route} from "../../route.model";
 })
 export class RouteItemComponent {
   @Input() route: Route;
+
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router) {
+  }
+
+  onEditItem() {
+    this.router.navigate([this.route.id + '/edit'], {relativeTo: this.activatedRoute});
+  }
 }

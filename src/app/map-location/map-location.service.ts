@@ -15,7 +15,7 @@ export class MapLocationService {
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
-    const url = `${backendUrl}routes/${route.id}/mapLocations`
+    const url = `${backendUrl}/routes/${route.id}/mapLocations`
     return this.http.get<Page<MapLocation>>(url, { params });
   }
 
