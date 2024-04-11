@@ -20,7 +20,6 @@ import {maxPageSize} from "../../shared/http.config";
 })
 export class RouteEditComponent implements OnInit {
   id: string;
-  routeToEdit: Route;
   routeForm: FormGroup;
   userLogin: string;
   mapLocations: MapLocation[];
@@ -49,22 +48,17 @@ export class RouteEditComponent implements OnInit {
     ).subscribe(
       response => {
         this.mapLocations = response.content;
-        console.log("mapLocations: ");
-        console.log(this.mapLocations);
       }
     )
   }
 
   onSubmit() {
-    console.log(this.routeForm.value);
     this.routeService.patchRouteById(this.id, this.routeForm.value)
       .subscribe(
-        response => {
-          console.log(response);
+        () => {
+          this.onCancel();
         }
       );
-
-    this.onCancel();
   }
 
   onCancel() {
@@ -83,7 +77,6 @@ export class RouteEditComponent implements OnInit {
     let route: Route = null;
     this.routeService.getRouteById(this.id)
       .subscribe(response => {
-        console.log(response);
         route = response;
         routeName = route.name;
         routeDescription = route.description;
