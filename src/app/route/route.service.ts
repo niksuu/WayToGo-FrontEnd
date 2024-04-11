@@ -21,4 +21,12 @@ export class RouteService {
     const url = `http://localhost:8090/api/v1/routes/${id}`;
     return this.http.get<Route>(url);
   }
+
+  putRouteById(id: string, route: Route) {
+    const url = `http://localhost:8090/api/v1/routes/${id}`;
+    return this.http.put<Route>(
+      url,
+      route
+    );
+  }
 }
