@@ -10,12 +10,12 @@ import {backendUrl} from "../shared/http.config";
 export class MapLocationService {
 
   constructor(private http: HttpClient) {}
-  getMapLocationsByRoute(pageNumber: number, pageSize: number, route: Route) {
+  getMapLocationsByRoute(pageNumber: number, pageSize: number, routeId: string) {
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
-    const url = `${backendUrl}/routes/${route.id}/mapLocations`
+    const url = `${backendUrl}/routes/${routeId}/mapLocations`
     return this.http.get<Page<MapLocation>>(url, { params });
   }
 
