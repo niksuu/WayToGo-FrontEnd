@@ -31,6 +31,11 @@ export class RouteService {
     return this.http.post<Route>(url, route);
   }
 
+  deleteRouteById(id: string) {
+    const url = `${backendUrl}/routes/${id}`
+    return this.http.delete<Route>(url);
+  }
+
   patchRouteById(id: string, route: Route) {
     const url = `${backendUrl}/routes/${id}`
     return this.http.patch<Route>(url, route);
