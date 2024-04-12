@@ -71,11 +71,8 @@ export class RouteEditComponent implements OnInit {
 
   onDelete() {
     if (confirm("You are about to delete " + this.route.name + " route. Dou you want to continue?")) {
-      console.log("OK CLICKED")
       this.routeService.deleteRouteById(this.id)
         .subscribe(() => {
-          console.log("IN DELETE SUBSCRIBE")
-          //this.goBack();
           this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
         });
     }
@@ -106,8 +103,6 @@ export class RouteEditComponent implements OnInit {
             'description': routeDescription,
           })
         })
-
-
     }
   }
 }
