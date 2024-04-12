@@ -1,10 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MapComponent} from "../../shared/map/map.component";
-import {RouteService} from "../route.service";
-import {Route} from "../route.model";
-import {HttpClient} from "@angular/common/http";
 import {CommonModule} from "@angular/common";
-
 import {RouteListComponent} from "../route-list/route-list.component";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
