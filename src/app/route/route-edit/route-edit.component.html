@@ -2,9 +2,12 @@
   <div class="col-xs-12">
     <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12" *ngIf="editMode">
           <h2>ID: {{ id }}</h2>
           <h4>User: {{ userLogin }}</h4>
+        </div>
+        <div class="col-xs-12" *ngIf="!editMode">
+          <h2>Adding new Route</h2>
         </div>
       </div>
       <div class="row">
