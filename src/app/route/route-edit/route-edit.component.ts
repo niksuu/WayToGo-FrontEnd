@@ -25,36 +25,29 @@ export class RouteEditComponent implements OnInit {
   userLogin: string;
   mapLocations: MapLocation[];
   editMode: boolean = false;
+  route: Route;
 
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
-              private route: ActivatedRoute,
+              private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(
+    this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.id = params['id'];
         this.editMode = params['id'] != null;
-        console.log(this.editMode);
         this.initForm();
       }
     )
+
     if (this.editMode) {
-      this.mapLocationService.getMapLocationsByRoute(0, maxPageSize,
-        new Route(
-          this.id,
-          '',
-          '',
-          null
-        )
-      ).subscribe(
-        response => {
+      this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)
+        .subscribe(response => {
           this.mapLocations = response.content;
-        }
-      )
+        })
     }
   }
 
@@ -62,18 +55,18 @@ export class RouteEditComponent implements OnInit {
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
-          this.onCancel();
+          this.goBack();
         });
     } else {
       this.routeService.postRoute(this.routeForm.value)
         .subscribe(() => {
-          this.onCancel();
+          this.goBack();
         });
     }
   }
 
-  onCancel() {
-    this.router.navigate(['../'], {relativeTo: this.route});
+  goBack() {
+    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
   }
 
   private initForm() {
@@ -86,21 +79,23 @@ export class RouteEditComponent implements OnInit {
     })
 
     if (this.editMode) {
-      let route: Route = null;
       this.routeService.getRouteById(this.id)
         .subscribe(response => {
-          route = response;
-          routeName = route.name;
-          routeDescription = route.description;
-          if(route.user !== null) {
-            this.userLogin = route.user.login;
+          this.route = response;
+
+          routeName = this.route.name;
+          routeDescription = this.route.description;
+          if (this.route.user !== null) {
+            this.userLogin = this.route.user.login;
           }
 
           this.routeForm.patchValue({
             'name': routeName,
             'description': routeDescription,
           })
-        });
+        })
+
+
     }
   }
 }
