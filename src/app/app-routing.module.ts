@@ -14,6 +14,10 @@ const routes: Routes = [
     component: LogInComponent,
   },
   {
+    path: 'routes/new',
+    component: RouteEditComponent
+  },
+  {
     path: 'users/:id',
     component: UserProfileComponent,
   },

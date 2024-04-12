@@ -5,7 +5,7 @@ import {RouteService} from "../route.service";
 import {Route} from "../route.model";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {maxPageSize} from "../../shared/http.config";
 
 @Component({
@@ -13,7 +13,8 @@ import {maxPageSize} from "../../shared/http.config";
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
@@ -23,46 +24,49 @@ export class RouteEditComponent implements OnInit {
   routeForm: FormGroup;
   userLogin: string;
   mapLocations: MapLocation[];
+  editMode: boolean = false;
+  route: Route;
 
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
-              private route: ActivatedRoute,
+              private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(
+    this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.id = params['id'];
+        this.editMode = params['id'] != null;
         this.initForm();
       }
     )
-    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize,
-      new Route(
-        this.id,
-        '',
-        '',
-        null
-      )
-    ).subscribe(
-      response => {
-        this.mapLocations = response.content;
-      }
-    )
+
+    if (this.editMode) {
+      this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)
+        .subscribe(response => {
+          this.mapLocations = response.content;
+        })
+    }
   }
 
   onSubmit() {
-    this.routeService.patchRouteById(this.id, this.routeForm.value)
-      .subscribe(
-        () => {
-          this.onCancel();
-        }
-      );
+    if (this.editMode) {
+      this.routeService.patchRouteById(this.id, this.routeForm.value)
+        .subscribe(() => {
+          this.goBack();
+        });
+    } else {
+      this.routeService.postRoute(this.routeForm.value)
+        .subscribe(() => {
+          this.goBack();
+        });
+    }
   }
 
-  onCancel() {
-    this.router.navigate(['../'], {relativeTo: this.route});
+  goBack() {
+    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
   }
 
   private initForm() {
@@ -74,18 +78,24 @@ export class RouteEditComponent implements OnInit {
       'description': new FormControl(routeDescription, Validators.required),
     })
 
-    let route: Route = null;
-    this.routeService.getRouteById(this.id)
-      .subscribe(response => {
-        route = response;
-        routeName = route.name;
-        routeDescription = route.description;
-        this.userLogin = route.user.login;
+    if (this.editMode) {
+      this.routeService.getRouteById(this.id)
+        .subscribe(response => {
+          this.route = response;
 
-        this.routeForm.patchValue({
-          'name': routeName,
-          'description': routeDescription,
+          routeName = this.route.name;
+          routeDescription = this.route.description;
+          if (this.route.user !== null) {
+            this.userLogin = this.route.user.login;
+          }
+
+          this.routeForm.patchValue({
+            'name': routeName,
+            'description': routeDescription,
+          })
         })
-      });
+
+
+    }
   }
 }

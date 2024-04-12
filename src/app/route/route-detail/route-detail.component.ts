@@ -34,7 +34,7 @@ export class RouteDetailComponent implements OnInit{
           this.route = response;
 
           //after fetching route, fetch its mapLocations
-          this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route)
+          this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
             .subscribe( response => {
               this.mapLocationsNo = response.content.length;
             });

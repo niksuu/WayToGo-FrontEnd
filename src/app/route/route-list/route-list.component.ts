@@ -36,7 +36,7 @@ export class RouteListComponent {
 
   onRouteClick(routeIt: Route) {
     let mapLocations: MapLocation[] = [];
-    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, routeIt).subscribe( response => {
+    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, routeIt.id).subscribe( response => {
       mapLocations.push(...response.content);
       this.mapService.routeSelectedEventEmitter.emit(mapLocations);
     });
