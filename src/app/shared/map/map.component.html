@@ -15,13 +15,21 @@
   </map-marker>
 
   <map-info-window>
-    <div style="max-height: 7vh; max-width: 7vw; min-height: 100px; min-width: 100px;">
-      <div >
-        {{infoWindowText}}
-      </div>
-      <div style="height: 7vh; width: 7vw">
-        <img src="https://images.photowall.com/products/47316/route-66-on-the-road-again.jpg?h=699&q=85"
-             style="max-width: 100%; max-height: 100%;">
+    <div style="max-height: 7vw; max-width: 7vw; min-height: 175px; min-width:175px;">
+      <img src="https://wallpaperswide.com/download/pure_nature_2-wallpaper-1280x1280.jpg" style="max-width: 100%;">
+    </div>
+    <div style="max-height: 7vw; max-width: 7vw; min-height: 175px; min-width:175px;">
+      <div class="info-card">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{infoWindowMapLocationId}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"> {{infoWindowMapLocationName}}</h6>
+            <button class="btn-primary"> MP3 </button>
+            <hr>
+            <p class="card-text">{{infoWindowMapLocationDescription}}</p>
+          </div>
+
+        </div>
       </div>
     </div>
   </map-info-window>

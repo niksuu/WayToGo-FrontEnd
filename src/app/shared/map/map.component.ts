@@ -21,23 +21,29 @@ export class MapComponent implements OnInit{
   };
   zoom = 14;
 
-  //markers
+  //all markers' options
   markerOptions: google.maps.MarkerOptions = {
     draggable: false
   };
+  //selected route's markers positions
   markerPositions: google.maps.LatLngLiteral[] = [];
+  //selected route's map locations
+  mapLocations: MapLocation[] = [];
+
+  //info window visible after selecting a marker
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
   infoWindowText: string = '';
+  infoWindowMapLocationId : string = '';
+  infoWindowMapLocationName : string = '';
+  infoWindowMapLocationDescription : string = '';
 
 
-  constructor(private mapService: MapService) {}
+  constructor(private mapService: MapService, private mapLocationService: MapLocationService) {}
   ngOnInit(): void {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
   }
-
-
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
     //this.moveMap($event);
@@ -50,7 +56,21 @@ export class MapComponent implements OnInit{
   }
 
   onMarkerClick(marker: MapMarker) {
-    this.infoWindowText = (marker.getPosition() ?? '').toString();
+    ///map location associated with clicked marker
+    let markerMapLocation: MapLocation = null;
+    //search for appropriate map location
+    for(let mapLocation of this.mapLocations) {
+      if(mapLocation.coordinates.coordinates[0] == marker.getPosition().toJSON().lat
+      && mapLocation.coordinates.coordinates[1] == marker.getPosition().toJSON().lng ) {
+        markerMapLocation = mapLocation;
+        break;
+      }
+    }
+    //populate info window
+    this.infoWindowText = marker.getPosition().toString() + markerMapLocation.id + markerMapLocation.description;
+    this.infoWindowMapLocationName = markerMapLocation.name;
+    this.infoWindowMapLocationId = markerMapLocation.id;
+    this.infoWindowMapLocationDescription = markerMapLocation.description;
     if (this.infoWindow != undefined) this.infoWindow.open(marker);
   }
 
@@ -70,6 +90,11 @@ export class MapComponent implements OnInit{
   }
 
   handleRouteSelected(mapLocations) {
+
+    //save selected route's map locations
+    this.mapLocations = mapLocations;
+
+    //reset map markers positions
     this.markerPositions = [];
     if(mapLocations.length == 0) {
       return;
@@ -82,6 +107,4 @@ export class MapComponent implements OnInit{
       this.addMarker(newMarkerLatLng);
     }
   }
-
-
 }
