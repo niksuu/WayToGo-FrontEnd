@@ -1,8 +1,9 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {Route} from "./route.model";
 import {Page} from "../shared/page.model";
 import {backendUrl} from "../shared/http.config";
+import {catchError, of} from "rxjs";
 
 
 @Injectable({providedIn: 'root'})
@@ -39,5 +40,20 @@ export class RouteService {
   patchRouteById(id: string, route: Route) {
     const url = `${backendUrl}/routes/${id}`
     return this.http.patch<Route>(url, route);
+  }
+
+  /*getRouteImageById(id: string) {
+    const url = `${backendUrl}/routes/${id}/image`;
+    return this.http.get<Blob>(url).pipe(
+      catchError((error: HttpErrorResponse) => {
+        //throw error;
+        return of(null);
+      })
+    );
+  }*/
+
+  getRouteImageById(id: string) {
+    const url = `${backendUrl}/routes/${id}/image`;
+    return this.http.get(url, { responseType: 'blob' });
   }
 }

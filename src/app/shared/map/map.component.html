@@ -1,5 +1,5 @@
 <google-map
-  height="80vh"
+  height="100%"
   width="100%"
   [center]="center"
   [zoom]="zoom"
@@ -35,7 +35,6 @@
   </map-info-window>
 
 </google-map>
-<hr>
-<div>Latitude: {{cursorLatLng?.lat}}</div>
-<div>Longitude: {{cursorLatLng?.lng}}</div>
 
+
+<div style="margin-bottom: 10px"> Lat: {{cursorLatLng?.lat}}, Long: {{cursorLatLng?.lng}}</div>

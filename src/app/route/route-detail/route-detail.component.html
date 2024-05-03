@@ -1,12 +1,23 @@
-<ul class="list-group">
-  <li class="list-group-item">
-    <div *ngIf="route">
-      {{routeId}}
-      <br>
-      {{ route.name }}
-      <br>
-      number of mapLocations: {{mapLocationsNo}}
-    </div>
-  </li>
-</ul>
+<div *ngIf="route" >
+  <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onShowRouteDetails()">Show route details</button>
 
+  <div *ngIf="ifShowRouteDetails">
+    <div class="row well well-sm">
+      <div class="col-md-12">
+        <img *ngIf="routeImage" [src]="routeImage" class="img-rounded" style="max-width: 100%;" />
+        <img *ngIf="!routeImage" class="img-rounded" style="max-width: 100%;" src="https://beckers.pl/sites/default/files/styles/scale_crop_extra_large_800_800/public/color_resources/%23B1B1AF.png?itok=tP2DjoTr" />
+      </div>
+
+      <div class="col-md-12 info-card" >
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ route.name }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{routeId}} </h6>
+              <p class="card-text">number of mapLocations: {{route.description}}</p>
+              <p class="card-text">number of mapLocations: {{mapLocationsNo}}</p>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {MapComponent} from "../../shared/map/map.component";
 import {CommonModule} from "@angular/common";
 import {RouteListComponent} from "../route-list/route-list.component";
@@ -15,6 +15,23 @@ import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
   styleUrl: './routes.component.css'
 })
 export class RoutesComponent {
+  panelVisible: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    if (event.target && !(<Element>event.target).closest('#slide-panel')) {
+      this.closePanel();
+    }
+  }
+
+  togglePanel() {
+    this.panelVisible = !this.panelVisible;
+  }
+
+  closePanel() {
+    this.panelVisible = false;
+  }
+
   constructor(private router: Router,
               private route: ActivatedRoute) {
   }
