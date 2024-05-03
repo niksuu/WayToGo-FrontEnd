@@ -6,6 +6,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {maxPageSize} from "../../shared/http.config";
+import {MapService} from "../../shared/map/map.service";
 
 @Component({
   selector: 'app-route-detail',
@@ -24,7 +25,7 @@ export class RouteDetailComponent implements OnInit{
   route: Route;
   mapLocationsNo: number;
   constructor(private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapLocationService: MapLocationService) {}
+              private mapLocationService: MapLocationService, private mapService: MapService) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe (
@@ -33,9 +34,13 @@ export class RouteDetailComponent implements OnInit{
         this.routeService.getRouteById(this.routeId).subscribe(response => {
           this.route = response;
 
+
+
           //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
             .subscribe( response => {
+              //notify map to place markers
+              this.mapService.routeSelectedEventEmitter.emit(response.content);
               this.mapLocationsNo = response.content.length;
             });
         });
