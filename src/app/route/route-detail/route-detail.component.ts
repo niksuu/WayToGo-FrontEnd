@@ -7,6 +7,7 @@ import {RouteItemComponent} from "../route-list/route-item/route-item.component"
 import {MapLocationService} from "../../map-location/map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {MapService} from "../../shared/map/map.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-route-detail',
@@ -23,8 +24,10 @@ import {MapService} from "../../shared/map/map.service";
 export class RouteDetailComponent implements OnInit{
   routeId: string;
   route: Route;
+  routeImage: SafeUrl = null;
   mapLocationsNo: number;
-  constructor(private activatedRoute: ActivatedRoute, private routeService: RouteService,
+  ifShowRouteDetails: boolean;
+  constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
               private mapLocationService: MapLocationService, private mapService: MapService) {}
 
   ngOnInit() {
@@ -34,6 +37,16 @@ export class RouteDetailComponent implements OnInit{
         this.routeService.getRouteById(this.routeId).subscribe(response => {
           this.route = response;
 
+          this.routeService.getRouteImageById(this.routeId).subscribe({
+            next: (response: Blob | null) => {
+              //convert Blob (raw byte object) to url to display it in the template
+              const objectURL = URL.createObjectURL(response);
+              this.routeImage = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            },
+            error: (error: any) => {
+              this.routeImage = null;
+            }
+          });
 
 
           //after fetching route, fetch its mapLocations
@@ -46,5 +59,9 @@ export class RouteDetailComponent implements OnInit{
         });
       }
     );
+  }
+
+  onShowRouteDetails() {
+    this.ifShowRouteDetails = !this.ifShowRouteDetails;
   }
 }

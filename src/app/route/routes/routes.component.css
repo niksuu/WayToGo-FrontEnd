@@ -1,0 +1,12 @@
+.map-wrapper {
+  height: 80vh;
+  margin-bottom: 30px;
+}
+
+
+.panel-button {
+  position: absolute;
+  top: 10px; /* Możesz dostosować pozycję top, bottom, left, right według potrzeb */
+  left: 10px; /* Możesz dostosować pozycję top, bottom, left, right według potrzeb */
+  z-index: 999; /* Ustaw z-index na wartość większą niż inne elementy, aby przycisk był na wierzchu */
+}

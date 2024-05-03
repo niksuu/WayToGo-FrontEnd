@@ -1,10 +1,23 @@
-<div class="row" >
-  <div class="col-md-10">
+<div class="row">
+
+  <button class="panel-button"> << </button>
+
+  <div class="col-md-10 map-wrapper" >
     <app-map></app-map>
   </div>
-  <div class="col-md-2">
-    <button class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
-    <router-outlet></router-outlet>
+  <div class="col-xs-1" ></div>
+  <div class="col-md-2 col-xs-9" >
+    <div class="d-flex justify-content-center" >
+
+      <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
+      <router-outlet></router-outlet>
+    </div>
+
+
     <app-route-list></app-route-list>
   </div>
+
+
+
+
 </div>
