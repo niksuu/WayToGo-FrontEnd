@@ -1,13 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Params, RouterLinkActive} from "@angular/router";
 import {RouteService} from "../route.service";
 import {Route} from "../route.model";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {MapService} from "../../shared/map/map.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {RouteDetailService} from "./route-detail.service";
+
 
 @Component({
   selector: 'app-route-detail',
@@ -16,19 +18,26 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
     NgIf,
     NgForOf,
     RouteItemComponent,
-    RouterLinkActive
+    RouterLinkActive,
+    NgClass
   ],
   templateUrl: './route-detail.component.html',
   styleUrl: './route-detail.component.css'
 })
-export class RouteDetailComponent implements OnInit{
+export class RouteDetailComponent implements OnInit, OnDestroy{
+
+
   routeId: string;
   route: Route;
   routeImage: SafeUrl = null;
   mapLocationsNo: number;
-  ifShowRouteDetails: boolean;
+  toggleRouteDetails: boolean;
+  detailsButtonTxt: string = "";
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapLocationService: MapLocationService, private mapService: MapService) {}
+              private mapLocationService: MapLocationService, private mapService: MapService,
+              private routeDetailService: RouteDetailService) {
+    this.toggleRouteDetails = false;
+  }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe (
@@ -48,6 +57,7 @@ export class RouteDetailComponent implements OnInit{
             }
           });
 
+          this.detailsButtonTxt = this.route.name + " | details";
 
           //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
@@ -61,7 +71,16 @@ export class RouteDetailComponent implements OnInit{
     );
   }
 
-  onShowRouteDetails() {
-    this.ifShowRouteDetails = !this.ifShowRouteDetails;
+  onToggleRouteDetails() {
+    this.toggleRouteDetails = ! this.toggleRouteDetails;
+    this.routeDetailService.showRouteDetails.emit(this.toggleRouteDetails);
+
+    this.detailsButtonTxt = this.toggleRouteDetails ?  "hide details" : this.route.name + " | details";
   }
+
+  ngOnDestroy() {
+    this.routeDetailService.showRouteDetails.emit(false);
+    this.mapService.clearAllMarkers.emit();
+  }
+
 }

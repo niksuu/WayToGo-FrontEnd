@@ -1,23 +1,19 @@
 <div class="row">
-
-  <button class="panel-button"> << </button>
-
-  <div class="col-md-10 map-wrapper" >
+  <div class="col-md-12 map-wrapper" >
     <app-map></app-map>
   </div>
-  <div class="col-xs-1" ></div>
-  <div class="col-md-2 col-xs-9" >
-    <div class="d-flex justify-content-center" >
+  <app-side-panel>
 
-      <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
+    <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
+
+
+    <div class="d-flex justify-content-center" style="max-height: 45vh" >
       <router-outlet></router-outlet>
     </div>
 
+    <div *ngIf="!toggleRouteDetails" style=" height: 55vh; overflow: auto">
+      <app-route-list ></app-route-list>
+    </div>
 
-    <app-route-list></app-route-list>
-  </div>
-
-
-
-
+  </app-side-panel>
 </div>

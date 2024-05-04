@@ -1,23 +1,35 @@
 <div *ngIf="route" >
-  <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onShowRouteDetails()">Show route details</button>
 
-  <div *ngIf="ifShowRouteDetails">
-    <div class="row well well-sm">
-      <div class="col-md-12">
-        <img *ngIf="routeImage" [src]="routeImage" class="img-rounded" style="max-width: 100%;" />
-        <img *ngIf="!routeImage" class="img-rounded" style="max-width: 100%;" src="https://beckers.pl/sites/default/files/styles/scale_crop_extra_large_800_800/public/color_resources/%23B1B1AF.png?itok=tP2DjoTr" />
-      </div>
+  <button style="width: 100%; margin-bottom: 10px;" class="btn"
+          (click)="onToggleRouteDetails()"
+          [ngClass]="{ 'btn-success': !toggleRouteDetails, 'btn-info': toggleRouteDetails }">
+     {{detailsButtonTxt}}
+  </button>
 
-      <div class="col-md-12 info-card" >
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ route.name }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{routeId}} </h6>
-              <p class="card-text">number of mapLocations: {{route.description}}</p>
-              <p class="card-text">number of mapLocations: {{mapLocationsNo}}</p>
+
+
+  <div *ngIf="toggleRouteDetails">
+
+    <div class="row well well-sm" style="margin:10px;">
+        <div class="col-md-offset-2 col-md-8">
+          <img *ngIf="routeImage" [src]="routeImage" class="img-rounded" style="max-width: 100%;" />
+          <img *ngIf="!routeImage" class="img-rounded" style="max-width: 100%;" src="https://beckers.pl/sites/default/files/styles/scale_crop_extra_large_800_800/public/color_resources/%23B1B1AF.png?itok=tP2DjoTr" />
+        </div>
+
+        <div class="col-md-12 info-card" style="margin-top:10px;">
+            <div class="card">
+              <div class="card-body">
+                <div style="text-align: center">
+                  <h5 class="card-title">{{ route.name }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{routeId}} </h6>
+                </div >
+                <div style=" overflow: auto; max-height: 200px">
+                  <p class="card-text">number of mapLocations: {{route.description}}</p>
+                  <p class="card-text">number of mapLocations: {{mapLocationsNo}}</p>
+                </div>
+              </div>
             </div>
-          </div>
+        </div>
       </div>
-    </div>
   </div>
 </div>
