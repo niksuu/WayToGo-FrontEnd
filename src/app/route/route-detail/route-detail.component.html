@@ -1,9 +1,12 @@
 <div *ngIf="route" >
+
   <button style="width: 100%; margin-bottom: 10px;" class="btn"
           (click)="onToggleRouteDetails()"
           [ngClass]="{ 'btn-success': !toggleRouteDetails, 'btn-info': toggleRouteDetails }">
-    Route Details
+     {{detailsButtonTxt}}
   </button>
+
+
 
   <div *ngIf="toggleRouteDetails">
 

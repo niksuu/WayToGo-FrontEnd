@@ -32,6 +32,7 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
   routeImage: SafeUrl = null;
   mapLocationsNo: number;
   toggleRouteDetails: boolean;
+  detailsButtonTxt: string = "";
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
               private mapLocationService: MapLocationService, private mapService: MapService,
               private routeDetailService: RouteDetailService) {
@@ -56,6 +57,7 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
             }
           });
 
+          this.detailsButtonTxt = this.route.name + " | details";
 
           //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
@@ -72,6 +74,8 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
   onToggleRouteDetails() {
     this.toggleRouteDetails = ! this.toggleRouteDetails;
     this.routeDetailService.showRouteDetails.emit(this.toggleRouteDetails);
+
+    this.detailsButtonTxt = this.toggleRouteDetails ?  "hide details" : this.route.name + " | details";
   }
 
   ngOnDestroy() {
