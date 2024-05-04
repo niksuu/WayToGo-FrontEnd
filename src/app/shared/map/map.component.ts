@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule} from "@angular/common";
 import {MapService} from "./map.service";
@@ -47,7 +47,11 @@ export class MapComponent implements OnInit{
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
     //this.moveMap($event);
-    this.addMarker($event.latLng.toJSON());
+
+    //adding new points (can be used later for adding points)
+    //this.addMarker($event.latLng.toJSON());
+    if(this.infoWindow != undefined)
+      this.infoWindow.close();
   }
 
   onMapMousemove($event: google.maps.MapMouseEvent) {
