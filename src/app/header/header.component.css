@@ -1,0 +1,10 @@
+
+.nav > li, .nav > li > a {
+  display: inline-block;
+  text-size-adjust: auto;
+}
+
+.navbar-default {
+  display: inline-block;
+}
+

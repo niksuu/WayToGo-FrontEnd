@@ -43,6 +43,10 @@ export class MapComponent implements OnInit{
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
+
+    this.mapService.clearAllMarkers.subscribe( () => {
+      this.markerPositions = [];
+    })
   }
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {

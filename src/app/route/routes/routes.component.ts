@@ -20,7 +20,7 @@ export class RoutesComponent {
 
 
 
-  toggleRouteDetails= false;
+  toggleRouteDetails: boolean;
 
 
 
@@ -28,8 +28,12 @@ export class RoutesComponent {
               private activatedRoute: ActivatedRoute,
               private routeDetailService: RouteDetailService) {
 
-    this.routeDetailService.routeDetailsClicked.subscribe(() => {
-      this.toggleRouteDetails = !this.toggleRouteDetails;
+
+
+    this.toggleRouteDetails = false;
+
+    this.routeDetailService.showRouteDetails.subscribe((ifShowDetails: boolean) => {
+      this.toggleRouteDetails = ifShowDetails;
     });
   }
 
