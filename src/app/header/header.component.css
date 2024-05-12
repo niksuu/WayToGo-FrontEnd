@@ -1,10 +1,17 @@
-
-.nav > li, .nav > li > a {
-  display: inline-block;
-  text-size-adjust: auto;
+.collapsed {
+  position: absolute;
+  left: 8svw;
+  z-index: 200;
+  background-color: white;
+  width: 92svw;
 }
 
-.navbar-default {
-  display: inline-block;
+.not-collapsed {
+  position: absolute;
+  left: 2svw;
+  z-index: 200;
+  width: 98svw;
+  background-color: white;
+
 }
 
