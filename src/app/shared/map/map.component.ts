@@ -94,7 +94,6 @@ export class MapComponent implements OnInit{
 
   setCenter(centerLatLng:  google.maps.LatLngLiteral) {
     this.center = centerLatLng;
-    this.zoom = 14;
   }
 
   //fetches the current cursor's coordinates
