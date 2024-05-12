@@ -92,13 +92,17 @@ export class MapComponent implements OnInit{
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 
+  setCenter(centerLatLng:  google.maps.LatLngLiteral) {
+    this.center = centerLatLng;
+    this.zoom = 14;
+  }
+
   //fetches the current cursor's coordinates
   getCursorLatLng(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.cursorLatLng = event.latLng.toJSON();
   }
 
   handleRouteSelected(mapLocations) {
-
     //save selected route's map locations
     this.mapLocations = mapLocations;
 
@@ -114,5 +118,12 @@ export class MapComponent implements OnInit{
       };
       this.addMarker(newMarkerLatLng);
     }
+
+    //set center to the first mapLocation
+    let centerLatLong: google.maps.LatLngLiteral = {
+      lat: mapLocations[0].coordinates.coordinates[0],
+      lng: mapLocations[0].coordinates.coordinates[1] - 0.01
+    };
+    this.setCenter(centerLatLong);
   }
 }
