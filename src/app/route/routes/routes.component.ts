@@ -5,7 +5,7 @@ import {RouteListComponent} from "../route-list/route-list.component";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {ActivatedRoute, Params, Router, RouterOutlet} from "@angular/router";
 import {SidePanelComponent} from "../../shared/side-panel/side-panel.component";
-import {RouteDetailService} from "../route-detail/route-detail.service";
+
 
 
 
@@ -20,21 +20,11 @@ export class RoutesComponent {
 
 
 
-  toggleRouteDetails: boolean;
-
 
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private routeDetailService: RouteDetailService) {
+              private activatedRoute: ActivatedRoute) {
 
-
-
-    this.toggleRouteDetails = false;
-
-    this.routeDetailService.showRouteDetails.subscribe((ifShowDetails: boolean) => {
-      this.toggleRouteDetails = ifShowDetails;
-    });
   }
 
   onAddNewRoute(){

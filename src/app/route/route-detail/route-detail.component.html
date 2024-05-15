@@ -1,14 +1,12 @@
 <div *ngIf="route" >
 
-  <button style="width: 100%; margin-bottom: 10px;" class="btn"
-          (click)="onToggleRouteDetails()"
-          [ngClass]="{ 'btn-success': !toggleRouteDetails, 'btn-info': toggleRouteDetails }">
-     {{detailsButtonTxt}}
+  <button style="width: 100%; margin-bottom: 10px;" class="btn" (click)="goBack()">
+    go back
   </button>
 
 
 
-  <div *ngIf="toggleRouteDetails">
+  <div>
 
     <div class="row well well-sm" style="margin:10px;">
         <div class="col-md-offset-2 col-md-8">

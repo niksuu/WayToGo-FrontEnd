@@ -5,7 +5,7 @@ import {RouteService} from "../route.service";
 import {Route} from "../route.model";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {Location, NgForOf, NgIf} from "@angular/common";
 import {maxPageSize} from "../../shared/http.config";
 
 @Component({
@@ -31,7 +31,8 @@ export class RouteEditComponent implements OnInit {
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private location: Location) {
   }
 
   ngOnInit() {
@@ -66,7 +67,7 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    this.location.back();
   }
 
   onDelete() {

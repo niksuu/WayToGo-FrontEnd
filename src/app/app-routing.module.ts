@@ -6,6 +6,8 @@ import {RoutesComponent} from "./route/routes/routes.component";
 import {UserRoutesComponent} from "./route/user-routes/user-routes.component";
 import {RouteDetailComponent} from "./route/route-detail/route-detail.component";
 import {RouteEditComponent} from "./route/route-edit/route-edit.component";
+import {RouteInfoComponent} from "./route/route-info/route-info.component";
+import {RouteListComponent} from "./route/route-list/route-list.component";
 
 
 const routes: Routes = [
@@ -26,9 +28,19 @@ const routes: Routes = [
     component: RoutesComponent,
     children: [
       {
-        path: ':id',
-        component: RouteDetailComponent,
+        path: 'list',
+        component: RouteListComponent,
+        children: [
+          {
+            path:':id',
+            component: RouteInfoComponent
+          }
+        ]
       },
+      {
+        path: ':id',
+        component: RouteDetailComponent
+      }
     ]
   },
   {
@@ -41,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'routes', pathMatch: 'full'
+    redirectTo: 'routes/list', pathMatch: 'full'
   },
 ];
 

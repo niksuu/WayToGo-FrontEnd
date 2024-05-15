@@ -8,7 +8,7 @@ import {MapLocationService} from "../../map-location/map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {MapService} from "../../shared/map/map.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {RouteDetailService} from "./route-detail.service";
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -31,12 +31,9 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
   route: Route;
   routeImage: SafeUrl = null;
   mapLocationsNo: number;
-  toggleRouteDetails: boolean;
   detailsButtonTxt: string = "";
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapLocationService: MapLocationService, private mapService: MapService,
-              private routeDetailService: RouteDetailService) {
-    this.toggleRouteDetails = false;
+              private mapLocationService: MapLocationService, private mapService: MapService, private location: Location) {
   }
 
   ngOnInit() {
@@ -73,15 +70,11 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
     );
   }
 
-  onToggleRouteDetails() {
-    this.toggleRouteDetails = ! this.toggleRouteDetails;
-    this.routeDetailService.showRouteDetails.emit(this.toggleRouteDetails);
-
-    this.detailsButtonTxt = this.toggleRouteDetails ?  "hide details" : this.route.name + " | details";
+  goBack(): void {
+    this.location.back();
   }
 
   ngOnDestroy() {
-    this.routeDetailService.showRouteDetails.emit(false);
     this.mapService.clearAllMarkers.emit();
   }
 
