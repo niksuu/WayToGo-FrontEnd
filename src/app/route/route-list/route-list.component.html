@@ -11,3 +11,14 @@
   </ul>
 </div>
 
+<div class="col-xs-12 text-center">
+  <div class="col-xs-6">
+    <button class="btn btn-default" (click)="onPrevPage()"><<</button>
+  </div>
+  <div  class="col-xs-6">
+    <button class="btn btn-default" (click)="onNextPage()">>></button>
+  </div>
+  <div class="col-xs-12">
+    <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
+  </div>
+</div>

@@ -7,8 +7,7 @@ import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
-import {maxPageSize} from "../../shared/http.config";
-
+import {defaultPageSize, maxPageSize} from "../../shared/http.config";
 
 
 @Component({
@@ -26,20 +25,64 @@ import {maxPageSize} from "../../shared/http.config";
 })
 export class RouteListComponent {
   routes: Route[] = [];
+  currentPageNumber: number;
+  totalPages: number;
+
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
-              private mapService: MapService) {}
+              private mapService: MapService) {
+  }
+
   ngOnInit() {
-    this.routeService.getRoutes(0, maxPageSize).subscribe(response => {
-      this.routes = response.content;
-    });
+    this.currentPageNumber = 200;
+    this.getRoutes();
 
   }
 
   onRouteClick(routeIt: Route) {
     let mapLocations: MapLocation[] = [];
-    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, routeIt.id).subscribe( response => {
+    this.mapLocationService.getMapLocationsByRoute(1, defaultPageSize, routeIt.id).subscribe(response => {
       mapLocations.push(...response.content);
       this.mapService.routeSelectedEventEmitter.emit(mapLocations);
+    });
+  }
+
+  onPrevPage() {
+    if (this.currentPageNumber > 1) {
+      this.currentPageNumber--;
+      this.getRoutes();
+    }
+  }
+
+  onNextPage() {
+    if (this.currentPageNumber < this.totalPages) {
+      this.currentPageNumber++;
+      this.getRoutes();
+    }
+  }
+
+  showCurrentPageNumber() {
+    let pageNumberString = '';
+    if (this.currentPageNumber > 2) {
+      pageNumberString += '... ';
+    }
+    if (this.currentPageNumber > 1) {
+      pageNumberString += (this.currentPageNumber - 1) + ' ';
+    }
+    //pageNumberString += this.currentPageNumber;
+    pageNumberString += `<span class="text-primary"><strong>${this.currentPageNumber}</strong></span>`;
+    if (this.currentPageNumber <= this.totalPages - 1) {
+      pageNumberString += ' ' + (this.currentPageNumber + 1) + ' ';
+    }
+    if (this.currentPageNumber <= this.totalPages - 2) {
+      pageNumberString += '... ';
+    }
+    return pageNumberString;
+  }
+
+  getRoutes() {
+    this.routeService.getRoutes(this.currentPageNumber, defaultPageSize).subscribe(response => {
+      this.routes = response.content;
+      this.totalPages = response.totalPages;
     });
   }
 }
