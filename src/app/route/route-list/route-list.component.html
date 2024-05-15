@@ -1,12 +1,47 @@
+<div class="row">
 
-<ul class="list-group" >
+  <!-- Sekcja dla dużych urządzeń -->
+  <!--<div class="visible-lg-block text-center">
+    <div class="col-md-12">
+      <div class="col-md-3">
+        <button class="btn btn-default" (click)="onPrevPage()"><<</button>
+      </div>
+
+      <div class="col-md-6">
+        <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
+      </div>
+
+      <div  class="col-md-3">
+        <button class="btn btn-default" (click)="onNextPage()">>></button>
+      </div>
+    </div>
+  </div>
+-->
+</div>
+
+<ul class="list-group">
   <li class="list-group-item" *ngFor="let routeIt of routes"
       style="cursor: pointer;"
       [routerLink]="[routeIt.id]"
       (click)="onRouteClick(routeIt)"
       routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-    <app-route-item [route]="routeIt" > </app-route-item>
+    <app-route-item [route]="routeIt"></app-route-item>
   </li>
 </ul>
+
+<!-- Sekcja dla małych urządzeń -->
+
+  <div class="col-xs-12 text-center">
+    <div class="col-xs-6">
+      <button class="btn btn-default" (click)="onPrevPage()"><<</button>
+    </div>
+    <div  class="col-xs-6">
+      <button class="btn btn-default" (click)="onNextPage()">>></button>
+    </div>
+    <div class="col-xs-12">
+      <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
+    </div>
+
+</div>
 
 
