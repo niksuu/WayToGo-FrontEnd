@@ -1,8 +1,10 @@
 <router-outlet></router-outlet>
-<div style=" height: 60vh; overflow: scroll">
+
+<div class="list-wrapper" style="overflow: scroll">
   <ul class="list-group" >
-    <li class="list-group-item" *ngFor="let routeIt of routes"
-        style="cursor: pointer;"
+    <li class="list-group-item"
+        *ngFor="let routeIt of routes"
+        style="cursor: pointer; height: 5vh"
         [routerLink]="[routeIt.id]"
         (click)="onRouteClick(routeIt)"
         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -22,3 +24,5 @@
     <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
   </div>
 </div>
+
+

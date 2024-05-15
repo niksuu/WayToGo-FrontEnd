@@ -33,7 +33,7 @@ export class RouteListComponent {
   }
 
   ngOnInit() {
-    this.currentPageNumber = 200;
+    this.currentPageNumber = 1;
     this.getRoutes();
 
   }
