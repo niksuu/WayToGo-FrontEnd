@@ -11,7 +11,7 @@
     <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true"
          [ngClass]="{ 'not-collapsed': !collapsed, 'collapsed': collapsed }">
       <ul class="nav navbar-nav">
-        <li routerLinkActive="active"><a routerLink="routes">Routes</a></li>
+        <li routerLinkActive="active"><a routerLink="routes/list">Routes</a></li>
         <li routerLinkActive="active"><a  routerLink="users/1/routes">Your Routes</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

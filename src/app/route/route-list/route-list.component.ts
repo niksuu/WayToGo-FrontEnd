@@ -3,7 +3,7 @@ import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
-import {RouterLink, RouterLinkActive} from "@angular/router";
+import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
@@ -18,7 +18,8 @@ import {maxPageSize} from "../../shared/http.config";
     NgForOf,
     RouteItemComponent,
     RouterLinkActive,
-    RouterLink
+    RouterLink,
+    RouterOutlet
   ],
   templateUrl: './route-list.component.html',
   styleUrl: './route-list.component.css'

@@ -18,10 +18,13 @@ export class SidePanelComponent {
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
-    if (event.target && !(<Element>event.target).closest('.panel-container')) {
+    const targetElement = event.target as Element;
+    if (targetElement && !targetElement.closest('.panel-container') && !targetElement.closest('.detail-button')) {
+      console.log("NO NIE DOBRZE");
       this.toggleSidePanel = false;
     }
   }
+
 
   onToggleSidePanel() {
     this.toggleSidePanel = !this.toggleSidePanel;
