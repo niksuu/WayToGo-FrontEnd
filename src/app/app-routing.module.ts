@@ -8,12 +8,22 @@ import {RouteDetailComponent} from "./route/route-detail/route-detail.component"
 import {RouteEditComponent} from "./route/route-edit/route-edit.component";
 import {RouteInfoComponent} from "./route/route-info/route-info.component";
 import {RouteListComponent} from "./route/route-list/route-list.component";
+import {RegisterComponent} from "./user/register/register.component";
+import {LogoutComponent} from "./user/logout/logout.component";
 
 
 const routes: Routes = [
   {
     path: 'log-in',
     component: LogInComponent,
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent,
   },
   {
     path: 'routes/new',
