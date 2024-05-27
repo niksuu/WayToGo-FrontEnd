@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule} from "@angular/common";
 import {MapService} from "./map.service";
@@ -37,8 +37,8 @@ export class MapComponent implements OnInit{
   infoWindowMapLocationName : string = '';
   infoWindowMapLocationDescription : string = '';
 
-
   constructor(private mapService: MapService, private mapLocationService: MapLocationService) {}
+
   ngOnInit(): void {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
@@ -47,6 +47,24 @@ export class MapComponent implements OnInit{
     this.mapService.clearAllMarkers.subscribe( () => {
       this.markerPositions = [];
     })
+
+    this.getCurrentLocation();
+  }
+
+  getCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        this.addMarker(this.center);
+      }, error => {
+        console.error('Error getting location: ', error);
+      });
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
   }
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
@@ -60,7 +78,6 @@ export class MapComponent implements OnInit{
 
   onMapMousemove($event: google.maps.MapMouseEvent) {
     this.getCursorLatLng($event);
-
   }
 
   onMarkerClick(marker: MapMarker) {
@@ -69,7 +86,7 @@ export class MapComponent implements OnInit{
     //search for appropriate map location
     for(let mapLocation of this.mapLocations) {
       if(mapLocation.coordinates.coordinates[0] == marker.getPosition().toJSON().lat
-      && mapLocation.coordinates.coordinates[1] == marker.getPosition().toJSON().lng ) {
+        && mapLocation.coordinates.coordinates[1] == marker.getPosition().toJSON().lng ) {
         markerMapLocation = mapLocation;
         break;
       }
