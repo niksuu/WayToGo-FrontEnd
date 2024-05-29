@@ -10,6 +10,7 @@ import {RouteInfoComponent} from "./route/route-info/route-info.component";
 import {RouteListComponent} from "./route/route-list/route-list.component";
 import {RegisterComponent} from "./user/register/register.component";
 import {LogoutComponent} from "./user/logout/logout.component";
+import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
 
 
 const routes: Routes = [
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent,
+  },
+  {
+    path: 'point/new/:routeId',
+    component: MapLocationEditComponent,
   },
   {
     path: 'routes/new',
