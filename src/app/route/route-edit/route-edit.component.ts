@@ -67,7 +67,7 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['..'], {relativeTo: this.activatedRoute});
   }
 
   onDelete() {

@@ -9,7 +9,8 @@
           <div class="col-xs-12">
             <button
               type="submit"
-              class="btn btn-success">Save
+              class="btn btn-success"
+              [disabled]="mapLocationForm.invalid">Save
             </button>
             <button
               type="button"
@@ -40,6 +41,27 @@
                 class="form-control"
                 rows="6"></textarea>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            <div class="form-group">
+              <label for="lat">Latitude</label>
+              <input
+                id="lat"
+                formControlName="lat"
+                class="form-control"
+              readonly>
+              <label for="lng">Longitude</label>
+              <input
+                id="lng"
+                formControlName="lng"
+                class="form-control"
+                readonly>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6 my-map-wrapper">
+            <app-map></app-map>
           </div>
         </div>
       </form>
