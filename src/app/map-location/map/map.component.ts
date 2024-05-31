@@ -1,4 +1,4 @@
-import {Component, EventEmitter} from '@angular/core';
+import {Component} from '@angular/core';
 import {GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule, NgForOf} from "@angular/common";
 import {MapService} from "./map.service";
