@@ -17,8 +17,6 @@ export class RouteMapLocationService {
       },
       sequenceNr: 1
     }
-    console.log("In postRouteMapLocation")
-    console.log(newRouteMapLocation)
     const url = `${backendUrl}/routeMapLocations`
     return this.http.post(url, newRouteMapLocation)
   }

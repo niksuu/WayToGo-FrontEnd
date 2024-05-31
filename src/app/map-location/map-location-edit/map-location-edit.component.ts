@@ -46,13 +46,10 @@ export class MapLocationEditComponent implements OnInit {
         lat: position.lat,
         lng: position.lng
       });
-      console.log('Nowa pozycja markera - Lat:', this.lat, 'Lng:', this.lng);
     })
   }
 
   onSubmit() {
-    console.log("In Submit")
-
     let newMapLocation = {
       name: this.mapLocationForm.value.name,
       description: this.mapLocationForm.value.description,
@@ -62,13 +59,8 @@ export class MapLocationEditComponent implements OnInit {
       },
     }
 
-    console.log(this.mapLocationForm.value)
-    console.log(newMapLocation)
-
     this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
       .subscribe((response: MapLocation) => {
-        console.log("In onSubmit");
-        console.log(response);
         this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
           .subscribe(() => {
             this.goBack();
@@ -77,7 +69,6 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   goBack() {
-    console.log("In Back")
     this.router.navigate(['../../../routes/' + this.routeId + '/edit'], {relativeTo: this.activatedRoute});
   }
 

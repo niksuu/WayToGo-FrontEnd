@@ -44,8 +44,6 @@ export class MapComponent {
 
   addMarker(latLng: google.maps.LatLngLiteral) {
     this.markerPosition = latLng;
-    console.log("In addMarker()")
-    console.log(this.markerPosition)
     this.mapSerivce.markerSelectedEmitter.next({lat: this.markerPosition.lat, lng: this.markerPosition.lng});
   }
 
