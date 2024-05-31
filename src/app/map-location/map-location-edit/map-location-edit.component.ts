@@ -3,9 +3,10 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {MapLocation} from "../map-location.model";
-//import {MapComponent} from "../../shared/map/map.component";
 import {MapComponent} from "../map/map.component";
 import {MapService} from "../map/map.service";
+import {MapLocationService} from "../map-location.service";
+import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 
 @Component({
   selector: 'app-points-edit',
@@ -27,7 +28,9 @@ export class MapLocationEditComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private mapService: MapService) {
+              private mapService: MapService,
+              private mapLocationService: MapLocationService,
+              private routeMapLocationService: RouteMapLocationService) {
   }
 
   ngOnInit(): void {
@@ -49,8 +52,28 @@ export class MapLocationEditComponent implements OnInit {
 
   onSubmit() {
     console.log("In Submit")
+
+    let newMapLocation = {
+      name: this.mapLocationForm.value.name,
+      description: this.mapLocationForm.value.description,
+      coordinates: {
+        type: "Point",
+        coordinates: [this.mapLocationForm.value.lat, this.mapLocationForm.value.lng]
+      },
+    }
+
     console.log(this.mapLocationForm.value)
-    this.goBack();
+    console.log(newMapLocation)
+
+    this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
+      .subscribe((response: MapLocation) => {
+        console.log("In onSubmit");
+        console.log(response);
+        this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+          .subscribe(() => {
+            this.goBack();
+          });
+      });
   }
 
   goBack() {

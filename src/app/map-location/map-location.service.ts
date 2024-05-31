@@ -4,6 +4,7 @@ import {Page} from "../shared/page.model";
 import {MapLocation} from "./map-location.model";
 import {Route} from "../route/route.model";
 import {backendUrl} from "../shared/http.config";
+import {RouteMapLocationService} from "../route-map-location/route-map-location.service";
 
 
 @Injectable({providedIn: 'root'})
@@ -17,6 +18,11 @@ export class MapLocationService {
 
     const url = `${backendUrl}/routes/${routeId}/mapLocations`
     return this.http.get<Page<MapLocation>>(url, { params });
+  }
+
+  postMapLocation(mapLocation: MapLocation, routeId: string) {
+    const url = `${backendUrl}/mapLocations`
+    return this.http.post(url, mapLocation);
   }
 
 }
