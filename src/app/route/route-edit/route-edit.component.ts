@@ -67,7 +67,7 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['..'], {relativeTo: this.activatedRoute});
   }
 
   onDelete() {
@@ -77,6 +77,10 @@ export class RouteEditComponent implements OnInit {
           this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
         });
     }
+  }
+
+  onAddPoint() {
+    this.router.navigate(['../../../point/new/' + this.id], {relativeTo: this.activatedRoute});
   }
 
   private initForm() {

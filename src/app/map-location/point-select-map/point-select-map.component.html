@@ -1,0 +1,16 @@
+<google-map
+  height="100%"
+  width="100%"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="onMapClick($event)"
+  (mapMousemove)="onMapMousemove($event)">
+
+  <map-marker
+    [position]="markerPosition"
+    [options]="markerOptions">
+  </map-marker>
+
+  <map-info-window>
+  </map-info-window>
+</google-map>

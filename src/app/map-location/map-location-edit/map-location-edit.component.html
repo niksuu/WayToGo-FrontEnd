@@ -1,32 +1,21 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-          <div class="col-xs-12" *ngIf="editMode">
-            <h2>ID: {{ id }}</h2>
-            <h4>User: {{ userLogin }}</h4>
-          </div>
-          <div class="col-xs-12" *ngIf="!editMode">
-            <h2>Adding new Route</h2>
-          </div>
+      <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
+        <div class="col-xs-12">
+          <h2>Adding New Point</h2>
         </div>
         <div class="row">
           <div class="col-xs-12">
             <button
               type="submit"
               class="btn btn-success"
-              [disabled]="routeForm.invalid">Save
+              [disabled]="mapLocationForm.invalid">Save
             </button>
             <button
               type="button"
               class="btn btn-danger"
               (click)="goBack()">Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="onDelete()">Delete
             </button>
           </div>
         </div>
@@ -54,19 +43,28 @@
             </div>
           </div>
         </div>
-      </form>
-      <hr>
-      <label>Points</label>
-      <button *ngIf="editMode" class="btn btn-primary" (click)="onAddPoint()">Add Point</button>
-      <div class="col-xs-12">
         <div class="row">
-          <ul class="list-group">
-            <div class="list-group-item" *ngFor="let mapLocation of mapLocations">
-              <div>{{ mapLocation.name }}</div>
+          <div class="col-xs-12 col-md-6">
+            <div class="form-group">
+              <label for="lat">Latitude</label>
+              <input
+                id="lat"
+                formControlName="lat"
+                class="form-control"
+              readonly>
+              <label for="lng">Longitude</label>
+              <input
+                id="lng"
+                formControlName="lng"
+                class="form-control"
+                readonly>
             </div>
-          </ul>
+          </div>
+          <div class="col-xs-12 col-md-6 my-map-wrapper">
+            <app-point-select-map></app-point-select-map>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
