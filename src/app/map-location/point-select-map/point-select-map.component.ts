@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule, NgForOf} from "@angular/common";
-import {MapService} from "./map.service";
+import {PointSelectMapService} from "./point-select-map.service";
 
 @Component({
-  selector: 'app-map',
+  selector: 'app-point-select-map',
   standalone: true,
   imports: [
     GoogleMap,
@@ -14,10 +14,10 @@ import {MapService} from "./map.service";
     GoogleMapsModule,
     CommonModule
   ],
-  templateUrl: './map.component.html',
-  styleUrl: './map.component.css'
+  templateUrl: './point-select-map.component.html',
+  styleUrl: './point-select-map.component.css'
 })
-export class MapComponent {
+export class PointSelectMapComponent {
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
     lat: 53.69671,
@@ -32,7 +32,7 @@ export class MapComponent {
   //selected route's markers positions
   markerPosition: google.maps.LatLngLiteral;
 
-  constructor(private mapSerivce: MapService) {
+  constructor(private mapSerivce: PointSelectMapService) {
   }
 
 

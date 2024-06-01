@@ -3,8 +3,8 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {MapLocation} from "../map-location.model";
-import {MapComponent} from "../map/map.component";
-import {MapService} from "../map/map.service";
+import {PointSelectMapComponent} from "../point-select-map/point-select-map.component";
+import {PointSelectMapService} from "../point-select-map/point-select-map.service";
 import {MapLocationService} from "../map-location.service";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 
@@ -14,8 +14,7 @@ import {RouteMapLocationService} from "../../route-map-location/route-map-locati
   imports: [
     ReactiveFormsModule,
     NgIf,
-    MapComponent,
-    MapComponent
+    PointSelectMapComponent,
   ],
   templateUrl: './map-location-edit.component.html',
   styleUrl: './map-location-edit.component.css'
@@ -28,7 +27,7 @@ export class MapLocationEditComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private mapService: MapService,
+              private mapService: PointSelectMapService,
               private mapLocationService: MapLocationService,
               private routeMapLocationService: RouteMapLocationService) {
   }

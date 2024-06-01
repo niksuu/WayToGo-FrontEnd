@@ -59,9 +59,9 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
           //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
             .subscribe( response => {
-              //notify map to place markers
+              //notify point-select-map to place markers
               //this.mapService.routeSelectedEventEmitter.emit(response.content);
-              //  (this was found to be redundant (route list notifies map about clicked routes)
+              //  (this was found to be redundant (route list notifies point-select-map about clicked routes)
               //  but was left commented for future testing)
               this.mapLocationsNo = response.content.length;
             });
