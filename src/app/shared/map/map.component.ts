@@ -1,24 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
-import {CommonModule} from "@angular/common";
-import {MapService} from "./map.service";
-import {MapLocation} from "../../map-location/map-location.model";
-import {MapLocationService} from "../../map-location/map-location.service";
-
-//google maps api documentation
-//https://developers.google.com/maps/documentation/javascript
-
-//configuration for future
-//https://medium.com/swlh/angular-google-map-component-basics-and-tips-7ff679e383ff
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { GoogleMapsModule, MapInfoWindow, MapMarker, MapDirectionsRenderer } from "@angular/google-maps";
+import { CommonModule } from "@angular/common";
+import { MapService } from "./map.service";
+import { MapLocation } from "../../map-location/map-location.model";
+import { MapLocationService } from "../../map-location/map-location.service";
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-map',
   standalone: true,
   imports: [GoogleMapsModule, CommonModule],
   templateUrl: './map.component.html',
-  styleUrl: './map.component.css'
+  styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit{
+export class MapComponent implements OnInit, OnDestroy {
 
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
@@ -27,44 +22,81 @@ export class MapComponent implements OnInit{
   };
   zoom = 14;
 
-  //all markers' options
+  // All markers' options
   markerOptions: google.maps.MarkerOptions = {
     draggable: false
   };
-  //selected route's markers positions
+  // Selected route's markers positions
   markerPositions: google.maps.LatLngLiteral[] = [];
-  //selected route's map locations
+  // Selected route's map locations
   mapLocations: MapLocation[] = [];
 
-  //info window visible after selecting a marker
+  // Info window visible after selecting a marker
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+  @ViewChild('map', { static: false }) map: any;
+
   infoWindowText: string = '';
   infoWindowMapLocationId : string = '';
   infoWindowMapLocationName : string = '';
   infoWindowMapLocationDescription : string = '';
 
-  constructor(private mapService: MapService, private mapLocationService: MapLocationService) {}
+  userMarker: google.maps.Marker | undefined;
+  locationTrackingInterval: any;
+
+  constructor(
+    private mapService: MapService,
+    private mapLocationService: MapLocationService,
+    private router: Router
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (this.router.url === '/routes/list') {
+          this.focusOnCurrentLocation();
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
 
-    this.mapService.clearAllMarkers.subscribe( () => {
+    this.mapService.clearAllMarkers.subscribe(() => {
       this.markerPositions = [];
-    })
+    });
 
-    this.getCurrentLocation();
+    this.getCurrentLocation(true); // Center map initially
+    this.startLocationTracking();
   }
 
-  getCurrentLocation() {
+  ngOnDestroy(): void {
+    this.stopLocationTracking();
+  }
+
+  startLocationTracking() {
+    this.locationTrackingInterval = setInterval(() => {
+      this.getCurrentLocation(false); // Update location without centering
+    }, 5000); // Aktualizacja co 5 sekund
+  }
+
+  stopLocationTracking() {
+    if (this.locationTrackingInterval) {
+      clearInterval(this.locationTrackingInterval);
+    }
+  }
+
+  getCurrentLocation(centerMap: boolean) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
-        this.center = {
+        const newCenter = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        this.addMarker(this.center);
+        if (centerMap) {
+          this.setCenter(newCenter);
+        }
+        this.updateUserMarker(newCenter);
       }, error => {
         console.error('Error getting location: ', error);
       });
@@ -73,13 +105,38 @@ export class MapComponent implements OnInit{
     }
   }
 
-  onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
-    //this.moveMap($event);
+  updateUserMarker(position: google.maps.LatLngLiteral) {
+    if (!this.userMarker) {
+      this.userMarker = new google.maps.Marker({
+        position,
+        map: this.map.googleMap,
+        icon: {
+          url: 'https://img.icons8.com/?size=100&id=VkCeX4Qax9iH&format=png&color=000000', // Ikona z literą 'M'
+          scaledSize: new google.maps.Size(40, 40) // Rozmiar ikony
+        }
+      });
+    } else {
+      this.userMarker.setPosition(position);
+    }
+  }
 
-    //adding new points (can be used later for adding points)
-    //this.addMarker($event.latLng.toJSON());
-    if(this.infoWindow != undefined)
+  focusOnCurrentLocation() {
+    if (this.userMarker) {
+      this.setCenter(this.userMarker.getPosition().toJSON());
+    }
+  }
+
+  setCenter(centerLatLng: google.maps.LatLngLiteral) {
+    this.center = centerLatLng;
+    if (this.map) {
+      this.map.panTo(new google.maps.LatLng(centerLatLng.lat, centerLatLng.lng));
+    }
+  }
+
+  onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
+    if(this.infoWindow != undefined) {
       this.infoWindow.close();
+    }
   }
 
   onMapMousemove($event: google.maps.MapMouseEvent) {
@@ -87,9 +144,9 @@ export class MapComponent implements OnInit{
   }
 
   onMarkerClick(marker: MapMarker) {
-    ///map location associated with clicked marker
-    let markerMapLocation: MapLocation = null;
-    //search for appropriate map location
+    // Map location associated with clicked marker
+    let markerMapLocation: MapLocation | null = null;
+    // Search for appropriate map location
     for(let mapLocation of this.mapLocations) {
       if(mapLocation.coordinates.coordinates[0] == marker.getPosition().toJSON().lat
         && mapLocation.coordinates.coordinates[1] == marker.getPosition().toJSON().lng ) {
@@ -97,38 +154,35 @@ export class MapComponent implements OnInit{
         break;
       }
     }
-    //populate info window
-    this.infoWindowText = marker.getPosition().toString() + markerMapLocation.id + markerMapLocation.description;
-    this.infoWindowMapLocationName = markerMapLocation.name;
-    this.infoWindowMapLocationId = markerMapLocation.id;
-    this.infoWindowMapLocationDescription = markerMapLocation.description;
-    if (this.infoWindow != undefined) this.infoWindow.open(marker);
+    // Populate info window
+    if (markerMapLocation) {
+      this.infoWindowText = marker.getPosition().toString() + markerMapLocation.id + markerMapLocation.description;
+      this.infoWindowMapLocationName = markerMapLocation.name;
+      this.infoWindowMapLocationId = markerMapLocation.id;
+      this.infoWindowMapLocationDescription = markerMapLocation.description;
+      if (this.infoWindow) {
+        this.infoWindow.open(marker);
+      }
+    }
   }
 
-  //helpers
   addMarker(latLng: google.maps.LatLngLiteral) {
     if (latLng != null) this.markerPositions.push(latLng);
   }
 
-  //moves map so that the center is in the clicked point
   moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.center = (event.latLng.toJSON());
+    if (event.latLng != null) this.setCenter(event.latLng.toJSON());
   }
 
-  setCenter(centerLatLng:  google.maps.LatLngLiteral) {
-    this.center = centerLatLng;
-  }
-
-  //fetches the current cursor's coordinates
   getCursorLatLng(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.cursorLatLng = event.latLng.toJSON();
   }
 
-  handleRouteSelected(mapLocations) {
-    //save selected route's map locations
+  handleRouteSelected(mapLocations: MapLocation[]) {
+    // Save selected route's map locations
     this.mapLocations = mapLocations;
 
-    //reset map markers positions
+    // Reset map markers positions
     this.markerPositions = [];
     if(mapLocations.length == 0) {
       return;
@@ -141,7 +195,7 @@ export class MapComponent implements OnInit{
       this.addMarker(newMarkerLatLng);
     }
 
-    //set center to the first mapLocation
+    // Set center to the first mapLocation
     let centerLatLong: google.maps.LatLngLiteral = {
       lat: mapLocations[0].coordinates.coordinates[0],
       lng: mapLocations[0].coordinates.coordinates[1] - 0.01
