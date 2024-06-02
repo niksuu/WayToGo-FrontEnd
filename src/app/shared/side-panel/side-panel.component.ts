@@ -1,4 +1,4 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {NgClass, NgIf} from "@angular/common";
 
 @Component({
@@ -11,7 +11,7 @@ import {NgClass, NgIf} from "@angular/common";
   templateUrl: './side-panel.component.html',
   styleUrl: './side-panel.component.css'
 })
-export class SidePanelComponent {
+export class SidePanelComponent  implements OnInit{
 
   toggleSidePanel = true;
   panelButtonContent: string = "";
@@ -19,15 +19,18 @@ export class SidePanelComponent {
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const targetElement = event.target as Element;
-    if (targetElement && !targetElement.closest('.panel-container') && !targetElement.closest('.detail-button')) {
-      console.log("NO NIE DOBRZE");
+    if (!!targetElement.closest('.map-wrapper')) {
       this.toggleSidePanel = false;
+
     }
   }
-
 
   onToggleSidePanel() {
     this.toggleSidePanel = !this.toggleSidePanel;
     this.panelButtonContent = this.toggleSidePanel ? "" : "Route";
+  }
+
+  ngOnInit(): void {
+    this.toggleSidePanel = true;
   }
 }

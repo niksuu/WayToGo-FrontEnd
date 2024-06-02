@@ -67,14 +67,14 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['..'], {relativeTo: this.activatedRoute});
+    this.router.navigate(['../../', 'list', this.id], {relativeTo: this.activatedRoute});
   }
 
   onDelete() {
     if (confirm("You are about to delete " + this.route.name + " route. Dou you want to continue?")) {
       this.routeService.deleteRouteById(this.id)
         .subscribe(() => {
-          this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
+          this.router.navigate(['../../', 'list'], {relativeTo: this.activatedRoute});
         });
     }
   }

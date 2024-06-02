@@ -1,19 +1,17 @@
 <div class="row">
-  <div class="col-md-12 map-wrapper" >
-    <app-map></app-map>
-
-    <div>
+  <div class="col-md-12" style="position: relative;">
+    <div class="map-wrapper" >
+      <app-map></app-map>
+    </div>
+    <div class="side-panel">
       <app-side-panel>
 
         <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
 
-
         <div style="max-height: 80vh">
           <router-outlet></router-outlet>
         </div>
-
       </app-side-panel>
     </div>
   </div>
-
 </div>
