@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ActivatedRoute, Params, Router} from "@angular/router";
-import {RouteService} from "../route.service";
-import {Route} from "../route.model";
-import {MapLocation} from "../../map-location/map-location.model";
-import {MapLocationService} from "../../map-location/map-location.service";
-import {Location, NgForOf, NgIf} from "@angular/common";
-import {maxPageSize} from "../../shared/http.config";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { RouteService } from "../route.service";
+import { Route } from "../route.model";
+import { MapLocation } from "../../map-location/map-location.model";
+import { MapLocationService } from "../../map-location/map-location.service";
+import { Location, NgForOf, NgIf } from "@angular/common";
+import { maxPageSize } from "../../shared/http.config";
 
 @Component({
   selector: 'app-route-edit',
@@ -26,7 +26,7 @@ export class RouteEditComponent implements OnInit {
   mapLocations: MapLocation[];
   editMode: boolean = false;
   route: Route;
-
+  selectedFile: File = null;
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
@@ -52,35 +52,52 @@ export class RouteEditComponent implements OnInit {
     }
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
   onSubmit() {
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
-          this.goBack();
+          if (this.selectedFile) {
+            this.routeService.uploadRouteImage(this.id, this.selectedFile)
+              .subscribe(() => {
+                this.goBack();
+              });
+          } else {
+            this.goBack();
+          }
         });
     } else {
       this.routeService.postRoute(this.routeForm.value)
-        .subscribe(() => {
-          this.goBack();
+        .subscribe(response => {
+          if (this.selectedFile) {
+            this.routeService.uploadRouteImage(response.id, this.selectedFile)
+              .subscribe(() => {
+                this.goBack();
+              });
+          } else {
+            this.goBack();
+          }
         });
     }
   }
 
   goBack() {
-    this.router.navigate(['../../', 'list', this.id], {relativeTo: this.activatedRoute});
+    this.location.back();
   }
 
   onDelete() {
-    if (confirm("You are about to delete " + this.route.name + " route. Dou you want to continue?")) {
+    if (confirm("You are about to delete " + this.route.name + " route. Do you want to continue?")) {
       this.routeService.deleteRouteById(this.id)
         .subscribe(() => {
-          this.router.navigate(['../../', 'list'], {relativeTo: this.activatedRoute});
+          this.router.navigate(['../../'], { relativeTo: this.activatedRoute });
         });
     }
-  }
-
-  onAddPoint() {
-    this.router.navigate(['../../../point/new/' + this.id], {relativeTo: this.activatedRoute});
   }
 
   private initForm() {
