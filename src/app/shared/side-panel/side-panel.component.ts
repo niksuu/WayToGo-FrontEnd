@@ -20,7 +20,6 @@ export class SidePanelComponent {
   clickOutside(event: Event) {
     const targetElement = event.target as Element;
     if (targetElement && !targetElement.closest('.panel-container') && !targetElement.closest('.detail-button')) {
-      console.log("NO NIE DOBRZE");
       this.toggleSidePanel = false;
     }
   }

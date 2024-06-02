@@ -5,6 +5,12 @@ import {MapService} from "./map.service";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 
+//google maps api documentation
+//https://developers.google.com/maps/documentation/javascript
+
+//configuration for future
+//https://medium.com/swlh/angular-google-map-component-basics-and-tips-7ff679e383ff
+
 @Component({
   selector: 'app-map',
   standalone: true,
