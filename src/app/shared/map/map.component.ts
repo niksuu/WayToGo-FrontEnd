@@ -125,10 +125,6 @@ export class MapComponent implements OnInit{
     }
 
     //set center to the first mapLocation
-    let centerLatLong: google.maps.LatLngLiteral = {
-      lat: mapLocations[0].coordinates.coordinates[0],
-      lng: mapLocations[0].coordinates.coordinates[1] - 0.01
-    };
-    this.setCenter(centerLatLong);
+    this.setCenter(this.markerPositions[0]);
   }
 }

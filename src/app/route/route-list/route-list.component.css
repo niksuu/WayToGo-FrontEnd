@@ -1,19 +1,8 @@
-.list-wrapper{
-  height: 60dvh;
-}
-
-
-
-@media only screen and (max-width: 1024px) {
-  .list-wrapper{
-    height: 50dvh;
-  }
-}
 
 .flex-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+
   align-items: center;
   justify-content: center;
   width: 100%;

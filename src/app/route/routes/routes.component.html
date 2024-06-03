@@ -1,17 +1,22 @@
-<div class="row">
-  <div class="col-md-12" style="position: relative;">
-    <div class="map-wrapper" >
-      <app-map></app-map>
-    </div>
-    <div class="side-panel">
-      <app-side-panel>
-
+<div style="display: flex; width: 100%; height: 90%">
+  <div *ngIf="toggleSidePanel" class="side-panel" style=" flex: 1 1 auto; min-width: 20px ">
+      <div style="height: 100%;">
         <button style="width: 100%; margin-bottom: 10px;" class="btn btn-success" (click)="onAddNewRoute()">Add new route</button>
+        <router-outlet></router-outlet>
+      </div>
 
-        <div style="height: 85dvh;">
-          <router-outlet></router-outlet>
-        </div>
-      </app-side-panel>
-    </div>
+  </div>
+  <div style="flex: 1 1 auto; min-width: 50%; position: relative" class=" map-wrapper" >
+    <app-map></app-map>
+
+    <button class="panel-button"
+            [ngClass]="{ 'left-panel-btn': !toggleSidePanel, 'right-panel-btn': toggleSidePanel }"
+            (click)="onToggleSidePanel()">
+
+      <strong> {{panelButtonContent}} </strong>
+      <i class="arrow" [ngClass]="{ 'arrow-right': !toggleSidePanel, 'arrow-left': toggleSidePanel }"></i>
+      <i class="arrow" [ngClass]="{ 'arrow-right': !toggleSidePanel, 'arrow-left': toggleSidePanel }"></i>
+    </button>
+
   </div>
 </div>

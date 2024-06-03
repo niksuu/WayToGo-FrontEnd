@@ -1,8 +1,10 @@
-<router-outlet></router-outlet>
+<div style="display: flex; flex-direction: column; height: 90%; ">
+  <div style="flex: 1 1 auto">
+    <router-outlet></router-outlet>
+  </div>
 
 
-
-<div class="list-wrapper" style="overflow: scroll; width: 100%">
+  <div class="list-wrapper" style="flex-grow: 1; width: 100%">
     <ul class="list-group" >
       <li class="list-group-item"
           *ngFor="let routeIt of routes"
@@ -14,7 +16,7 @@
     </ul>
   </div>
 
-  <div class="flex-container" style=" height: 60px;">
+  <div class="flex-container" >
     <div class="flex-item">
       <button type="button" class="btn btn-default" aria-label="Left Align" (click)="onPrevPage()">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -29,4 +31,7 @@
       </button>
     </div>
   </div>
+
+</div>
+
 
