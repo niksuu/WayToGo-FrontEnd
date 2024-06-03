@@ -38,13 +38,7 @@ export class RouteListComponent {
 
   }
 
-  onRouteClick(routeIt: Route) {
-    let mapLocations: MapLocation[] = [];
-    this.mapLocationService.getMapLocationsByRoute(1, defaultPageSize, routeIt.id).subscribe(response => {
-      mapLocations.push(...response.content);
-      this.mapService.routeSelectedEventEmitter.emit(mapLocations);
-    });
-  }
+
 
   onPrevPage() {
     if (this.currentPageNumber > 1) {

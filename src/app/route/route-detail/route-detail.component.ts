@@ -31,7 +31,7 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
   route: Route;
   routeImage: SafeUrl = null;
   mapLocationsNo: number;
-  detailsButtonTxt: string = "";
+
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
               private mapLocationService: MapLocationService, private mapService: MapService, private location: Location) {
   }
@@ -54,16 +54,12 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
             }
           });
 
-          this.detailsButtonTxt = this.route.name + " | details";
-
           //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
             .subscribe( response => {
-              //notify point-select-map to place markers
-              //this.mapService.routeSelectedEventEmitter.emit(response.content);
-              //  (this was found to be redundant (route list notifies point-select-map about clicked routes)
-              //  but was left commented for future testing)
+              this.mapService.routeSelectedEventEmitter.emit(response.content);
               this.mapLocationsNo = response.content.length;
+
             });
         });
       }
