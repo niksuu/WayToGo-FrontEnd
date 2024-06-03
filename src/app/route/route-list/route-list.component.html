@@ -1,28 +1,32 @@
 <router-outlet></router-outlet>
 
-<div class="list-wrapper" style="overflow: scroll">
-  <ul class="list-group" >
-    <li class="list-group-item"
-        *ngFor="let routeIt of routes"
-        style="cursor: pointer; height: 5vh"
-        [routerLink]="[routeIt.id]"
-        (click)="onRouteClick(routeIt)"
-        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-      <app-route-item [route]="routeIt" > </app-route-item>
-    </li>
-  </ul>
-</div>
 
-<div class="col-xs-12 text-center">
-  <div class="col-xs-6">
-    <button class="btn btn-default" (click)="onPrevPage()"><<</button>
-  </div>
-  <div  class="col-xs-6">
-    <button class="btn btn-default" (click)="onNextPage()">>></button>
-  </div>
-  <div class="col-xs-12">
-    <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
-  </div>
-</div>
 
+<div class="list-wrapper" style="overflow: scroll; width: 100%">
+    <ul class="list-group" >
+      <li class="list-group-item"
+          *ngFor="let routeIt of routes"
+          style="cursor: pointer; height: 6dvh"
+          [routerLink]="[routeIt.id]"
+          routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <app-route-item [route]="routeIt" > </app-route-item>
+      </li>
+    </ul>
+  </div>
+
+  <div class="flex-container" style=" height: 60px;">
+    <div class="flex-item">
+      <button type="button" class="btn btn-default" aria-label="Left Align" (click)="onPrevPage()">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="flex-item">
+      <span class="text-info btn" [innerHTML]="showCurrentPageNumber()"></span>
+    </div>
+    <div class="flex-item">
+      <button type="button" class="btn btn-default" aria-label="Left Align" (click)="onNextPage()">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
 

@@ -1,11 +1,11 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="flex-container">
+    <div class="flex-container" >
       <div *ngIf="route" class="flex-item">{{route.name}}</div>
       <div class="flex-item">
-        <button class="btn btn-primary detail-button" [routerLink]="['/routes', routeId]"> Details</button>
+        <button class="btn btn-primary" style="height: 30px" [routerLink]="['/routes', routeId]"> Details</button>
         |
-        <button class="btn btn-primary" [routerLink]="['/routes', routeId, 'edit']"> Edit</button>
+        <button class="btn btn-primary " style="height: 30px" [routerLink]="['/routes', routeId, 'edit']"> Edit</button>
       </div>
     </div>
 

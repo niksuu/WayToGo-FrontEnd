@@ -1,11 +1,37 @@
 .list-wrapper{
-  height: 55vh;
+  height: 60dvh;
 }
+
 
 
 @media only screen and (max-width: 1024px) {
   .list-wrapper{
-    height: 45vh;
+    height: 50dvh;
   }
+}
 
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.flex-item {
+  margin: 0px;
+  padding: 0px;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+
+@media (max-width: 320px) {
+  .flex-item:nth-child(2) {
+    order: 3;
+  }
+  .flex-item:nth-child(3) {
+    order: 2;
+  }
 }
