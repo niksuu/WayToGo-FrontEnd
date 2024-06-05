@@ -44,7 +44,7 @@ export class RouteEditComponent implements OnInit {
       }
     )
 
-    if (this.editMode) {
+    if (this.editMode)   {
       this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)
         .subscribe(response => {
           this.mapLocations = response.content;
