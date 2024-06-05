@@ -52,8 +52,21 @@ export class RouteService {
     );
   }*/
 
+  uploadRouteImage(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    const url = `${backendUrl}/routes/${id}/image`;
+    return this.http.put<void>(url, formData);
+  }
+
+
   getRouteImageById(id: string) {
     const url = `${backendUrl}/routes/${id}/image`;
-    return this.http.get(url, { responseType: 'blob' });
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error fetching image:', error);
+        return of(null);
+      })
+    );
   }
 }
