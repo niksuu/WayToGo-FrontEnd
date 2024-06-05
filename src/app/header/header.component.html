@@ -1,3 +1,66 @@
+<div class="nav-container">
+
+  <div (click)="collapsed = true" class="nav-header nav-item">
+    <a routerLink="/">WayToGo </a>
+  </div>
+
+  <ng-template #repeatableContent>
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
+         style="align-content: center; ">
+      <a routerLink="routes/list">Routes</a>
+    </div>
+
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
+         style="align-content: center; ">
+      <a routerLink="users/1/routes">Your Routes</a>
+    </div>
+
+
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
+         style="align-content: center; ">
+      <a routerLink="log-in">Log in</a>
+    </div>
+
+
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+         routerLinkActive="active-link" style="align-content: center; ">
+      <a routerLink="users/1">User profile </a>
+    </div>
+
+
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+         routerLinkActive="active-link" style="align-content: center; ">
+      <a routerLink="register">Register </a>
+    </div>
+
+
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+         routerLinkActive="active-link" style="align-content: center; ">
+      <a routerLink="logout">Logout </a>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="!mobileVersion;">
+    <ng-container *ngTemplateOutlet="repeatableContent"></ng-container>
+  </ng-container>
+
+
+  <button (click)="collapsed = !collapsed" *ngIf="mobileVersion" class="nav-item" style="flex:0">
+    <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span>
+  </button>
+
+
+</div>
+
+<div (click)="collapsed = !collapsed"
+     *ngIf="!collapsed && mobileVersion"
+     style="position: absolute; background-color: white; top: 7%; width: 100%; height: 93%; z-index: 9999;">
+  <div style=" height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-around">
+    <ng-container *ngTemplateOutlet="repeatableContent"></ng-container>
+  </div>
+</div>
+
+<!-- prev header (dont delete!!!)
 <nav class="navbar navbar-default" style="margin-bottom: 0px">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -38,6 +101,7 @@
     </div>
 
   </div>
-</nav>
+</nav>-->
+
 
 
