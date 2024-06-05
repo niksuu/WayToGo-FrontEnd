@@ -44,7 +44,7 @@ export class RouteEditComponent implements OnInit {
       }
     )
 
-    if (this.editMode) {
+    if (this.editMode)   {
       this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)
         .subscribe(response => {
           this.mapLocations = response.content;
@@ -59,7 +59,7 @@ export class RouteEditComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit()   {
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
