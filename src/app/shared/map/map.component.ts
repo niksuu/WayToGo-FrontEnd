@@ -6,6 +6,13 @@ import { MapLocation } from "../../map-location/map-location.model";
 import { MapLocationService } from "../../map-location/map-location.service";
 import { Router, NavigationEnd } from '@angular/router';
 
+//google maps api documentation
+//https://developers.google.com/maps/documentation/javascript
+
+//configuration for future
+//https://medium.com/swlh/angular-google-map-component-basics-and-tips-7ff679e383ff
+
+
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -22,16 +29,16 @@ export class MapComponent implements OnInit, OnDestroy {
   };
   zoom = 14;
 
-  // All markers' options
+  //all markers' options
   markerOptions: google.maps.MarkerOptions = {
     draggable: false
   };
-  // Selected route's markers positions
+  //selected route's markers positions
   markerPositions: google.maps.LatLngLiteral[] = [];
-  // Selected route's map locations
+  //selected route's map locations
   mapLocations: MapLocation[] = [];
 
-  // Info window visible after selecting a marker
+  //info window visible after selecting a marker
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
   @ViewChild('map', { static: false }) map: any;
 
@@ -48,6 +55,10 @@ export class MapComponent implements OnInit, OnDestroy {
     private mapLocationService: MapLocationService,
     private router: Router
   ) {
+
+  }
+
+  ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         if (this.router.url === '/routes/list') {
@@ -55,9 +66,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
 
-  ngOnInit(): void {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
@@ -166,14 +175,17 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
+  //helpers
   addMarker(latLng: google.maps.LatLngLiteral) {
     if (latLng != null) this.markerPositions.push(latLng);
   }
 
+  //moves map so that the center is in the clicked point
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.setCenter(event.latLng.toJSON());
   }
 
+  //fetches the current cursor's coordinates
   getCursorLatLng(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.cursorLatLng = event.latLng.toJSON();
   }
@@ -182,7 +194,7 @@ export class MapComponent implements OnInit, OnDestroy {
     // Save selected route's map locations
     this.mapLocations = mapLocations;
 
-    // Reset map markers positions
+    //reset map markers positions
     this.markerPositions = [];
     if(mapLocations.length == 0) {
       return;
@@ -195,11 +207,7 @@ export class MapComponent implements OnInit, OnDestroy {
       this.addMarker(newMarkerLatLng);
     }
 
-    // Set center to the first mapLocation
-    let centerLatLong: google.maps.LatLngLiteral = {
-      lat: mapLocations[0].coordinates.coordinates[0],
-      lng: mapLocations[0].coordinates.coordinates[1] - 0.01
-    };
-    this.setCenter(centerLatLong);
+    //set center to the first mapLocation
+    this.setCenter(this.markerPositions[0]);
   }
 }
