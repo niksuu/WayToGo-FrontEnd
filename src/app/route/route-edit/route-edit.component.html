@@ -1,59 +1,72 @@
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-          <div class="col-xs-12" *ngIf="editMode">
-            <h2>ID: {{ id }}</h2>
-            <h4>User: {{ userLogin }}</h4>
-          </div>
-          <div class="col-xs-12" *ngIf="!editMode">
-            <h2>Adding new Route</h2>
+<div class="row">
+  <div class="col-xs-12" >
+    <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col-xs-12" *ngIf="editMode">
+          <h2>ID: {{ id }}</h2>
+          <h4>User: {{ userLogin }}</h4>
+        </div>
+        <div class="col-xs-12" *ngIf="!editMode">
+          <h2>Adding new Route</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="routeForm.invalid">Save
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="goBack()">Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="onDelete()">Delete
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control">
           </div>
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <button
-              type="submit"
-              class="btn btn-success"
-              [disabled]="routeForm.invalid">Save
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="goBack()">Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="onDelete()">Delete
-            </button>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="form-control"
+              rows="6"></textarea>
           </div>
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                formControlName="name"
-                class="form-control">
-            </div>
+      </div>
+      <!-- Dodanie elementu input do przesyłania plików -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input
+              type="file"
+              id="image"
+              (change)="onFileSelected($event)"
+              class="form-control">
           </div>
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                formControlName="description"
-                class="form-control"
-                rows="6"></textarea>
-            </div>
-          </div>
-        </div>
+      </div>
       </form>
       <hr>
       <label>Points</label>
