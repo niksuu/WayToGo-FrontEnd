@@ -10,6 +10,7 @@ import { MapService } from "../../shared/map/map.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Location } from '@angular/common';
 
+
 @Component({
   selector: 'app-route-detail',
   standalone: true,
@@ -25,11 +26,11 @@ import { Location } from '@angular/common';
 })
 export class RouteDetailComponent implements OnInit, OnDestroy {
 
+
   routeId: string;
   route: Route;
   routeImage: SafeUrl = null;
   mapLocationsNo: number;
-  detailsButtonTxt: string = "";
 
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
               private mapLocationService: MapLocationService, private mapService: MapService, private location: Location) { }
@@ -46,22 +47,19 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
               if (response) {
                 const objectURL = URL.createObjectURL(response);
                 this.routeImage = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-                console.log('Image URL:', objectURL); // Debugging log
               } else {
-                console.error('No image found for this route.');
                 this.routeImage = null;
               }
             },
             error: (error: any) => {
-              console.error('Error fetching image:', error);
               this.routeImage = null;
             }
           });
 
-          this.detailsButtonTxt = this.route.name + " | details";
-
+          //after fetching route, fetch its mapLocations
           this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
-            .subscribe(response => {
+            .subscribe( response => {
+              this.mapService.routeSelectedEventEmitter.emit(response.content);
               this.mapLocationsNo = response.content.length;
             });
         });
@@ -76,4 +74,5 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.mapService.clearAllMarkers.emit();
   }
+
 }

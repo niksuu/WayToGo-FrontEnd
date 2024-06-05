@@ -2,3 +2,35 @@
   height: 90vh;
 }
 
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.arrow-right {
+  transform: rotate(-45deg);
+}
+
+.arrow-left {
+  transform: rotate(135deg);
+}
+
+.panel-button {
+  position: absolute;
+  top: 100px;
+  z-index: 100;
+  height: 50px;
+  background-color: white;
+}
+
+.right-panel-btn {
+  left: 0px;
+  width: 50px;
+}
+
+.left-panel-btn {
+  left: 10px;
+  width: 100px;
+}
