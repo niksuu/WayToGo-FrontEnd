@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {backendUrl} from "../shared/http.config";
 import {Page} from "../shared/page.model";
 import {Route} from "../route/route.model";
-import {Observable, tap} from "rxjs";
+import {BehaviorSubject, Observable, tap} from "rxjs";
 import { jwtDecode } from 'jwt-decode'; // Use the actual named export from the module
 
 import {Router} from "@angular/router";
@@ -14,6 +14,11 @@ import {Router} from "@angular/router";
 })
 export class AuthService {
   url = `${backendUrl}/auth`;
+  private loggedIn = new BehaviorSubject<boolean>(false);
+
+  // Observable do subskrypcji
+  isLoggedIn$ = this.loggedIn.asObservable();
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -22,6 +27,7 @@ export class AuthService {
       tap(response => {
         if (response.token) {
           localStorage.setItem('jwt_token', response.token);
+          this.loggedIn.next(true);
         }
       })
     );
@@ -36,6 +42,7 @@ export class AuthService {
   }
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this.loggedIn.next(false);
     this.router.navigate(['/']);
   }
 
@@ -50,7 +57,10 @@ export class AuthService {
   }
   isLoggedIn(): boolean {
     const token = this.getToken();
-    return token ? !this.isTokenExpired(token) : false;
+    const isValid =  token ? !this.isTokenExpired(token) : false;
+    this.loggedIn.next(isValid);
+    return isValid;
+
   }
 
   isTokenExpired(token: string): boolean {

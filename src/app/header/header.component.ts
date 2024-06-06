@@ -1,6 +1,6 @@
 import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule} from "@angular/router";
 import {DropdownDirective} from "../shared/dropdown.directive";
 import {AuthService} from "../auth/auth.service";
 
@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
 
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -31,10 +31,16 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.collapsed = true;
     this.mobileVersion = window.innerWidth < this.mobileBoundary ? true : false;
+
     this.isLoggedIn = this.authService.isLoggedIn();
+
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
   }
   logout(): void {
     this.authService.logout();
-    this.isLoggedIn = false;
   }
+
 }
