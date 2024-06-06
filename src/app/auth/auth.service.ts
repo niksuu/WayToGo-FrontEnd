@@ -3,8 +3,10 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {backendUrl} from "../shared/http.config";
 import {Page} from "../shared/page.model";
 import {Route} from "../route/route.model";
-import {Observable, tap} from "rxjs";
-import jwt_decode from "jwt-decode";
+import {BehaviorSubject, Observable, tap} from "rxjs";
+import { jwtDecode } from 'jwt-decode'; // Use the actual named export from the module
+
+import {Router} from "@angular/router";
 
 
 @Injectable({
@@ -12,14 +14,20 @@ import jwt_decode from "jwt-decode";
 })
 export class AuthService {
   url = `${backendUrl}/auth`;
+  private loggedIn = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {}
+  // Observable do subskrypcji
+  isLoggedIn$ = this.loggedIn.asObservable();
+
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.url}/login`, { username, password }).pipe(
       tap(response => {
         if (response.token) {
           localStorage.setItem('jwt_token', response.token);
+          this.loggedIn.next(true);
         }
       })
     );
@@ -34,25 +42,30 @@ export class AuthService {
   }
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this.loggedIn.next(false);
+    this.router.navigate(['/']);
   }
 
   getUserId(): string | null {
     const token = this.getToken();
     if (token) {
       // @ts-ignore
-      const decoded: any = jwt_decode(token);
+      const decoded: any = jwtDecode(token);
       return decoded.userId || null;
     }
     return null;
   }
   isLoggedIn(): boolean {
     const token = this.getToken();
-    return token ? !this.isTokenExpired(token) : false;
+    const isValid =  token ? !this.isTokenExpired(token) : false;
+    this.loggedIn.next(isValid);
+    return isValid;
+
   }
 
   isTokenExpired(token: string): boolean {
     // @ts-ignore
-    const decoded: any = jwt_decode(token);
+    const decoded: any = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000);
     return decoded.exp < currentTime;
   }

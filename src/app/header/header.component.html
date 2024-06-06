@@ -10,33 +10,33 @@
       <a routerLink="routes/list">Routes</a>
     </div>
 
-    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
+    <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
          style="align-content: center; ">
       <a routerLink="users/1/routes">Your Routes</a>
     </div>
 
 
-    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
+    <div *ngIf="!isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
          style="align-content: center; ">
-      <a routerLink="log-in">Log in</a>
+      <a routerLink="log-in">Login</a>
     </div>
 
 
-    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+    <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
          routerLinkActive="active-link" style="align-content: center; ">
       <a routerLink="users/1">User profile </a>
     </div>
 
 
-    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+    <div *ngIf="!isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
          routerLinkActive="active-link" style="align-content: center; ">
       <a routerLink="register">Register </a>
     </div>
 
 
-    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
+    <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
          routerLinkActive="active-link" style="align-content: center; ">
-      <a routerLink="logout">Logout </a>
+      <a (click)="logout()" class="logout-link">Logout</a>
     </div>
   </ng-template>
 

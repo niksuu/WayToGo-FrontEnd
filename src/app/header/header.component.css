@@ -2,6 +2,9 @@
 .active-link {
   font-weight: bold;
 }
+.logout-link {
+  cursor: pointer;
+}
 
 .nav-container {
   height: 100%;
