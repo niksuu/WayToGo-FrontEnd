@@ -88,7 +88,14 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['../../', 'list', this.id], {relativeTo: this.activatedRoute});
+    if(this.editMode) {
+      console.log("CANCEL EDIT")
+      this.router.navigate(['../../', 'list', this.id], {relativeTo: this.activatedRoute});
+    } else {
+      console.log("CANCEL NIE EDIT")
+      this.router.navigate(['../', 'list'], {relativeTo: this.activatedRoute});
+    }
+
   }
 
   onDelete() {

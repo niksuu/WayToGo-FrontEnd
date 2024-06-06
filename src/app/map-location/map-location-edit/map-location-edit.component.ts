@@ -60,6 +60,7 @@ export class MapLocationEditComponent implements OnInit {
 
     this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
       .subscribe((response: MapLocation) => {
+        console.log(response)
         this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
           .subscribe(() => {
             this.goBack();
