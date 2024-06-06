@@ -4,10 +4,9 @@ import {RouteService} from "../route.service";
 import {NgForOf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
-import {defaultPageSize, maxPageSize} from "../../shared/http.config";
+import {defaultPageSize} from "../../shared/http.config";
 
 
 @Component({
@@ -34,9 +33,10 @@ export class RouteListComponent {
   }
 
   ngOnInit() {
-    this.currentPageNumber = 1;
-    this.getRoutes();
-
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.currentPageNumber = params['page'] ? +params['page'] : 1;
+      this.getRoutes();
+    });
   }
 
   onAddNewRoute() {
@@ -47,6 +47,7 @@ export class RouteListComponent {
     if (this.currentPageNumber > 1) {
       this.currentPageNumber--;
       this.getRoutes();
+      this.onPageChanged();
     }
   }
 
@@ -54,7 +55,19 @@ export class RouteListComponent {
     if (this.currentPageNumber < this.totalPages) {
       this.currentPageNumber++;
       this.getRoutes();
+      this.onPageChanged();
     }
+  }
+
+  onPageChanged() {
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: { page: this.currentPageNumber },
+        queryParamsHandling: 'merge', // Dodaje lub aktualizuje parametr w bieżącej ścieżce
+      }
+    );
   }
 
   showCurrentPageNumber() {
@@ -80,6 +93,10 @@ export class RouteListComponent {
     this.routeService.getRoutes(this.currentPageNumber, defaultPageSize).subscribe(response => {
       this.routes = response.content;
       this.totalPages = response.totalPages;
+      if (this.currentPageNumber > this.totalPages) {
+        this.currentPageNumber = this.totalPages;
+        this.onPageChanged();
+      }
     });
   }
 }

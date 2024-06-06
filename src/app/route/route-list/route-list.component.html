@@ -7,6 +7,7 @@
         <li *ngFor="let routeIt of routes"
             [routerLinkActiveOptions]="{exact: true}"
             [routerLink]="[routeIt.id]"
+            [queryParams]="{ page: currentPageNumber }"
             class="list-group-item"
             routerLinkActive="active" style="cursor: pointer; height: 6dvh">
           <app-route-item [route]="routeIt"></app-route-item>
