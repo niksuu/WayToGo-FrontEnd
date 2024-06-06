@@ -4,7 +4,9 @@ import {backendUrl} from "../shared/http.config";
 import {Page} from "../shared/page.model";
 import {Route} from "../route/route.model";
 import {Observable, tap} from "rxjs";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode'; // Use the actual named export from the module
+
+import {Router} from "@angular/router";
 
 
 @Injectable({
@@ -13,7 +15,7 @@ import jwt_decode from "jwt-decode";
 export class AuthService {
   url = `${backendUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.url}/login`, { username, password }).pipe(
@@ -34,13 +36,14 @@ export class AuthService {
   }
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this.router.navigate(['/']);
   }
 
   getUserId(): string | null {
     const token = this.getToken();
     if (token) {
       // @ts-ignore
-      const decoded: any = jwt_decode(token);
+      const decoded: any = jwtDecode(token);
       return decoded.userId || null;
     }
     return null;
@@ -52,7 +55,7 @@ export class AuthService {
 
   isTokenExpired(token: string): boolean {
     // @ts-ignore
-    const decoded: any = jwt_decode(token);
+    const decoded: any = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000);
     return decoded.exp < currentTime;
   }

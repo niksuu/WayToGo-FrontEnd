@@ -9,7 +9,6 @@ import {RouteEditComponent} from "./route/route-edit/route-edit.component";
 import {RouteInfoComponent} from "./route/route-info/route-info.component";
 import {RouteListComponent} from "./route/route-list/route-list.component";
 import {RegisterComponent} from "./user/register/register.component";
-import {LogoutComponent} from "./user/logout/logout.component";
 import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
 
 
@@ -22,10 +21,7 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
   },
-  {
-    path: 'logout',
-    component: LogoutComponent,
-  },
+
   {
     path: 'point/new/:routeId',
     component: MapLocationEditComponent,

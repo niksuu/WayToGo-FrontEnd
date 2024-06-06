@@ -36,7 +36,7 @@
 
     <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
          routerLinkActive="active-link" style="align-content: center; ">
-      <a routerLink="logout">Logout </a>
+      <a (click)="logout()" class="logout-link">Logout</a>
     </div>
   </ng-template>
 
