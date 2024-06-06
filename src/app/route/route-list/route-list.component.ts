@@ -36,10 +36,6 @@ export class RouteListComponent {
     this.activatedRoute.queryParams.subscribe(params => {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
       this.getRoutes();
-      /*if (this.currentPageNumber > this.totalPages) {
-        this.currentPageNumber = this.totalPages;
-        this.getRoutes();
-      }*/
     });
   }
 
