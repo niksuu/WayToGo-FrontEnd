@@ -3,7 +3,7 @@ import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
-import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
@@ -29,7 +29,8 @@ export class RouteListComponent {
   totalPages: number;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
-              private mapService: MapService) {
+              private mapService: MapService, private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -38,7 +39,9 @@ export class RouteListComponent {
 
   }
 
-
+  onAddNewRoute() {
+    this.router.navigate(['../', 'new'], {relativeTo: this.activatedRoute})
+  }
 
   onPrevPage() {
     if (this.currentPageNumber > 1) {
