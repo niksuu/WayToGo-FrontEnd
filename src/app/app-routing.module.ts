@@ -10,6 +10,7 @@ import {RouteInfoComponent} from "./route/route-info/route-info.component";
 import {RouteListComponent} from "./route/route-list/route-list.component";
 import {RegisterComponent} from "./user/register/register.component";
 import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
+import {AuthGuardService} from "./auth/auth-guard.service";
 
 
 const routes: Routes = [
@@ -24,18 +25,22 @@ const routes: Routes = [
 
   {
     path: 'point/new/:routeId',
+    canActivate: [AuthGuardService],
     component: MapLocationEditComponent,
   },
   {
     path: 'routes/new',
+    canActivate: [AuthGuardService],
     component: RouteEditComponent
   },
   {
     path: 'users/:id',
+    canActivate: [AuthGuardService],
     component: UserProfileComponent,
   },
   {
     path: 'routes',
+    canActivate: [AuthGuardService],
     component: RoutesComponent,
     children: [
       {
@@ -56,10 +61,12 @@ const routes: Routes = [
   },
   {
     path: 'routes/:id/edit',
+    canActivate: [AuthGuardService],
     component: RouteEditComponent
   },
   {
     path: 'users/:id/routes',
+    canActivate: [AuthGuardService],
     component: UserRoutesComponent,
   },
   {
