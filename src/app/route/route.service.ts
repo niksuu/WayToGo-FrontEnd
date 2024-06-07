@@ -13,10 +13,13 @@ export class RouteService {
   }
 
   getRoutes(pageNumber: number, pageSize: number, name?: string) {
-    let params = new HttpParams()
+        let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString())
-      .set('name', name);
+      .set('pageSize', pageSize.toString());
+
+    if (name && name !== "") {
+      params = params.append('routeName', name);
+    }
 
     const url = `${backendUrl}/routes`
 

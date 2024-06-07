@@ -7,6 +7,7 @@ import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
+import {FormsModule} from "@angular/forms";
 
 
 @Component({
@@ -17,7 +18,8 @@ import {defaultPageSize} from "../../shared/http.config";
     RouteItemComponent,
     RouterLinkActive,
     RouterLink,
-    RouterOutlet
+    RouterOutlet,
+    FormsModule
   ],
   templateUrl: './route-list.component.html',
   styleUrl: './route-list.component.css'
@@ -26,6 +28,7 @@ export class RouteListComponent {
   routes: Route[] = [];
   currentPageNumber: number;
   totalPages: number;
+  routeNameToSearch: string;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
@@ -70,6 +73,10 @@ export class RouteListComponent {
     );
   }
 
+  onGetRoutesByName() {
+    this.getRoutes()
+  }
+
   showCurrentPageNumber() {
     let pageNumberString = '';
     if (this.currentPageNumber > 2) {
@@ -90,7 +97,7 @@ export class RouteListComponent {
   }
 
   getRoutes() {
-    this.routeService.getRoutes(this.currentPageNumber, defaultPageSize).subscribe(response => {
+    this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
       this.routes = response.content;
       this.totalPages = response.totalPages;
       if (this.currentPageNumber > this.totalPages) {

@@ -1,8 +1,12 @@
 <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 2%">
   <button (click)="onAddNewRoute()" class="btn btn-success" style="width: 100%;">Add new route</button>
-  <div class="row">
-    <input type="text" name="routeName" class="col-md-9S col-md-offset-1 input-sm" style="height: 35px">
-    <button class="btn btn-primary" style="height: 35px">search</button>
+  <div class="row flex-item">
+    <input
+      type="text"
+      [(ngModel)]="routeNameToSearch"
+      class="col-md-10 input-sm"
+      style="height: 35px">
+    <button class="btn btn-primary" style="height: 35px" (click)="onGetRoutesByName()">search</button>
   </div>
   <div>
     <router-outlet></router-outlet>
