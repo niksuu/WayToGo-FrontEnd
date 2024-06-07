@@ -1,5 +1,9 @@
 <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 2%">
   <button (click)="onAddNewRoute()" class="btn btn-success" style="width: 100%;">Add new route</button>
+  <div class="row">
+    <input type="text" name="routeName" class="col-md-8 input-sm" style="height: 35px">
+    <button class="btn btn-primary" style="height: 35px">search</button>
+  </div>
   <div>
     <router-outlet></router-outlet>
     <div class="list-wrapper">
