@@ -69,7 +69,7 @@ export class RouteListComponent {
       {
         relativeTo: this.activatedRoute,
         queryParams: { page: this.currentPageNumber },
-        queryParamsHandling: 'merge', // Dodaje lub aktualizuje parametr w bieżącej ścieżce
+        queryParamsHandling: 'merge',
       }
     );
   }
@@ -80,7 +80,7 @@ export class RouteListComponent {
       {
         relativeTo: this.activatedRoute,
         queryParams: { routeName: this.routeNameToSearch },
-        queryParamsHandling: 'merge', // Dodaje lub aktualizuje parametr w bieżącej ścieżce
+        queryParamsHandling: 'merge',
       }
     );
     this.getRoutes()
@@ -129,7 +129,7 @@ export class RouteListComponent {
         {
           relativeTo: this.activatedRoute,
           queryParams: { routeName: null },
-          queryParamsHandling: 'merge', // Usuwa parametr w bieżącej ścieżce
+          queryParamsHandling: 'merge',
         }
       );
 
