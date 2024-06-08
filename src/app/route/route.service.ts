@@ -12,10 +12,14 @@ export class RouteService {
   constructor(private http: HttpClient) {
   }
 
-  getRoutes(pageNumber: number, pageSize: number) {
-    let params = new HttpParams()
+  getRoutes(pageNumber: number, pageSize: number, name?: string) {
+        let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
+
+    if (name && name !== "") {
+      params = params.append('routeName', name);
+    }
 
     const url = `${backendUrl}/routes`
 
