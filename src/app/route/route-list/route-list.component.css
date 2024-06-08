@@ -1,4 +1,19 @@
 
+.list-group{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem 1rem
+}
+
+.list-group-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 6dvh;
+  cursor: pointer;
+}
+
 .flex-container {
   display: flex;
   flex-direction: row;
@@ -11,7 +26,7 @@
 .flex-item {
   margin: 0px;
   padding: 0px;
-  flex: 1 1 auto;
+  flex-grow: 1;
   text-align: center;
 }
 

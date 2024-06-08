@@ -1,41 +1,50 @@
 <div class="nav-container">
 
-  <div (click)="collapsed = true" class="nav-header nav-item">
-    <a routerLink="/">WayToGoo </a>
+  <div (click)="collapsed = true" class="nav-header">
+    <a routerLink="/">WayToGo </a>
   </div>
+
+  <div style="flex-grow: 1"></div>
+
+  <label *ngIf="mobileVersion" for="check">
+    <input type="checkbox" id="check" (change)="collapsed = !collapsed"/>
+    <span></span>
+    <span></span>
+    <span></span>
+  </label>
 
   <ng-template #repeatableContent>
     <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
-         style="align-content: center; ">
+    >
       <a routerLink="routes/list">Routes</a>
     </div>
 
     <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
-         style="align-content: center; ">
+   >
       <a routerLink="users/1/routes">Your Routes</a>
     </div>
 
 
     <div *ngIf="!isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link"
-         style="align-content: center; ">
+     >
       <a routerLink="log-in">Login</a>
     </div>
 
 
     <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
-         routerLinkActive="active-link" style="align-content: center; ">
+         routerLinkActive="active-link" >
       <a routerLink="users/1">User profile </a>
     </div>
 
 
     <div *ngIf="!isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
-         routerLinkActive="active-link" style="align-content: center; ">
+         routerLinkActive="active-link" >
       <a routerLink="register">Register </a>
     </div>
 
 
     <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" [routerLinkActiveOptions]="{ exact: true }"
-         routerLinkActive="active-link" style="align-content: center; ">
+         routerLinkActive="active-link" >
       <a (click)="logout()" class="logout-link">Logout</a>
     </div>
   </ng-template>
@@ -45,9 +54,7 @@
   </ng-container>
 
 
-  <button (click)="collapsed = !collapsed" *ngIf="mobileVersion" class="nav-item" style="flex:0">
-    <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span>
-  </button>
+
 
 
 </div>
