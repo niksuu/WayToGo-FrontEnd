@@ -38,6 +38,7 @@ export class RouteListComponent {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
+      this.routeNameToSearch = params['routeName'] ? params['routeName'] : null
       this.getRoutes();
     });
   }
@@ -74,6 +75,14 @@ export class RouteListComponent {
   }
 
   onGetRoutesByName() {
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: { routeName: this.routeNameToSearch },
+        queryParamsHandling: 'merge', // Dodaje lub aktualizuje parametr w bieżącej ścieżce
+      }
+    );
     this.getRoutes()
   }
 
@@ -97,6 +106,7 @@ export class RouteListComponent {
   }
 
   getRoutes() {
+    this.validateQueryParams();
     this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
       this.routes = response.content;
       this.totalPages = response.totalPages;
@@ -105,5 +115,19 @@ export class RouteListComponent {
         this.onPageChanged();
       }
     });
+  }
+
+  validateQueryParams() {
+    if (!this.routeNameToSearch || this.routeNameToSearch === "") {
+      this.router.navigate(
+        [],
+        {
+          relativeTo: this.activatedRoute,
+          queryParams: { routeName: null },
+          queryParamsHandling: 'merge', // Usuwa parametr w bieżącej ścieżce
+        }
+      );
+
+    }
   }
 }
