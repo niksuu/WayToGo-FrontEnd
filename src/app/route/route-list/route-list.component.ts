@@ -86,6 +86,11 @@ export class RouteListComponent {
     this.getRoutes()
   }
 
+  onClearFilters() {
+    this.routeNameToSearch = "";
+    this.getRoutes();
+  }
+
   showCurrentPageNumber() {
     let pageNumberString = '';
     if (this.currentPageNumber > 2) {
