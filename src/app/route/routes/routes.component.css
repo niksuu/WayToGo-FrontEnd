@@ -1,12 +1,19 @@
 .map-wrapper {
-  height: 90vh;
+  flex: 1 1 auto;
+  min-width: 50%;
+  height: 100%;
+  position: relative
 }
 
 .arrow {
-  border: solid black;
+  border: solid azure;
   border-width: 0 3px 3px 0;
   display: inline-block;
   padding: 3px;
+}
+
+.panel-stripe {
+  min-width: 20px; background-color: azure; border-right:  #046169 3px solid
 }
 
 .arrow-right {
@@ -22,15 +29,38 @@
   top: 100px;
   z-index: 100;
   height: 50px;
-  background-color: white;
+  background-color: #10898d;
+  border: #046169 3px solid;
+  color: white;
 }
 
 .right-panel-btn {
-  left: 0px;
+  left: -3px;
   width: 50px;
 }
 
 .left-panel-btn {
-  left: 10px;
+  left: -3px;
   width: 100px;
+}
+
+.side-panel-visible {
+  width: 80%;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+
+.side-panel-hidden {
+  width: 0;
+  transition: width 0.3s ease, transform 0.3s ease;
+  transform: translateX(-100%);
+  overflow: hidden;
+  visibility: hidden;
+}
+
+@media (max-width: 900px) {
+  .map-wrapper {
+    min-width: 20%;
+  }
 }

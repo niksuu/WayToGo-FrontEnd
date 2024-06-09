@@ -100,7 +100,7 @@ export class RouteListComponent {
       pageNumberString += (this.currentPageNumber - 1) + ' ';
     }
     //pageNumberString += this.currentPageNumber;
-    pageNumberString += `<span class="text-primary"><strong>${this.currentPageNumber}</strong></span>`;
+    pageNumberString += `<span><strong>${this.currentPageNumber}</strong></span>`;
     if (this.currentPageNumber <= this.totalPages - 1) {
       pageNumberString += ' ' + (this.currentPageNumber + 1) + ' ';
     }
