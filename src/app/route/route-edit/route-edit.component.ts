@@ -7,6 +7,7 @@ import { MapLocation } from "../../map-location/map-location.model";
 import { MapLocationService } from "../../map-location/map-location.service";
 import { Location, NgForOf, NgIf } from "@angular/common";
 import { maxPageSize } from "../../shared/http.config";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-route-edit',
@@ -27,12 +28,14 @@ export class RouteEditComponent implements OnInit {
   editMode: boolean = false;
   route: Route;
   selectedFile: File = null;
+  currentImageUrl: SafeUrl = null;
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private location: Location) {
+              private location: Location,
+              private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -44,7 +47,7 @@ export class RouteEditComponent implements OnInit {
       }
     )
 
-    if (this.editMode)   {
+    if (this.editMode) {
       this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)
         .subscribe(response => {
           this.mapLocations = response.content;
@@ -59,7 +62,7 @@ export class RouteEditComponent implements OnInit {
     }
   }
 
-  onSubmit()   {
+  onSubmit() {
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
@@ -88,25 +91,24 @@ export class RouteEditComponent implements OnInit {
   }
 
   goBack() {
-    if(this.editMode) {
-      this.router.navigate(['../../', 'list', this.id], {relativeTo: this.activatedRoute});
+    if (this.editMode) {
+      this.router.navigate(['../../', 'list', this.id], { relativeTo: this.activatedRoute });
     } else {
-      this.router.navigate(['../', 'list'], {relativeTo: this.activatedRoute});
+      this.router.navigate(['../', 'list'], { relativeTo: this.activatedRoute });
     }
-
   }
 
   onDelete() {
-    if (confirm("You are about to delete " + this.route.name + " route. Dou you want to continue?")) {
+    if (confirm("You are about to delete " + this.route.name + " route. Do you want to continue?")) {
       this.routeService.deleteRouteById(this.id)
         .subscribe(() => {
-          this.router.navigate(['../../', 'list'], {relativeTo: this.activatedRoute});
+          this.router.navigate(['../../', 'list'], { relativeTo: this.activatedRoute });
         });
     }
   }
 
   onAddPoint() {
-    this.router.navigate(['../../../point/new/' + this.id], {relativeTo: this.activatedRoute});
+    this.router.navigate(['../../../point/new/' + this.id], { relativeTo: this.activatedRoute });
   }
 
   private initForm() {
@@ -116,7 +118,7 @@ export class RouteEditComponent implements OnInit {
     this.routeForm = new FormGroup({
       'name': new FormControl(routeName, Validators.required),
       'description': new FormControl(routeDescription, Validators.required),
-    })
+    });
 
     if (this.editMode) {
       this.routeService.getRouteById(this.id)
@@ -132,8 +134,21 @@ export class RouteEditComponent implements OnInit {
           this.routeForm.patchValue({
             'name': routeName,
             'description': routeDescription,
-          })
-        })
+          });
+
+          this.routeService.getRouteImageById(this.id).subscribe({
+            next: (response: Blob | null) => {
+              if (response) {
+                const objectURL = URL.createObjectURL(response);
+                this.currentImageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+              }
+            },
+            error: (error: any) => {
+              console.error('Error fetching current image:', error);
+              this.currentImageUrl = null;
+            }
+          });
+        });
     }
   }
 }
