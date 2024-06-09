@@ -24,6 +24,7 @@ export class MapLocationEditComponent implements OnInit {
   mapLocationForm: FormGroup;
   lat: number | undefined;
   lng: number | undefined;
+  selectedFile: File = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -48,6 +49,14 @@ export class MapLocationEditComponent implements OnInit {
     })
   }
 
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
   onSubmit() {
     let newMapLocation = {
       name: this.mapLocationForm.value.name,
@@ -60,10 +69,20 @@ export class MapLocationEditComponent implements OnInit {
 
     this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
       .subscribe((response: MapLocation) => {
-        this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
-          .subscribe(() => {
-            this.goBack();
-          });
+        if (this.selectedFile) {
+          this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
+            .subscribe(() => {
+              this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+                .subscribe(() => {
+                  this.goBack();
+                });
+            });
+        } else {
+          this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+            .subscribe(() => {
+              this.goBack();
+            });
+        }
       });
   }
 
