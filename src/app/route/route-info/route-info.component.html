@@ -1,11 +1,15 @@
-<div class="panel panel-default">
+<div class="panel panel-default" style="color: azure; background-color: #046169">
   <div class="panel-body">
     <div class="flex-container" >
       <div *ngIf="route" class="flex-item">{{route.name}}</div>
       <div class="flex-item">
-        <button class="btn btn-primary" style="height: 30px" [routerLink]="['/routes', routeId]"> Details</button>
+        <button class="btn btn-primary" style="height: 30px; background-color: #10898d" [routerLink]="['/routes', routeId]">
+          <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
         |
-        <button class="btn btn-primary " style="height: 30px" [routerLink]="['/routes', routeId, 'edit']"> Edit</button>
+        <button class="btn btn-primary " style="height: 30px; background-color:#10898d " [routerLink]="['/routes', routeId, 'edit']">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
       </div>
     </div>
 

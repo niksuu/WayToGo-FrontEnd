@@ -10,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 6dvh;
+  height: 7dvh;
   cursor: pointer;
 }
 
@@ -30,6 +30,44 @@
   text-align: center;
 }
 
+.page-button{
+  background-color: #10898d;
+  color: azure;
+  border: 2px solid #046169
+}
+
+.page-nr {
+  background-color: #10898d;
+  border: 2px solid #046169
+}
+
+.page-nr span {
+  color:azure
+}
+
+
+.list-group-item.active {
+  background-color: #10898d;
+  color: azure;
+}
+
+.list-group-item:focus {
+  outline: none;
+  background-color: #10898d;
+  color: azure;
+}
+
+
+
+@media (max-width: 900px) {
+  * {
+    font-size: 1rem;
+  }
+
+  .list-group-item {
+    height: 6dvh;
+  }
+}
 
 @media (max-width: 320px) {
   .flex-item:nth-child(2) {

@@ -1,7 +1,8 @@
 <div style="height: 100%; display: flex; gap: 10px; flex-direction: column; justify-content: space-between; padding: 1%">
 
   <div style="display: flex; justify-content: space-around">
-    <button (click)="onAddNewRoute()" class="btn btn-success">
+    <button style="background-color: #10898d"
+      (click)="onAddNewRoute()" class="btn btn-success">
       <span aria-hidden="true" class="glyphicon glyphicon-plus"></span>
     </button>
     <input
@@ -9,10 +10,12 @@
       [(ngModel)]="routeNameToSearch"
       class="input-sm"
       style="width: 70%">
-    <button class="btn btn-primary" (click)="onGetRoutesByName()">
+    <button style="background-color: #10898d"
+      class="btn btn-primary" (click)="onGetRoutesByName()">
       <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
     </button>
-    <button class="btn btn-danger" (click)="onClearFilters()">
+    <button  style="background-color: #10898d"
+             class="btn btn-danger" (click)="onClearFilters()">
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </button>
   </div>
@@ -34,17 +37,18 @@
     </ul>
   </div>
 
-  <div class="flex-container">
+  <div class="flex-container" >
     <div class="flex-item">
-      <button (click)="onPrevPage()" aria-label="Left Align" class="btn btn-default" type="button">
+      <button (click)="onPrevPage()" aria-label="Left Align" class="btn btn-default page-button" type="button">
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span>
       </button>
     </div>
-    <div class="flex-item">
+    <div class="flex-item page-nr">
       <span [innerHTML]="showCurrentPageNumber()" class="text-info btn"></span>
     </div>
     <div class="flex-item">
-      <button (click)="onNextPage()" aria-label="Left Align" class="btn btn-default" type="button">
+      <button
+        (click)="onNextPage()" aria-label="Left Align" class="btn btn-default page-button" type="button">
         <span aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span>
       </button>
     </div>

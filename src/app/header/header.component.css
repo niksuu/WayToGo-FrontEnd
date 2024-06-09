@@ -22,7 +22,7 @@
   display: flex;
   justify-content: space-around;
   background-color: #046169;
-  border-bottom: 1px solid azure;
+ /* border-bottom: 1px solid azure;*/
   overflow: auto;
 }
 
