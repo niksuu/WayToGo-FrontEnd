@@ -6,8 +6,7 @@
         <button class="btn btn-primary" style="height: 30px; background-color: #10898d" [routerLink]="['/routes', routeId]">
           <span class="glyphicon glyphicon-eye-open"></span>
         </button>
-        |
-        <button class="btn btn-primary " style="height: 30px; background-color:#10898d " [routerLink]="['/routes', routeId, 'edit']">
+        <button *ngIf="userMode" class="btn btn-primary " style="height: 30px; background-color:#10898d " [routerLink]="['/routes', routeId, 'edit']">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
       </div>

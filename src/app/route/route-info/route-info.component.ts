@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params, RouterLink} from "@angular/router";
+import {ActivatedRoute, Params, Router, RouterLink, UrlTree} from "@angular/router";
 import {defaultPageSize, maxPageSize} from "../../shared/http.config";
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
@@ -22,11 +22,13 @@ export class RouteInfoComponent  implements OnInit{
 
   routeId: string;
   route: Route;
+  userMode: boolean;
 
   constructor(private activatedRoute: ActivatedRoute,
               private routeService: RouteService,
               private mapLocationService: MapLocationService,
-              private mapService: MapService) {
+              private mapService: MapService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -43,7 +45,10 @@ export class RouteInfoComponent  implements OnInit{
       }
     );
 
-
+    this.activatedRoute.url.subscribe(urlSegments => {
+      const urlTree: UrlTree = this.router.parseUrl(this.router.url);
+      this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'users');
+    });
 
   }
 }
