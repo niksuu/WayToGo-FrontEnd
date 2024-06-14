@@ -34,7 +34,7 @@ const routes: Routes = [
     component: RouteEditComponent
   },
   {
-    path: 'users/:id/routes/new',
+    path: 'yourRoutes/new',
     canActivate: [AuthGuardService],
     component: RouteEditComponent
   },
@@ -75,7 +75,7 @@ const routes: Routes = [
   //   component: UserRoutesComponent,
   // },
   {
-    path: 'users/:id/routes',
+    path: 'yourRoutes',
     canActivate: [AuthGuardService],
     component: RoutesComponent,
     children: [
