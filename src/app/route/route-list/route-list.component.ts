@@ -137,6 +137,7 @@ export class RouteListComponent {
         if (this.currentPageNumber > this.totalPages) {
           this.currentPageNumber = this.totalPages;
           this.onPageChanged();
+
         }
       });
     }
