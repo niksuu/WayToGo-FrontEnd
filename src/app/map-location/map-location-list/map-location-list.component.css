@@ -1,0 +1,7 @@
+.list-group-item.active {
+  background-color: #10898d;
+}
+
+.list-group-item:focus {
+  background-color: #10898d;
+}

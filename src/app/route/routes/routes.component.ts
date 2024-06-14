@@ -4,6 +4,7 @@ import {CommonModule} from "@angular/common";
 import {RouteListComponent} from "../route-list/route-list.component";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {RouterOutlet} from "@angular/router";
+import {SidePanelService} from "../../shared/side-panel.service";
 
 
 @Component({
@@ -29,7 +30,7 @@ export class RoutesComponent implements OnInit {
     }
   }*/
 
-  constructor() {
+  constructor(private sidePanelService: SidePanelService) {
 
   }
 
@@ -40,5 +41,8 @@ export class RoutesComponent implements OnInit {
 
   ngOnInit(): void {
     this.toggleSidePanel = true;
+    this.sidePanelService.togglePanelEventEmitter.subscribe(toggle => {
+      this.toggleSidePanel = toggle;
+    })
   }
 }

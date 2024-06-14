@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, Params, RouterLinkActive} from "@angular/router";
+import {ActivatedRoute, Params, Router, RouterLinkActive} from "@angular/router";
 import {RouteService} from "../route.service";
 import {Route} from "../route.model";
 import {NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
@@ -8,7 +8,8 @@ import {MapLocationService} from "../../map-location/map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {MapService} from "../../shared/map/map.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import { Location } from '@angular/common';
+import {Location} from '@angular/common';
+import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
 
 
 @Component({
@@ -19,25 +20,25 @@ import { Location } from '@angular/common';
     NgForOf,
     RouteItemComponent,
     RouterLinkActive,
-    NgClass
+    NgClass,
+    MapLocationListComponent
   ],
   templateUrl: './route-detail.component.html',
   styleUrl: './route-detail.component.css'
 })
-export class RouteDetailComponent implements OnInit, OnDestroy{
+export class RouteDetailComponent implements OnInit, OnDestroy {
 
 
   routeId: string;
   route: Route;
   routeImage: SafeUrl = null;
-  mapLocationsNo: number;
 
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapLocationService: MapLocationService, private mapService: MapService, private location: Location) {
+              private mapService: MapService, private location: Location) {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe (
+    this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.routeId = params['id'];
         this.routeService.getRouteById(this.routeId).subscribe(response => {
@@ -45,22 +46,16 @@ export class RouteDetailComponent implements OnInit, OnDestroy{
 
           this.routeService.getRouteImageById(this.routeId).subscribe({
             next: (response: Blob | null) => {
-              //convert Blob (raw byte object) to url to display it in the template
-              const objectURL = URL.createObjectURL(response);
-              this.routeImage = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+              if (response) {
+                //convert Blob (raw byte object) to url to display it in the template
+                const objectURL = URL.createObjectURL(response);
+                this.routeImage = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+              }
             },
             error: (error: any) => {
               this.routeImage = null;
             }
           });
-
-          //after fetching route, fetch its mapLocations
-          this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
-            .subscribe( response => {
-              this.mapService.routeSelectedEventEmitter.emit(response.content);
-              this.mapLocationsNo = response.content.length;
-
-            });
         });
       }
     );

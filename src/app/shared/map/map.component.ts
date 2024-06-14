@@ -5,6 +5,9 @@ import { MapService } from "./map.service";
 import { MapLocation } from "../../map-location/map-location.model";
 import { MapLocationService } from "../../map-location/map-location.service";
 import { Router, NavigationEnd } from '@angular/router';
+import {
+  MapLocationInfoWindowComponent
+} from "../../map-location/map-location-info-window/map-location-info-window.component";
 
 //google maps api documentation
 //https://developers.google.com/maps/documentation/javascript
@@ -16,7 +19,7 @@ import { Router, NavigationEnd } from '@angular/router';
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule],
+  imports: [GoogleMapsModule, CommonModule, MapLocationInfoWindowComponent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
@@ -42,10 +45,9 @@ export class MapComponent implements OnInit, OnDestroy {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
   @ViewChild('map', { static: false }) map: any;
 
-  infoWindowText: string = '';
-  infoWindowMapLocationId : string = '';
-  infoWindowMapLocationName : string = '';
-  infoWindowMapLocationDescription : string = '';
+
+
+  infoWindowMapLocation: MapLocation = null;
 
   userMarker: google.maps.Marker | undefined;
   locationTrackingInterval: any;
@@ -77,6 +79,15 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.getCurrentLocation(true); // Center map initially
     this.startLocationTracking();
+
+    this.mapService.centerOnMapLocation.subscribe(mapLocation => {
+        let center: google.maps.LatLngLiteral = {
+          lat: mapLocation.coordinates.coordinates[0],
+          lng: mapLocation.coordinates.coordinates[1]
+        };
+        this.setCenter(center);
+    })
+
   }
 
   ngOnDestroy(): void {
@@ -140,6 +151,7 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.map) {
       this.map.panTo(new google.maps.LatLng(centerLatLng.lat, centerLatLng.lng));
     }
+    this.zoom = 17;
   }
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
@@ -163,12 +175,15 @@ export class MapComponent implements OnInit, OnDestroy {
         break;
       }
     }
+
+
+
     // Populate info window
     if (markerMapLocation) {
-      this.infoWindowText = marker.getPosition().toString() + markerMapLocation.id + markerMapLocation.description;
-      this.infoWindowMapLocationName = markerMapLocation.name;
-      this.infoWindowMapLocationId = markerMapLocation.id;
-      this.infoWindowMapLocationDescription = markerMapLocation.description;
+
+
+      this.infoWindowMapLocation = markerMapLocation
+
       if (this.infoWindow) {
         this.infoWindow.open(marker);
       }

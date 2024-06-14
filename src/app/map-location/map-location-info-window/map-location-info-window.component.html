@@ -1,0 +1,8 @@
+<div *ngIf="mapLocation" style="display: flex; flex-direction: column; height: 200px; width: 300px">
+  name: {{mapLocation.name}}
+
+  <audio *ngFor="let audio of audiosUrls" controls>
+    <source [src]="audio" type="audio/mpeg"/>
+  </audio>
+
+</div>

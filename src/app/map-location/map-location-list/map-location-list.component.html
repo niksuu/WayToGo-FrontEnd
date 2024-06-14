@@ -1,0 +1,7 @@
+<ul class="list-group">
+  <li (click)="onMapLocationSelected(mapLocation)" *ngFor="let mapLocation of mapLocations"
+      [ngClass]="{'active' : activeMapLocationId == mapLocation.id}"
+      class="list-group-item">
+    {{mapLocation.name}}
+  </li>
+</ul>
