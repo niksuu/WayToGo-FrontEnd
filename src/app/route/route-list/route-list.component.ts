@@ -45,11 +45,6 @@ export class RouteListComponent {
       this.activatedRoute.url.subscribe(urlSegments => {
         const urlTree: UrlTree = this.router.parseUrl(this.router.url);
         this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'users');
-        if (this.userMode) {
-          console.log("userMode")
-        } else {
-          console.log("normal mode")
-        }
         this.getRoutes();
       });
     });
