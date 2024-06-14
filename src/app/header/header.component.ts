@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
 
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router) {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event) {

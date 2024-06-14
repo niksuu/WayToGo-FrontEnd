@@ -4,12 +4,14 @@ import {Route} from "./route.model";
 import {Page} from "../shared/page.model";
 import {backendUrl} from "../shared/http.config";
 import {catchError, of} from "rxjs";
+import {AuthService} from "../auth/auth.service";
 
 
 @Injectable({providedIn: 'root'})
 export class RouteService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private authService: AuthService) {
   }
 
   getRoutes(pageNumber: number, pageSize: number, name?: string) {
@@ -29,6 +31,20 @@ export class RouteService {
   getRouteById(id: string) {
     const url = `${backendUrl}/routes/${id}`
     return this.http.get<Route>(url);
+  }
+
+  getRouteByUserId(pageNumber: number, pageSize: number, name?: string) {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (name && name !== "") {
+      params = params.append('routeName', name);
+    }
+
+    const userId = this.authService.getUserId();
+      const url = `${backendUrl}/routes/${userId}/routes`;
+    return this.http.get<Page<Route>>(url, {params});
   }
 
   postRoute(route: Route) {

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LogInComponent} from "./user/log-in/log-in.component";
 import {UserProfileComponent} from "./user/user-profile/user-profile.component";
 import {RoutesComponent} from "./route/routes/routes.component";
@@ -34,6 +34,11 @@ const routes: Routes = [
     component: RouteEditComponent
   },
   {
+    path: 'users/:id/routes/new',
+    canActivate: [AuthGuardService],
+    component: RouteEditComponent
+  },
+  {
     path: 'users/:id',
     canActivate: [AuthGuardService],
     component: UserProfileComponent,
@@ -48,7 +53,7 @@ const routes: Routes = [
         component: RouteListComponent,
         children: [
           {
-            path:':id',
+            path: ':id',
             component: RouteInfoComponent
           }
         ]
@@ -64,10 +69,31 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     component: RouteEditComponent
   },
+  // {
+  //   path: 'users/:id/routes',
+  //   canActivate: [AuthGuardService],
+  //   component: UserRoutesComponent,
+  // },
   {
     path: 'users/:id/routes',
     canActivate: [AuthGuardService],
-    component: UserRoutesComponent,
+    component: RoutesComponent,
+    children: [
+      {
+        path: 'list',
+        component: RouteListComponent,
+        children: [
+          {
+            path: ':id',
+            component: RouteInfoComponent
+          }
+        ]
+      },
+      {
+        path: ':id',
+        component: RouteDetailComponent
+      }
+    ]
   },
   {
     path: '',
@@ -79,4 +105,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

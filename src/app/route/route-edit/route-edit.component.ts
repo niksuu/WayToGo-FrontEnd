@@ -39,13 +39,11 @@ export class RouteEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (params: Params) => {
-        this.id = params['id'];
-        this.editMode = params['id'] != null;
-        this.initForm();
-      }
-    )
+    this.activatedRoute.url.subscribe(urlSegments => {
+      this.editMode = !urlSegments.some(segment => segment.path === 'new');
+      this.id = this.editMode ? this.activatedRoute.snapshot.params['id'] : null;
+      this.initForm();
+    });
 
     if (this.editMode) {
       this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.id)

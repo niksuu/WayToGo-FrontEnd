@@ -3,7 +3,7 @@ import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
-import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Params, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlTree} from "@angular/router";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
@@ -29,6 +29,8 @@ export class RouteListComponent {
   currentPageNumber: number;
   totalPages: number;
   routeNameToSearch: string;
+  public userMode: boolean;
+  user = null;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
@@ -38,9 +40,21 @@ export class RouteListComponent {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
-      this.routeNameToSearch = params['routeName'] ? params['routeName'] : null
-      this.getRoutes();
+      this.routeNameToSearch = params['routeName'] ? params['routeName'] : null;
+
+      this.activatedRoute.url.subscribe(urlSegments => {
+        const urlTree: UrlTree = this.router.parseUrl(this.router.url);
+        this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'users');
+        if (this.userMode) {
+          console.log("userMode")
+        } else {
+          console.log("normal mode")
+        }
+        this.getRoutes();
+      });
     });
+
+
   }
 
   onAddNewRoute() {
@@ -68,7 +82,7 @@ export class RouteListComponent {
       [],
       {
         relativeTo: this.activatedRoute,
-        queryParams: { page: this.currentPageNumber },
+        queryParams: {page: this.currentPageNumber},
         queryParamsHandling: 'merge',
       }
     );
@@ -79,7 +93,7 @@ export class RouteListComponent {
       [],
       {
         relativeTo: this.activatedRoute,
-        queryParams: { routeName: this.routeNameToSearch },
+        queryParams: {routeName: this.routeNameToSearch},
         queryParamsHandling: 'merge',
       }
     );
@@ -112,14 +126,26 @@ export class RouteListComponent {
 
   getRoutes() {
     this.validateQueryParams();
-    this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
-      this.routes = response.content;
-      this.totalPages = response.totalPages;
-      if (this.currentPageNumber > this.totalPages) {
-        this.currentPageNumber = this.totalPages;
-        this.onPageChanged();
-      }
-    });
+    if (this.userMode) {
+      this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
+        this.routes = response.content;
+        this.totalPages = response.totalPages;
+        if (this.currentPageNumber > this.totalPages) {
+          this.currentPageNumber = this.totalPages;
+          this.onPageChanged();
+        }
+      });
+    } else {
+      this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
+        this.routes = response.content;
+        this.totalPages = response.totalPages;
+        if (this.currentPageNumber > this.totalPages) {
+          this.currentPageNumber = this.totalPages;
+          this.onPageChanged();
+        }
+      });
+    }
+
   }
 
   validateQueryParams() {
@@ -128,7 +154,7 @@ export class RouteListComponent {
         [],
         {
           relativeTo: this.activatedRoute,
-          queryParams: { routeName: null },
+          queryParams: {routeName: null},
           queryParamsHandling: 'merge',
         }
       );
