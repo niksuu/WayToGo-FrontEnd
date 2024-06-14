@@ -25,7 +25,7 @@ export class MapLocationService {
 
   uploadMapLocationImage(mapLocationId: string, image: File) {
     const formData = new FormData();
-    formData.append('image', image, image.name);
+    formData.append('file', image, image.name);
     const url = `${backendUrl}/mapLocations/${mapLocationId}/image`;
     return this.http.put(url, formData);
   }
