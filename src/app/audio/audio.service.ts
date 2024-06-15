@@ -5,7 +5,6 @@ import {Page} from "../shared/page.model";
 import {MapLocation} from "../map-location/map-location.model";
 import {catchError, of} from "rxjs";
 import {Audio} from "./audio.model";
-import {Route} from "../route/route.model";
 
 @Injectable({providedIn: 'root'})
 export class AudioService {
@@ -21,14 +20,12 @@ export class AudioService {
 
     //get audio entries
     const url = `${backendUrl}/mapLocations/${mapLocation.id}/audios`;
-    console.log(url);
     return this.http.get<Page<Audio>>(url, { params });
   }
 
 
   getAudioFileByAudio(audio: Audio) {
     const url = `${backendUrl}/audios/${audio.id}/audio`;
-    console.log(url);
     return this.http.get(url, { responseType: 'blob' }).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching audio:', error);

@@ -5,6 +5,7 @@ import {AudioService} from "../../audio/audio.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {maxPageSize} from "../../shared/http.config";
 import {Audio} from "../../audio/audio.model";
+import {MapService} from "../../shared/map/map.service";
 
 @Component({
   selector: 'app-map-location-info-window',
@@ -22,7 +23,7 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
   audiosEntities: Audio[] = [];
   audiosUrls: SafeUrl[] = [];
 
-  constructor(private audioService: AudioService, private sanitizer: DomSanitizer) {
+  constructor(private audioService: AudioService, private sanitizer: DomSanitizer, private mapService: MapService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -33,7 +34,6 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
     this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
       this.audiosEntities = response.content;
 
-      console.log(this.audiosEntities);
 
       for (let audio of this.audiosEntities) {
         this.audioService.getAudioFileByAudio(audio).subscribe({
@@ -56,5 +56,9 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
+  }
+
+  onDetailsClick() {
+    this.mapService.mapLocationDetailsEventEmitter.emit(this.mapLocation);
   }
 }

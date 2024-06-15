@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, HostListener} from '@angular/core';
 import { GoogleMapsModule, MapInfoWindow, MapMarker, MapDirectionsRenderer } from "@angular/google-maps";
 import { CommonModule } from "@angular/common";
 import { MapService } from "./map.service";
@@ -8,6 +8,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import {
   MapLocationInfoWindowComponent
 } from "../../map-location/map-location-info-window/map-location-info-window.component";
+import {SidePanelService} from "../side-panel.service";
+import {ScreenSizeService} from "../screen-size.service";
 
 //google maps api documentation
 //https://developers.google.com/maps/documentation/javascript
@@ -45,6 +47,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
   @ViewChild('map', { static: false }) map: any;
 
+  mobileVersion: boolean;
 
 
   infoWindowMapLocation: MapLocation = null;
@@ -53,14 +56,21 @@ export class MapComponent implements OnInit, OnDestroy {
   locationTrackingInterval: any;
 
   constructor(
+    private sidePanelService: SidePanelService,
     private mapService: MapService,
     private mapLocationService: MapLocationService,
-    private router: Router
+    private router: Router,
+    private screenSizeService: ScreenSizeService
   ) {
 
   }
 
   ngOnInit(): void {
+
+    this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
+      this.mobileVersion = isMobileVersion;
+    });
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         if (this.router.url === '/routes/list') {
@@ -72,6 +82,12 @@ export class MapComponent implements OnInit, OnDestroy {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
+
+    this.mapService.closeInfoWindow.subscribe(()=> {
+      if(this.infoWindow != undefined) {
+        this.infoWindow.close();
+      }
+    })
 
     this.mapService.clearAllMarkers.subscribe(() => {
       this.markerPositions = [];
@@ -86,6 +102,8 @@ export class MapComponent implements OnInit, OnDestroy {
           lng: mapLocation.coordinates.coordinates[1]
         };
         this.setCenter(center);
+
+
     })
 
   }
@@ -165,6 +183,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   onMarkerClick(marker: MapMarker) {
+
     // Map location associated with clicked marker
     let markerMapLocation: MapLocation | null = null;
     // Search for appropriate map location
@@ -177,9 +196,13 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
 
-
     // Populate info window
     if (markerMapLocation) {
+
+
+      if(this.mobileVersion) {
+        this.sidePanelService.togglePanelEventEmitter.emit(false);
+      }
 
 
       this.infoWindowMapLocation = markerMapLocation
@@ -187,6 +210,8 @@ export class MapComponent implements OnInit, OnDestroy {
       if (this.infoWindow) {
         this.infoWindow.open(marker);
       }
+
+
     }
   }
 
