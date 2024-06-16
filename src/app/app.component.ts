@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {RouterModule} from "@angular/router";
 import {HeaderComponent} from "./header/header.component";
+import {ScreenSizeService} from "./shared/screen-size.service";
 
 @Component({
   standalone: true,
@@ -11,4 +12,14 @@ import {HeaderComponent} from "./header/header.component";
 })
 export class AppComponent {
   title = 'WayToGo-FrontEnd';
+
+  mobileBoundary = 800;
+
+  constructor(private screenSizeService: ScreenSizeService) {
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenSizeService.mobileVersion.next(window.innerWidth < this.mobileBoundary)
+
+  }
 }

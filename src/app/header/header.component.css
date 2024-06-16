@@ -22,7 +22,7 @@
   display: flex;
   justify-content: space-around;
   background-color: #046169;
- /* border-bottom: 1px solid azure;*/
+  /* border-bottom: 1px solid azure;*/
   overflow: auto;
 }
 
@@ -116,6 +116,15 @@
   font-size: 2.5rem;
 }
 
+.background-cover {
+  background-color: white;
+  position: absolute;
+  width: 100%;
+  height: 93%;
+  top:7%;
+  z-index: 10
+}
+
 .menu-collapsed {
   animation: dropDown 0.5s ease;
   position: absolute;
@@ -123,8 +132,10 @@
   top: 7%;
   width: 100%;
   height: 93%;
-  z-index: 9999;
-  display: flex; flex-direction: column; justify-content: space-evenly;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 @keyframes dropDown {
@@ -137,39 +148,38 @@
 }
 
 
-
 .bg {
-  animation:slide 3s ease-in-out infinite alternate;
+  animation: slide 3s ease-in-out infinite alternate;
   background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);
-  bottom:0;
-  left:-50%;
-  opacity:.5;
-  position:fixed;
-  right:-50%;
-  top:7%;
-  z-index:-1;
+  bottom: 0;
+  left: -50%;
+  opacity: .5;
+  position: fixed;
+  right: -50%;
+  top: 7%;
+  z-index: -1;
 }
 
 .bg2 {
-  animation-direction:alternate-reverse;
-  animation-duration:4s;
+  animation-direction: alternate-reverse;
+  animation-duration: 4s;
 }
 
 .bg3 {
-  animation-duration:5s;
+  animation-duration: 5s;
 }
 
 
 h1 {
-  font-family:monospace;
+  font-family: monospace;
 }
 
 @keyframes slide {
   0% {
-    transform:translateX(-25%);
+    transform: translateX(-25%);
   }
   100% {
-    transform:translateX(25%);
+    transform: translateX(25%);
   }
 }
 

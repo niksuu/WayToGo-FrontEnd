@@ -47,7 +47,7 @@ export class RouteInfoComponent  implements OnInit{
 
     this.activatedRoute.url.subscribe(urlSegments => {
       const urlTree: UrlTree = this.router.parseUrl(this.router.url);
-      this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'users');
+      this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'yourRoutes');
     });
 
   }

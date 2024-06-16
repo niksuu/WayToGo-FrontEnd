@@ -4,6 +4,9 @@ import {CommonModule} from "@angular/common";
 import {RouteListComponent} from "../route-list/route-list.component";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
 import {RouterOutlet} from "@angular/router";
+import {SidePanelService} from "../../shared/side-panel.service";
+import {MapService} from "../../shared/map/map.service";
+import {ScreenSizeService} from "../../shared/screen-size.service";
 
 
 @Component({
@@ -18,27 +21,40 @@ export class RoutesComponent implements OnInit {
   toggleSidePanel = true;
   panelButtonContent: string = "";
 
-  //DONT DELETE THIS!!!!!!!!!!!!!!!!
-  //for hiding the side panel after clicking the map
-  /*@HostListener('document:click', ['$event'])
-  clickOutside(event: Event) {
-    const targetElement = event.target as Element;
-    if (!!targetElement.closest('.map-wrapper') && !targetElement.closest('.panel-button')) {
-      this.toggleSidePanel = false;
+  mobileVersion: boolean;
 
-    }
-  }*/
-
-  constructor() {
+  constructor(private sidePanelService: SidePanelService, private mapService: MapService, private screenSizeService: ScreenSizeService) {
 
   }
 
   onToggleSidePanel() {
     this.toggleSidePanel = !this.toggleSidePanel;
     this.panelButtonContent = this.toggleSidePanel ? "" : "Route";
+
+    if(this.mobileVersion) {
+      this.mapService.closeInfoWindow.emit();
+    }
+
   }
 
   ngOnInit(): void {
+
+    this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
+      this.mobileVersion = isMobileVersion;
+    });
+
     this.toggleSidePanel = true;
+    this.sidePanelService.togglePanelEventEmitter.subscribe(toggle => {
+
+
+        this.toggleSidePanel = toggle;
+        this.panelButtonContent = toggle ? "" : "Route";
+
+        if(this.mobileVersion) {
+          this.mapService.closeInfoWindow.emit();
+        }
+
+
+    })
   }
 }

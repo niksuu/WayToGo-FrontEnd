@@ -3,6 +3,7 @@ import {CommonModule} from "@angular/common";
 import {Router, RouterModule} from "@angular/router";
 import {DropdownDirective} from "../shared/dropdown.directive";
 import {AuthService} from "../auth/auth.service";
+import {ScreenSizeService} from "../shared/screen-size.service";
 
 @Component({
   selector: 'app-header',
@@ -14,23 +15,21 @@ import {AuthService} from "../auth/auth.service";
 export class HeaderComponent implements OnInit {
   collapsed = true;
   mobileVersion: boolean;
-  mobileBoundary: number = 800;
   isLoggedIn: boolean = false;
 
 
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router, private screenSizeService: ScreenSizeService) {
   }
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.mobileVersion = window.innerWidth < this.mobileBoundary ? true : false;
-    this.collapsed = true;
 
-  }
 
 
   ngOnInit(): void {
     this.collapsed = true;
-    this.mobileVersion = window.innerWidth < this.mobileBoundary ? true : false;
+
+    this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
+      this.mobileVersion = isMobileVersion;
+      this.collapsed = true;
+    });
 
     this.isLoggedIn = this.authService.isLoggedIn();
 

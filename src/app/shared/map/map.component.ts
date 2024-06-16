@@ -1,10 +1,15 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, HostListener} from '@angular/core';
 import { GoogleMapsModule, MapInfoWindow, MapMarker, MapDirectionsRenderer } from "@angular/google-maps";
 import { CommonModule } from "@angular/common";
 import { MapService } from "./map.service";
 import { MapLocation } from "../../map-location/map-location.model";
 import { MapLocationService } from "../../map-location/map-location.service";
 import { Router, NavigationEnd } from '@angular/router';
+import {
+  MapLocationInfoWindowComponent
+} from "../../map-location/map-location-info-window/map-location-info-window.component";
+import {SidePanelService} from "../side-panel.service";
+import {ScreenSizeService} from "../screen-size.service";
 
 //google maps api documentation
 //https://developers.google.com/maps/documentation/javascript
@@ -16,7 +21,7 @@ import { Router, NavigationEnd } from '@angular/router';
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule],
+  imports: [GoogleMapsModule, CommonModule, MapLocationInfoWindowComponent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
@@ -42,23 +47,30 @@ export class MapComponent implements OnInit, OnDestroy {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
   @ViewChild('map', { static: false }) map: any;
 
-  infoWindowText: string = '';
-  infoWindowMapLocationId : string = '';
-  infoWindowMapLocationName : string = '';
-  infoWindowMapLocationDescription : string = '';
+  mobileVersion: boolean;
+
+
+  infoWindowMapLocation: MapLocation = null;
 
   userMarker: google.maps.Marker | undefined;
   locationTrackingInterval: any;
 
   constructor(
+    private sidePanelService: SidePanelService,
     private mapService: MapService,
     private mapLocationService: MapLocationService,
-    private router: Router
+    private router: Router,
+    private screenSizeService: ScreenSizeService
   ) {
 
   }
 
   ngOnInit(): void {
+
+    this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
+      this.mobileVersion = isMobileVersion;
+    });
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         if (this.router.url === '/routes/list') {
@@ -71,12 +83,29 @@ export class MapComponent implements OnInit, OnDestroy {
       this.handleRouteSelected(mapLocations);
     });
 
+    this.mapService.closeInfoWindow.subscribe(()=> {
+      if(this.infoWindow != undefined) {
+        this.infoWindow.close();
+      }
+    })
+
     this.mapService.clearAllMarkers.subscribe(() => {
       this.markerPositions = [];
     });
 
     this.getCurrentLocation(true); // Center map initially
     this.startLocationTracking();
+
+    this.mapService.centerOnMapLocation.subscribe(mapLocation => {
+        let center: google.maps.LatLngLiteral = {
+          lat: mapLocation.coordinates.coordinates[0],
+          lng: mapLocation.coordinates.coordinates[1]
+        };
+        this.setCenter(center);
+
+
+    })
+
   }
 
   ngOnDestroy(): void {
@@ -140,6 +169,7 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.map) {
       this.map.panTo(new google.maps.LatLng(centerLatLng.lat, centerLatLng.lng));
     }
+    this.zoom = 17;
   }
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
@@ -153,6 +183,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   onMarkerClick(marker: MapMarker) {
+
     // Map location associated with clicked marker
     let markerMapLocation: MapLocation | null = null;
     // Search for appropriate map location
@@ -163,15 +194,24 @@ export class MapComponent implements OnInit, OnDestroy {
         break;
       }
     }
+
+
     // Populate info window
     if (markerMapLocation) {
-      this.infoWindowText = marker.getPosition().toString() + markerMapLocation.id + markerMapLocation.description;
-      this.infoWindowMapLocationName = markerMapLocation.name;
-      this.infoWindowMapLocationId = markerMapLocation.id;
-      this.infoWindowMapLocationDescription = markerMapLocation.description;
+
+
+      if(this.mobileVersion) {
+        this.sidePanelService.togglePanelEventEmitter.emit(false);
+      }
+
+
+      this.infoWindowMapLocation = markerMapLocation
+
       if (this.infoWindow) {
         this.infoWindow.open(marker);
       }
+
+
     }
   }
 

@@ -1,0 +1,40 @@
+<ul class="list-group" style="padding: 5px">
+  <div *ngFor="let mapLocation of mapLocations" style="margin-bottom: 5px">
+
+    <li (click)="onMapLocationSelected(mapLocation)"
+        [ngClass]="{'active' : activeMapLocationId == mapLocation.id}"
+        class="list-group-item"
+        style="cursor: pointer; display: flex; justify-content: center">
+
+      <span aria-hidden="true" class="glyphicon glyphicon-map-marker"></span>
+      <p style="flex-grow: 1; text-align: center">{{mapLocation.name}}</p>
+    </li>
+
+    <li *ngIf="activeMapLocationId == mapLocation.id" class="list-group-item"
+        style="background-color: #bdf2e9;" #info>
+      <div class="map-location-grid-container">
+        <div class="photo-wrap">
+          <div class="photo">
+
+          </div>
+        </div>
+        <div class="info-wrap" >
+          <p style="text-align: center"><strong>Map Location info: </strong></p>
+          <p>Name: {{mapLocation.name}}</p>
+          <p>Description: {{mapLocation.description}}</p>
+        </div>
+        <div class="audio-list">
+          <div *ngFor="let audioItem of audioData">
+            <!--<audio controls *ngIf="audioItem.url">-->
+            <audio class="audio-file" controls>
+              <source [src]="audioItem.url" type="audio/mpeg"/>
+              Your browser does not support the audio element.
+            </audio>
+            <p>{{audioItem.audio.name}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </li>
+  </div>
+</ul>

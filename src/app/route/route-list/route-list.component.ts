@@ -46,6 +46,7 @@ export class RouteListComponent {
         const urlTree: UrlTree = this.router.parseUrl(this.router.url);
         this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'yourRoutes');
         this.getRoutes();
+
       });
     });
 
@@ -137,6 +138,7 @@ export class RouteListComponent {
         if (this.currentPageNumber > this.totalPages) {
           this.currentPageNumber = this.totalPages;
           this.onPageChanged();
+
         }
       });
     }

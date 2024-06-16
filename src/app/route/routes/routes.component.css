@@ -27,7 +27,7 @@
 .panel-button {
   position: absolute;
   top: 100px;
-  z-index: 100;
+  z-index: 3;
   height: 50px;
   background-color: #10898d;
   border: #046169 3px solid;

@@ -23,13 +23,14 @@
               <h6 class="card-subtitle mb-2 text-muted">{{routeId}} </h6>
             </div>
             <div style=" overflow: auto; max-height: 70%">
-              <p class="card-text">number of mapLocations: {{mapLocationsNo}}</p>
               <p class="card-text">{{route.description}}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <app-map-location-list [route]="route">
+    </app-map-location-list>
   </div>
 </div>
 
