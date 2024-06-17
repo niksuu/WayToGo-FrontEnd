@@ -114,7 +114,10 @@ export class MapLocationListComponent implements OnInit {
 
   onMapLocationSelected(mapLocation: MapLocation) {
     this.mapService.centerOnMapLocation.emit(mapLocation);
-    if (this.activeMapLocationId !== mapLocation.id) {
+    if(this.activeMapLocationId == mapLocation.id) {
+      this.activeMapLocationId = null;
+    }
+    else {
       this.activeMapLocationId = mapLocation.id;
       if (this.mobileVersion) {
         this.sidePanelService.togglePanelEventEmitter.emit(false);

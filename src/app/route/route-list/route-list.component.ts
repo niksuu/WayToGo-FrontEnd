@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MapLocationService} from "../../map-location/map-location.service";
@@ -19,7 +19,8 @@ import {FormsModule} from "@angular/forms";
     RouterLinkActive,
     RouterLink,
     RouterOutlet,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './route-list.component.html',
   styleUrl: './route-list.component.css'

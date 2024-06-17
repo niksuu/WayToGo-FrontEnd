@@ -1,15 +1,22 @@
-<div class="panel panel-default" style="color: azure; background-color: #046169">
+<div class="panel panel-default wrapper background-animation" style="color: azure; background-color: #046169">
   <div class="panel-body">
     <div class="flex-container" >
       <div *ngIf="route" class="flex-item">{{route.name}}</div>
-      <div class="flex-item">
-        <button class="btn btn-primary" style="height: 30px; background-color: #10898d" [routerLink]="['/routes', routeId]">
-          <span class="glyphicon glyphicon-eye-open"></span>
+
+      <div style="display: flex">
+        <button class="btn route-button"
+                [routerLink]="['/routes', routeId]">
+          <span class="glyphicon glyphicon-info-sign"></span>
         </button>
-        <button *ngIf="userMode" class="btn btn-primary " style="height: 30px; background-color:#10898d " [routerLink]="['/routes', routeId, 'edit']">
+
+        <button class="btn route-button"
+                [routerLink]="['/routes', routeId, 'edit']">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
       </div>
+
+
+
     </div>
 
   </div>

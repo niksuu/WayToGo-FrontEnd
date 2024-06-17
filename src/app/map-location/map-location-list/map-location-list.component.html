@@ -4,14 +4,16 @@
     <li (click)="onMapLocationSelected(mapLocationData.mapLocation)"
         [ngClass]="{'active' : activeMapLocationId == mapLocationData.mapLocation.id}"
         class="list-group-item"
-        style="cursor: pointer; display: flex; justify-content: center">
+        style="cursor: pointer; display: flex; justify-content: center; align-items: center;">
 
       <span aria-hidden="true" class="glyphicon glyphicon-map-marker"></span>
-      <p style="flex-grow: 1; text-align: center">{{mapLocationData.mapLocation.name}}</p>
+      <p style="flex-grow: 1; margin-left: 20px"></p>
+      {{mapLocationData.mapLocation.name}}
+      <p style="flex-grow: 1;"></p>
     </li>
 
     <li *ngIf="activeMapLocationId == mapLocationData.mapLocation.id" class="list-group-item"
-        style="background-color: #bdf2e9;" #info>
+        style="background-color: #bdf2e9;" #info >
       <div class="map-location-grid-container">
         <div class="photo-wrap">
           <div class="photo">
