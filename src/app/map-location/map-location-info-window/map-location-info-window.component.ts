@@ -1,11 +1,9 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {MapLocation} from "../map-location.model";
 import {NgForOf, NgIf} from "@angular/common";
-import {AudioService} from "../../audio/audio.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {maxPageSize} from "../../shared/http.config";
-import {Audio} from "../../audio/audio.model";
 import {MapService} from "../../shared/map/map.service";
+import {MapLocationService} from "../map-location.service";
 
 @Component({
   selector: 'app-map-location-info-window',
@@ -20,42 +18,36 @@ import {MapService} from "../../shared/map/map.service";
 export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
 
   @Input() mapLocation: MapLocation;
-  audiosEntities: Audio[] = [];
-  audiosUrls: SafeUrl[] = [];
+  imageUrl: SafeUrl = null;
 
-  constructor(private audioService: AudioService, private sanitizer: DomSanitizer, private mapService: MapService) {
+
+  constructor( private sanitizer: DomSanitizer,
+               private mapService: MapService,
+               private mapLocationService: MapLocationService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
 
-    this.audiosEntities = [];
-    this.audiosUrls = [];
+    this.imageUrl = null;
 
-    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
-      this.audiosEntities = response.content;
-
-
-      for (let audio of this.audiosEntities) {
-        this.audioService.getAudioFileByAudio(audio).subscribe({
-          next: (response: Blob | null) => {
-            //convert Blob (raw byte object) to url
-            if (response) {
-              const objectURL = URL.createObjectURL(response);
-              this.audiosUrls.push(this.sanitizer.bypassSecurityTrustUrl(objectURL));
-            }
-
-          },
-          error: (error: any) => {
-            //
-            console.log("getaudio error")
-          }
-        });
+    this.mapLocationService.getMapLocationImageById(this.mapLocation.id).subscribe({
+      next: (response: Blob | null) => {
+        if (response) {
+          //convert Blob (raw byte object) to url to display it in the template
+          const objectURL = URL.createObjectURL(response);
+          this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        }
+      },
+      error: (error: any) => {
+        //
       }
     });
+
   }
 
 
   ngOnInit(): void {
+
   }
 
   onDetailsClick() {

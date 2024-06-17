@@ -39,6 +39,7 @@
   height: 180px;
   width: 180px;
   overflow: hidden;
+  background-color: #89ecda;
 }
 
 .photo img {
