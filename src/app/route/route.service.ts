@@ -6,6 +6,7 @@ import {backendUrl} from "../shared/http.config";
 import {catchError, map, Observable, of} from "rxjs";
 import {AuthService} from "../auth/auth.service";
 import {ActivatedRoute, Router, UrlTree} from "@angular/router";
+import {User} from "../user/user.model";
 
 
 @Injectable({providedIn: 'root'})
@@ -16,7 +17,7 @@ export class RouteService {
   }
 
   getRoutes(pageNumber: number, pageSize: number, name?: string) {
-        let params = new HttpParams()
+    let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
@@ -44,13 +45,16 @@ export class RouteService {
     }
 
     const userId = this.authService.getUserId();
-      const url = `${backendUrl}/routes/${userId}/routes`;
+    const url = `${backendUrl}/routes/${userId}/routes`;
     return this.http.get<Page<Route>>(url, {params});
   }
 
   postRoute(route: Route) {
+    route.user = new User(this.authService.getUserId());
+
     const url = `${backendUrl}/routes`;
     return this.http.post<Route>(url, route);
+
   }
 
   deleteRouteById(id: string) {
@@ -83,7 +87,7 @@ export class RouteService {
 
   getRouteImageById(id: string) {
     const url = `${backendUrl}/routes/${id}/image`;
-    return this.http.get(url, { responseType: 'blob' }).pipe(
+    return this.http.get(url, {responseType: 'blob'}).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching image:', error);
         return of(null);
