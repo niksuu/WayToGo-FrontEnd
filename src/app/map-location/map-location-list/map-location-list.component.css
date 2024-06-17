@@ -26,6 +26,12 @@
   width:200px;
   height: 200px;
   background-color: cadetblue;
+  overflow: hidden;
+}
+
+.photo img {
+  height: 100%;
+  width: 100%;
 }
 
 .info-wrap {

@@ -1,8 +1,8 @@
 <div style="height: 100%; display: flex; gap: 10px; flex-direction: column; justify-content: space-between; padding: 1%">
 
   <div style="display: flex; justify-content: space-around">
-    <button style="background-color: #10898d"
-      (click)="onAddNewRoute()" class="btn btn-success">
+    <button style="background-color: #10898d; color: white"
+      (click)="onAddNewRoute()" class="btn ">
       <span aria-hidden="true" class="glyphicon glyphicon-plus"></span>
     </button>
     <input
@@ -10,12 +10,12 @@
       [(ngModel)]="routeNameToSearch"
       class="input-sm"
       style="width: 70%">
-    <button style="background-color: #10898d"
-      class="btn btn-primary" (click)="onGetRoutesByName()">
+    <button style="background-color: #10898d; color: white"
+      class="btn" (click)="onGetRoutesByName()">
       <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
     </button>
-    <button  style="background-color: #10898d"
-             class="btn btn-danger" (click)="onClearFilters()">
+    <button  style="background-color: #10898d; color: white"
+             class="btn" (click)="onClearFilters()">
       <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
     </button>
   </div>
@@ -31,8 +31,15 @@
           [routerLink]="[routeIt.id]"
           [queryParams]="{ page: currentPageNumber }"
           class="list-group-item"
-          routerLinkActive="active">
+          routerLinkActive="active"
+          #rla="routerLinkActive">
         <app-route-item [route]="routeIt"></app-route-item>
+        <div *ngIf="rla.isActive">
+          <button class="btn route-button"
+                  [routerLink]="['/routes', routeIt.id]">
+            <span class="glyphicon glyphicon-info-sign"></span>
+          </button>
+        </div>
       </li>
     </ul>
   </div>
