@@ -3,7 +3,7 @@ import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
-import {ActivatedRoute, Params, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlTree} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
@@ -42,11 +42,9 @@ export class RouteListComponent {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
       this.routeNameToSearch = params['routeName'] ? params['routeName'] : null;
 
-      this.activatedRoute.url.subscribe(urlSegments => {
-        const urlTree: UrlTree = this.router.parseUrl(this.router.url);
-        this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'yourRoutes');
+      this.routeService.isUserMode(this.activatedRoute, this.router).subscribe(userMode => {
+        this.userMode = userMode;
         this.getRoutes();
-
       });
     });
 

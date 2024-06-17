@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params, Router, RouterLink, UrlTree} from "@angular/router";
-import {defaultPageSize, maxPageSize} from "../../shared/http.config";
+import {ActivatedRoute, Params, Router, RouterLink} from "@angular/router";
+import {maxPageSize} from "../../shared/http.config";
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgIf} from "@angular/common";
-import {MapLocation} from "../../map-location/map-location.model";
 import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 
@@ -45,10 +44,8 @@ export class RouteInfoComponent  implements OnInit{
       }
     );
 
-    this.activatedRoute.url.subscribe(urlSegments => {
-      const urlTree: UrlTree = this.router.parseUrl(this.router.url);
-      this.userMode = urlTree.root.children['primary'].segments.some(segment => segment.path === 'yourRoutes');
+    this.routeService.isUserMode(this.activatedRoute, this.router).subscribe(userMode => {
+      this.userMode = userMode;
     });
-
   }
 }

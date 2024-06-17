@@ -3,8 +3,9 @@ import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {Route} from "./route.model";
 import {Page} from "../shared/page.model";
 import {backendUrl} from "../shared/http.config";
-import {catchError, of} from "rxjs";
+import {catchError, map, Observable, of} from "rxjs";
 import {AuthService} from "../auth/auth.service";
+import {ActivatedRoute, Router, UrlTree} from "@angular/router";
 
 
 @Injectable({providedIn: 'root'})
@@ -86,6 +87,15 @@ export class RouteService {
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching image:', error);
         return of(null);
+      })
+    );
+  }
+
+  isUserMode(activatedRoute: ActivatedRoute, router: Router): Observable<boolean> {
+    return activatedRoute.url.pipe(
+      map(() => {
+        const urlTree: UrlTree = router.parseUrl(router.url);
+        return urlTree.root.children['primary'].segments.some(segment => segment.path === 'yourRoutes');
       })
     );
   }
