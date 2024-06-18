@@ -57,6 +57,7 @@ export class MapLocationListComponent implements OnInit {
     //subscribe to event emitted by map location in map info window
     this.mapService.mapLocationDetailsEventEmitter.subscribe(mapLocation => {
       this.onMapLocationSelected(mapLocation);
+      this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
       this.scrollToInfoWrapper();
     });
@@ -64,10 +65,28 @@ export class MapLocationListComponent implements OnInit {
     this.fetchMapLocations();
   }
 
+  onMapLocationSelected(mapLocation: MapLocation) {
+    this.mapService.centerOnMapLocation.emit(mapLocation);
+    if(this.activeMapLocationId == mapLocation.id) {
+      this.activeMapLocationId = null;
+    }
+    else {
+      this.activeMapLocationId = mapLocation.id;
+      if (this.mobileVersion) {
+        this.sidePanelService.togglePanelEventEmitter.emit(false);
+      }
+      this.fetchMapLocationAudio(mapLocation);
+    }
+  }
+
   //scroll to map location info and animate it
   private scrollToInfoWrapper() {
+    console.log("MMHMMM")
     if (this.infoWrapper?.nativeElement) {
+      console.log("OK")
       this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+
       this.renderer.addClass(this.infoWrapper.nativeElement, 'animation');
       this.infoWrapper.nativeElement.addEventListener('animationend', () => {
         this.renderer.removeClass(this.infoWrapper.nativeElement, 'animation');
@@ -112,19 +131,7 @@ export class MapLocationListComponent implements OnInit {
     });
   }
 
-  onMapLocationSelected(mapLocation: MapLocation) {
-    this.mapService.centerOnMapLocation.emit(mapLocation);
-    if(this.activeMapLocationId == mapLocation.id) {
-      this.activeMapLocationId = null;
-    }
-    else {
-      this.activeMapLocationId = mapLocation.id;
-      if (this.mobileVersion) {
-        this.sidePanelService.togglePanelEventEmitter.emit(false);
-      }
-      this.fetchMapLocationAudio(mapLocation);
-    }
-  }
+
 
   private fetchMapLocationAudio(mapLocation: MapLocation) {
     this.audiosEntities = [];
