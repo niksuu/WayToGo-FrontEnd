@@ -1,4 +1,7 @@
-<div class="panel panel-default wrapper background-animation" style="color: azure; background-color: #046169">
+<div [routerLink]="['/routes', routeId]"
+     class="panel panel-default wrapper background-animation"
+     style="color: azure; background-color: #046169; cursor: pointer"
+     [@tada]="animationState">
   <div class="panel-body">
     <div class="flex-container" >
       <div *ngIf="route" class="flex-item">{{route.name}}</div>
@@ -7,11 +10,14 @@
         <button class="btn route-button"
                 [routerLink]="['/routes', routeId]">
           <span class="glyphicon glyphicon-info-sign"></span>
+          <p>details</p>
         </button>
 
         <button class="btn route-button"
-                [routerLink]="['/routes', routeId, 'edit']">
+                [routerLink]="['/routes', routeId, 'edit']"
+                *ngIf="userMode">
           <span class="glyphicon glyphicon-pencil"></span>
+          <p>edit</p>
         </button>
       </div>
 

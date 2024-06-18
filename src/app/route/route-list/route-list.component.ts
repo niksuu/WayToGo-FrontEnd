@@ -32,6 +32,7 @@ export class RouteListComponent {
   routeNameToSearch: string;
   public userMode: boolean;
   user = null;
+  selectedRoute: Route;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
@@ -39,6 +40,7 @@ export class RouteListComponent {
   }
 
   ngOnInit() {
+    this.selectedRoute = null;
     this.activatedRoute.queryParams.subscribe(params => {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
       this.routeNameToSearch = params['routeName'] ? params['routeName'] : null;
@@ -156,5 +158,17 @@ export class RouteListComponent {
       );
 
     }
+  }
+
+  onRouteSelected(route: Route) {
+    //double click lets you see the detials
+    if(route == this.selectedRoute) {
+      this.selectedRoute = null;
+      this.router.navigate(['/routes', route.id]);
+    }
+    else {
+      this.selectedRoute = route;
+    }
+
   }
 }

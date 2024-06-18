@@ -32,6 +32,7 @@
           [queryParams]="{ page: currentPageNumber }"
           class="list-group-item"
           routerLinkActive="active"
+          (click)="onRouteSelected(routeIt)"
           #rla="routerLinkActive">
         <app-route-item [route]="routeIt"></app-route-item>
         <div *ngIf="rla.isActive">

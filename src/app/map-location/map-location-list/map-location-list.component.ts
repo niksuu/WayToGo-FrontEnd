@@ -29,7 +29,6 @@ import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
 
   ],
   animations: [
-    bounceInDownAnimation(),
     headShakeAnimation()
   ],
   templateUrl: './map-location-list.component.html',
@@ -54,7 +53,6 @@ export class MapLocationListComponent implements OnInit {
               private mapLocationService: MapLocationService,
               private audioService: AudioService,
               private sanitizer: DomSanitizer,
-              private renderer: Renderer2,
               private screenSizeService: ScreenSizeService) { }
 
 
@@ -79,6 +77,7 @@ export class MapLocationListComponent implements OnInit {
 
   onMapLocationSelected(mapLocation: MapLocation) {
     //this.infoWrapperAnimationState = false;
+
     this.mapService.centerOnMapLocation.emit(mapLocation);
     if(this.activeMapLocationId == mapLocation.id) {
       this.activeMapLocationId = null;
@@ -90,6 +89,8 @@ export class MapLocationListComponent implements OnInit {
       }
       this.fetchMapLocationAudio(mapLocation);
     }
+
+    //this.scrollToInfoWrapper(); if we want to add animation on list item click
   }
 
   //scroll to map location info and animate it

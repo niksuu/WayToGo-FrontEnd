@@ -74,6 +74,10 @@
     font-size: 1rem;
   }
 
+  .route-button span {
+    font-size: 1.5rem;
+  }
+
   .list-group-item {
     height: 6dvh;
   }
