@@ -12,8 +12,11 @@
       <p style="flex-grow: 1;"></p>
     </li>
 
+    <!--https://github.com/filipows/angular-animations-->
     <li *ngIf="activeMapLocationId == mapLocationData.mapLocation.id" class="list-group-item"
-        style="background-color: #bdf2e9;" #info >
+        style="background-color: #bdf2e9;" #info
+        [@headShake]="infoWrapperAnimationState"
+    [ngClass]="{'animation' : infoWrapperAnimationState}">
       <div class="map-location-grid-container">
         <div class="photo-wrap">
           <div class="photo">

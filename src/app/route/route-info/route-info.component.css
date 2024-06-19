@@ -14,7 +14,7 @@
 
 .route-button {
   height: 30px;
-  width: 30px;
+  width: auto;
   background-color: white;
   color: #10898d;
   margin-left: 10px;
@@ -24,9 +24,17 @@
   align-items: center;
 }
 
+.route-button > p {
+  margin-left: 5px;
+  align-self: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
 .background-animation {
   animation: background-change 1s infinite;
-  animation-duration: 1s;
+  animation-duration: 1.5s;
 }
 
 @keyframes background-change {
@@ -46,12 +54,13 @@
 
 
 @media (max-width: 900px) {
-  * {
+  .route-button {
+    height: 20px;
+    font-size: 1.5rem;
+  }
+
+  .route-button > p {
     font-size: 1rem;
   }
 
-  .route-button {
-    height: 20px;
-    width: 20px;
-  }
 }

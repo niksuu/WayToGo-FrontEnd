@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MapLocationService} from "../map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {Route} from "../../route/route.model";
@@ -14,6 +14,8 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ScreenSizeService} from "../../shared/screen-size.service";
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
 
 @Component({
   selector: 'app-map-location-list',
@@ -23,7 +25,11 @@ import { map } from 'rxjs/operators';
     RouteItemComponent,
     RouterLinkActive,
     NgClass,
-    NgIf
+    NgIf,
+
+  ],
+  animations: [
+    headShakeAnimation()
   ],
   templateUrl: './map-location-list.component.html',
   styleUrl: './map-location-list.component.css'
@@ -40,16 +46,19 @@ export class MapLocationListComponent implements OnInit {
   mobileVersion: boolean;
 
   @ViewChild('info') infoWrapper: ElementRef;
+  infoWrapperAnimationState: boolean;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
               private mapLocationService: MapLocationService,
               private audioService: AudioService,
               private sanitizer: DomSanitizer,
-              private renderer: Renderer2,
               private screenSizeService: ScreenSizeService) { }
 
+
+
   ngOnInit(): void {
+    this.infoWrapperAnimationState = false;
     this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
       this.mobileVersion = isMobileVersion;
     });
@@ -57,22 +66,48 @@ export class MapLocationListComponent implements OnInit {
     //subscribe to event emitted by map location in map info window
     this.mapService.mapLocationDetailsEventEmitter.subscribe(mapLocation => {
       this.onMapLocationSelected(mapLocation);
+      this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
+      console.log("BBBBB")
       this.scrollToInfoWrapper();
     });
 
     this.fetchMapLocations();
   }
 
+  onMapLocationSelected(mapLocation: MapLocation) {
+    //this.infoWrapperAnimationState = false;
+
+    this.mapService.centerOnMapLocation.emit(mapLocation);
+    if(this.activeMapLocationId == mapLocation.id) {
+      this.activeMapLocationId = null;
+    }
+    else {
+      this.activeMapLocationId = mapLocation.id;
+      if (this.mobileVersion) {
+        this.sidePanelService.togglePanelEventEmitter.emit(false);
+      }
+      this.fetchMapLocationAudio(mapLocation);
+    }
+
+    //this.scrollToInfoWrapper(); if we want to add animation on list item click
+  }
+
   //scroll to map location info and animate it
   private scrollToInfoWrapper() {
-    if (this.infoWrapper?.nativeElement) {
-      this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      this.renderer.addClass(this.infoWrapper.nativeElement, 'animation');
-      this.infoWrapper.nativeElement.addEventListener('animationend', () => {
-        this.renderer.removeClass(this.infoWrapper.nativeElement, 'animation');
-      }, { once: true });
-    }
+    setTimeout(() => {
+      if (this.infoWrapper) {
+        console.log("AAAA");
+        this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        this.infoWrapperAnimationState = false;
+        setTimeout(() => {
+          this.infoWrapperAnimationState = true;
+        }, 1);
+      } else {
+        console.error('infoWrapper  not available');
+      }
+    }, 1);
   }
 
   //fetch map locations and their images
@@ -112,19 +147,7 @@ export class MapLocationListComponent implements OnInit {
     });
   }
 
-  onMapLocationSelected(mapLocation: MapLocation) {
-    this.mapService.centerOnMapLocation.emit(mapLocation);
-    if(this.activeMapLocationId == mapLocation.id) {
-      this.activeMapLocationId = null;
-    }
-    else {
-      this.activeMapLocationId = mapLocation.id;
-      if (this.mobileVersion) {
-        this.sidePanelService.togglePanelEventEmitter.emit(false);
-      }
-      this.fetchMapLocationAudio(mapLocation);
-    }
-  }
+
 
   private fetchMapLocationAudio(mapLocation: MapLocation) {
     this.audiosEntities = [];

@@ -20,7 +20,10 @@
           <div class="card-body">
             <div style="text-align: center">
               <h5 class="card-title">{{ route.name }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{routeId}} </h6>
+              <div class="user-container">
+                <span class="glyphicon glyphicon-user"></span>
+                {{route.user.username}}
+              </div>
             </div>
             <div style=" overflow: auto; max-height: 70%">
               <p class="card-text">{{route.description}}</p>
