@@ -78,6 +78,7 @@ export class RouteEditComponent implements OnInit {
     } else {
       this.routeService.postRoute(this.routeForm.value)
         .subscribe(response => {
+          this.id = response.id;
           if (this.selectedFile) {
             this.routeService.uploadRouteImage(response.id, this.selectedFile)
               .subscribe(() => {
@@ -92,9 +93,9 @@ export class RouteEditComponent implements OnInit {
 
   goBack() {
     if (this.editMode) {
-      this.router.navigate(['../../../yourRoutes/list'], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../../../yourRoutes/' + this.id], { relativeTo: this.activatedRoute });
     } else {
-      this.router.navigate(['../', 'list'], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../' + this.id], { relativeTo: this.activatedRoute });
     }
   }
 
