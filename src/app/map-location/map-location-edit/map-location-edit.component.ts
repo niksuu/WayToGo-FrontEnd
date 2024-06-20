@@ -7,6 +7,7 @@ import {PointSelectMapComponent} from "../point-select-map/point-select-map.comp
 import {PointSelectMapService} from "../point-select-map/point-select-map.service";
 import {MapLocationService} from "../map-location.service";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-points-edit',
@@ -27,13 +28,15 @@ export class MapLocationEditComponent implements OnInit {
   lng: number | undefined;
   selectedFile: File = null;
   editMode = false;
-  mapLocation: MapLocation
+  mapLocation: MapLocation;
+  currentImageUrl: SafeUrl = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private mapService: PointSelectMapService,
               private mapLocationService: MapLocationService,
-              private routeMapLocationService: RouteMapLocationService) {
+              private routeMapLocationService: RouteMapLocationService,
+              private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -89,7 +92,15 @@ export class MapLocationEditComponent implements OnInit {
     if (this.editMode) {
       this.mapLocationService.putMapLocation(newMapLocation, this.mapLocationId)
         .subscribe((response: MapLocation) => {
-          this.goBack();
+          if (this.selectedFile) {
+            this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
+              .subscribe(() => {
+                this.goBack();
+              });
+          } else {
+            this.goBack();
+          }
+          //this.goBack();
         });
     } else {
       this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
@@ -151,6 +162,19 @@ export class MapLocationEditComponent implements OnInit {
           'lat': mapLocationLat,
           'lng': mapLocationLng
         });
+
+        this.mapLocationService.getMapLocationImageById(this.mapLocationId).subscribe({
+          next: (response: Blob | null) => {
+            if (response) {
+              const objectURL = URL.createObjectURL(response);
+              this.currentImageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            }
+          },
+          error: (error: any) => {
+            console.error('Error fetching current image:', error);
+            this.currentImageUrl = null;
+          }
+        })
       });
     }
   }
