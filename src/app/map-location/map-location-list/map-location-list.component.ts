@@ -88,7 +88,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
       this.onMapLocationSelected(mapLocation);
       this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
-      console.log("BBBBB")
       this.scrollToInfoWrapper();
     });
 
@@ -125,7 +124,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   private scrollToInfoWrapper() {
     setTimeout(() => {
       if (this.infoWrapper) {
-        console.log("AAAA");
         this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         this.infoWrapperAnimationState = false;

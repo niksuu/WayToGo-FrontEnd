@@ -31,7 +31,6 @@ export class MapLocationService {
 
   putMapLocation(mapLocation: MapLocation, mapLocationId: string) {
     const url = `${backendUrl}/mapLocations/${mapLocationId}`;
-    console.log(mapLocation.description)
     return this.http.put(url, mapLocation);
   }
 

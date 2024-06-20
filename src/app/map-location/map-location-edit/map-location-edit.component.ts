@@ -87,27 +87,8 @@ export class MapLocationEditComponent implements OnInit {
 
 
     if (this.editMode) {
-      console.log("In Submit")
-      console.log(this.mapLocation.description)
-      console.log(newMapLocation.description)
-      console.log('----------------------')
       this.mapLocationService.putMapLocation(newMapLocation, this.mapLocationId)
         .subscribe((response: MapLocation) => {
-          console.log(response)
-          // if (this.selectedFile) {
-          //   this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
-          //     .subscribe(() => {
-          //       this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
-          //         .subscribe(() => {
-          //           this.goBack();
-          //         });
-          //     });
-          // } else {
-          //   this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
-          //     .subscribe(() => {
-          //       this.goBack();
-          //     });
-          // }
           this.goBack();
         });
     } else {

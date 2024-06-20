@@ -44,7 +44,6 @@ export class PointSelectMapComponent {
 
   addMarker(latLng: google.maps.LatLngLiteral) {
     this.markerPosition = latLng;
-    console.log(latLng)
     this.mapSerivce.markerSelectedEmitter.next({lat: this.markerPosition.lat, lng: this.markerPosition.lng});
   }
 
