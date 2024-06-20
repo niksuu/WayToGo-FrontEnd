@@ -8,13 +8,14 @@
 
       <div style="display: flex">
         <button class="btn route-button"
-                [routerLink]="['/routes', routeId]">
+                (click)="onDetails()">
+<!--                [routerLink]="['/routes', routeId]">-->
           <span class="glyphicon glyphicon-info-sign"></span>
           <p>details</p>
         </button>
 
         <button class="btn route-button"
-                [routerLink]="['/routes', routeId, 'edit']"
+                [routerLink]="['/yourRoutes', routeId, 'edit']"
                 *ngIf="userMode">
           <span class="glyphicon glyphicon-pencil"></span>
           <p>edit</p>

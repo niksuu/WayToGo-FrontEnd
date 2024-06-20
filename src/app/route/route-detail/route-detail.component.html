@@ -4,6 +4,9 @@
   <button (click)="goBack()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
     go back
   </button>
+  <button *ngIf="userMode" (click)="onEditRoute()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
+    edit route
+  </button>
 
   <div *ngIf="route" class="panel panel-default" style="flex-grow: 1; margin-top: 1.5rem; overflow: auto">
     <div class="panel-body">

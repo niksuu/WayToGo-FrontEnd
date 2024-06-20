@@ -19,9 +19,19 @@ export class MapLocationService {
     return this.http.get<Page<MapLocation>>(url, { params });
   }
 
+  getMapLocationsById( mapLocationId: string) {
+    const url = `${backendUrl}/mapLocations/${mapLocationId}`;
+    return this.http.get<MapLocation>(url);
+  }
+
   postMapLocation(mapLocation: MapLocation, routeId: string) {
     const url = `${backendUrl}/mapLocations`;
     return this.http.post(url, mapLocation);
+  }
+
+  putMapLocation(mapLocation: MapLocation, mapLocationId: string) {
+    const url = `${backendUrl}/mapLocations/${mapLocationId}`;
+    return this.http.put(url, mapLocation);
   }
 
   uploadMapLocationImage(mapLocationId: string, image: File) {

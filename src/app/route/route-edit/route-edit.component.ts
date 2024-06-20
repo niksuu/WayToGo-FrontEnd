@@ -8,6 +8,7 @@ import { MapLocationService } from "../../map-location/map-location.service";
 import { Location, NgForOf, NgIf } from "@angular/common";
 import { maxPageSize } from "../../shared/http.config";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
 
 @Component({
   selector: 'app-route-edit',
@@ -15,7 +16,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   imports: [
     ReactiveFormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    MapLocationListComponent
   ],
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
@@ -76,6 +78,7 @@ export class RouteEditComponent implements OnInit {
     } else {
       this.routeService.postRoute(this.routeForm.value)
         .subscribe(response => {
+          this.id = response.id;
           if (this.selectedFile) {
             this.routeService.uploadRouteImage(response.id, this.selectedFile)
               .subscribe(() => {
@@ -90,9 +93,9 @@ export class RouteEditComponent implements OnInit {
 
   goBack() {
     if (this.editMode) {
-      this.router.navigate(['../../', 'list', this.id], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../../../yourRoutes/' + this.id], { relativeTo: this.activatedRoute });
     } else {
-      this.router.navigate(['../', 'list'], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../' + this.id], { relativeTo: this.activatedRoute });
     }
   }
 

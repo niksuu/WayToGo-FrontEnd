@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {MapLocationService} from "../map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {Route} from "../../route/route.model";
@@ -16,6 +26,7 @@ import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
+import {RouteService} from "../../route/route.service";
 
 @Component({
   selector: 'app-map-location-list',
@@ -34,7 +45,7 @@ import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
   templateUrl: './map-location-list.component.html',
   styleUrl: './map-location-list.component.css'
 })
-export class MapLocationListComponent implements OnInit {
+export class MapLocationListComponent implements OnInit, OnChanges {
 
   @Input() route: Route;
   mapLocations: MapLocation[];
@@ -48,16 +59,25 @@ export class MapLocationListComponent implements OnInit {
   @ViewChild('info') infoWrapper: ElementRef;
   infoWrapperAnimationState: boolean;
 
+  userMode = false;
+
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
               private mapLocationService: MapLocationService,
               private audioService: AudioService,
               private sanitizer: DomSanitizer,
-              private screenSizeService: ScreenSizeService) { }
+              private screenSizeService: ScreenSizeService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private routeService: RouteService) { }
 
 
 
   ngOnInit(): void {
+    this.routeService.isUserMode(this.activatedRoute, this.router).subscribe(response => {
+      this.userMode = response;
+    })
+
     this.infoWrapperAnimationState = false;
     this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
       this.mobileVersion = isMobileVersion;
@@ -68,11 +88,18 @@ export class MapLocationListComponent implements OnInit {
       this.onMapLocationSelected(mapLocation);
       this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
-      console.log("BBBBB")
       this.scrollToInfoWrapper();
     });
 
-    this.fetchMapLocations();
+    if (this.route) {
+      this.fetchMapLocations();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['route'] && changes['route'].currentValue) {
+      this.fetchMapLocations();
+    }
   }
 
   onMapLocationSelected(mapLocation: MapLocation) {
@@ -97,7 +124,6 @@ export class MapLocationListComponent implements OnInit {
   private scrollToInfoWrapper() {
     setTimeout(() => {
       if (this.infoWrapper) {
-        console.log("AAAA");
         this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         this.infoWrapperAnimationState = false;
@@ -176,5 +202,9 @@ export class MapLocationListComponent implements OnInit {
         // All audio files fetched and URLs are set
       });
     });
+  }
+
+  onMapLocationEdit(mapLocationId: string) {
+    this.router.navigate(['point/' + mapLocationId + '/edit'])
   }
 }

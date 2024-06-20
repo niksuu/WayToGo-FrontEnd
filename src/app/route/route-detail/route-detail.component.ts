@@ -32,12 +32,17 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
   routeId: string;
   route: Route;
   routeImage: SafeUrl = null;
+  userMode: boolean = false;
 
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapService: MapService, private location: Location) {
+              private mapService: MapService, private location: Location, private router: Router) {
   }
 
   ngOnInit() {
+    this.routeService.isUserMode(this.activatedRoute, this.router).subscribe(response => {
+      this.userMode = response;
+    })
+
     this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.routeId = params['id'];
@@ -69,4 +74,7 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
     this.mapService.clearAllMarkers.emit();
   }
 
+  onEditRoute() {
+    this.router.navigate(['edit'], {relativeTo: this.activatedRoute})
+  }
 }

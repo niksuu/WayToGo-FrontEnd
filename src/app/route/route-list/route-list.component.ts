@@ -164,7 +164,7 @@ export class RouteListComponent {
     //double click lets you see the detials
     if(route == this.selectedRoute) {
       this.selectedRoute = null;
-      this.router.navigate(['/routes', route.id]);
+      this.router.navigate(['/yourRoutes', route.id]);
     }
     else {
       this.selectedRoute = route;

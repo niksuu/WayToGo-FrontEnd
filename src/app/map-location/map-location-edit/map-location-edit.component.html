@@ -1,6 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
+      <div class="row" *ngIf="currentImageUrl">
+        <div class="col-xs-12">
+          <div class="form-group text-center img-responsive">
+            <img [src]="currentImageUrl" alt="Current Route Image" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
+          </div>
+        </div>
+      </div>
       <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
         <div class="col-xs-12">
           <h2>Adding New Point</h2>

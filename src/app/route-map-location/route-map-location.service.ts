@@ -7,7 +7,7 @@ export class RouteMapLocationService {
 
   constructor(private http: HttpClient) {}
 
-  postRouteMapLocationService(routeId: string, mapLocationId: string) {
+  postRouteMapLocation(routeId: string, mapLocationId: string) {
     let newRouteMapLocation = {
       mapLocation: {
         id: mapLocationId
