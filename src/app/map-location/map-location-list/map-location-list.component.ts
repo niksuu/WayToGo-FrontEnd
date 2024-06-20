@@ -63,7 +63,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
               private mapLocationService: MapLocationService,
               private audioService: AudioService,
               private sanitizer: DomSanitizer,
-              private screenSizeService: ScreenSizeService) { }
+              private screenSizeService: ScreenSizeService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) { }
 
 
 
@@ -194,5 +196,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
         // All audio files fetched and URLs are set
       });
     });
+  }
+
+  onMapLocationEdit(mapLocationId: string) {
+    this.router.navigate(['point/' + mapLocationId + '/edit'])
   }
 }

@@ -21,10 +21,13 @@ import {RouteMapLocationService} from "../../route-map-location/route-map-locati
 })
 export class MapLocationEditComponent implements OnInit {
   routeId: string;
+  mapLocationId: string;
   mapLocationForm: FormGroup;
   lat: number | undefined;
   lng: number | undefined;
   selectedFile: File = null;
+  editMode = false;
+  mapLocation: MapLocation
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -34,12 +37,27 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(
-      (params: Params) => {
-        this.routeId = params['routeId'];
-        this.initForm();
-      }
-    )
+    this.activatedRoute.url.subscribe(urlSegments => {
+      this.editMode = urlSegments.some(segment => segment.path === 'edit');
+    });
+
+    if (!this.editMode) {
+      this.activatedRoute.params.subscribe(
+        (params: Params) => {
+          this.routeId = params['routeId'];
+          this.initForm();
+        }
+      )
+    } else {
+      this.activatedRoute.params.subscribe(
+        (params: Params) => {
+          this.mapLocationId = params['pointId'];
+          this.initForm();
+        }
+      )
+      this.initForm();
+    }
+
 
     this.mapService.markerSelectedEmitter.subscribe((position: { lat: number, lng: number }) => {
       this.mapLocationForm.patchValue({
@@ -67,38 +85,73 @@ export class MapLocationEditComponent implements OnInit {
       },
     }
 
-    this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
-      .subscribe((response: MapLocation) => {
-        if (this.selectedFile) {
-          this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
-            .subscribe(() => {
-              this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
-                .subscribe(() => {
-                  this.goBack();
-                });
-            });
-        } else {
-          this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
-            .subscribe(() => {
-              this.goBack();
-            });
-        }
-      });
+    if (this.editMode) {
+      console.log(this.mapLocationId)
+      this.mapLocationService.putMapLocation(newMapLocation, this.mapLocationId)
+        .subscribe((response: MapLocation) => {
+          this.goBack();
+        });
+    } else {
+      this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
+        .subscribe((response: MapLocation) => {
+          if (this.selectedFile) {
+            this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
+              .subscribe(() => {
+                this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+                  .subscribe(() => {
+                    this.goBack();
+                  });
+              });
+          } else {
+            this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+              .subscribe(() => {
+                this.goBack();
+              });
+          }
+        });
+    }
+
+
   }
 
   goBack() {
-    this.router.navigate(['../../../routes/' + this.routeId + '/edit'], {relativeTo: this.activatedRoute});
+    if (this.editMode) {
+      this.router.navigate(['yourRoutes/list'])
+    } else {
+      this.router.navigate(['routes/' + this.routeId + '/edit']);
+    }
+
   }
 
   private initForm() {
     let mapLocationName = '';
     let mapLocationDescription = '';
+    let mapLocationLat = null;
+    let mapLocationLng = null;
 
     this.mapLocationForm = new FormGroup({
       'name': new FormControl(mapLocationName, Validators.required),
       'description': new FormControl(mapLocationDescription),
-      'lat': new FormControl(null, Validators.required),
-      'lng': new FormControl(null, Validators.required),
+      'lat': new FormControl(mapLocationLat, Validators.required),
+      'lng': new FormControl(mapLocationLng, Validators.required),
     })
+
+    if (this.editMode) {
+      this.mapLocationService.getMapLocationsById(this.mapLocationId).subscribe(response => {
+        this.mapLocation = response
+
+        mapLocationName = this.mapLocation.name;
+        mapLocationDescription = this.mapLocation.description;
+        mapLocationLat = this.mapLocation.coordinates.coordinates[0];
+        mapLocationLng = this.mapLocation.coordinates.coordinates[1];
+
+        this.mapLocationForm.patchValue({
+          'name': mapLocationName,
+          'description': mapLocationDescription,
+          'lat': mapLocationLat,
+          'lng': mapLocationLng
+        });
+      })
+    }
   }
 }
