@@ -92,7 +92,7 @@ export class RouteEditComponent implements OnInit {
 
   goBack() {
     if (this.editMode) {
-      this.router.navigate(['../../', 'list', this.id], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../../../yourRoutes/list'], { relativeTo: this.activatedRoute });
     } else {
       this.router.navigate(['../', 'list'], { relativeTo: this.activatedRoute });
     }

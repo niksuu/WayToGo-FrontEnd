@@ -67,5 +67,12 @@ export class RouteInfoComponent  implements OnInit{
     });
   }
 
+  onDetails() {
+    if (this.userMode) {
+      this.router.navigate(['/yourRoutes/', this.routeId]);
+    } else {
+      this.router.navigate(['/routes/', this.routeId]);
+    }
+  }
 
 }
