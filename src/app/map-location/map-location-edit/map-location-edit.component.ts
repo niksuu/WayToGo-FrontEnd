@@ -85,10 +85,29 @@ export class MapLocationEditComponent implements OnInit {
       },
     }
 
+
     if (this.editMode) {
-      console.log(this.mapLocationId)
+      console.log("In Submit")
+      console.log(this.mapLocation.description)
+      console.log(newMapLocation.description)
+      console.log('----------------------')
       this.mapLocationService.putMapLocation(newMapLocation, this.mapLocationId)
         .subscribe((response: MapLocation) => {
+          console.log(response)
+          // if (this.selectedFile) {
+          //   this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
+          //     .subscribe(() => {
+          //       this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
+          //         .subscribe(() => {
+          //           this.goBack();
+          //         });
+          //     });
+          // } else {
+          //   this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
+          //     .subscribe(() => {
+          //       this.goBack();
+          //     });
+          // }
           this.goBack();
         });
     } else {
@@ -97,13 +116,13 @@ export class MapLocationEditComponent implements OnInit {
           if (this.selectedFile) {
             this.mapLocationService.uploadMapLocationImage(response.id, this.selectedFile)
               .subscribe(() => {
-                this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+                this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
                   .subscribe(() => {
                     this.goBack();
                   });
               });
           } else {
-            this.routeMapLocationService.postRouteMapLocationService(this.routeId, response.id)
+            this.routeMapLocationService.postRouteMapLocation(this.routeId, response.id)
               .subscribe(() => {
                 this.goBack();
               });
@@ -134,11 +153,11 @@ export class MapLocationEditComponent implements OnInit {
       'description': new FormControl(mapLocationDescription),
       'lat': new FormControl(mapLocationLat, Validators.required),
       'lng': new FormControl(mapLocationLng, Validators.required),
-    })
+    });
 
     if (this.editMode) {
       this.mapLocationService.getMapLocationsById(this.mapLocationId).subscribe(response => {
-        this.mapLocation = response
+        this.mapLocation = response;
 
         mapLocationName = this.mapLocation.name;
         mapLocationDescription = this.mapLocation.description;
@@ -151,7 +170,7 @@ export class MapLocationEditComponent implements OnInit {
           'lat': mapLocationLat,
           'lng': mapLocationLng
         });
-      })
+      });
     }
   }
 }
