@@ -96,6 +96,11 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'yourRoutes/:id/edit',
+    canActivate: [AuthGuardService],
+    component: RouteEditComponent
+  },
+  {
     path: '',
     redirectTo: 'routes/list', pathMatch: 'full'
   },
