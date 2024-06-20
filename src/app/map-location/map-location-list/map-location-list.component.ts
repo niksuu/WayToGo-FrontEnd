@@ -26,6 +26,7 @@ import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
+import {RouteService} from "../../route/route.service";
 
 @Component({
   selector: 'app-map-location-list',
@@ -58,6 +59,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   @ViewChild('info') infoWrapper: ElementRef;
   infoWrapperAnimationState: boolean;
 
+  userMode = false;
+
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
               private mapLocationService: MapLocationService,
@@ -65,11 +68,16 @@ export class MapLocationListComponent implements OnInit, OnChanges {
               private sanitizer: DomSanitizer,
               private screenSizeService: ScreenSizeService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private routeService: RouteService) { }
 
 
 
   ngOnInit(): void {
+    this.routeService.isUserMode(this.activatedRoute, this.router).subscribe(response => {
+      this.userMode = response;
+    })
+
     this.infoWrapperAnimationState = false;
     this.screenSizeService.isMobileVersion$.subscribe(isMobileVersion => {
       this.mobileVersion = isMobileVersion;
