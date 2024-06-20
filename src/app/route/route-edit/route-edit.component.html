@@ -4,8 +4,8 @@
       <!-- Wyświetlanie aktualnego zdjęcia na górze -->
       <div class="row" *ngIf="currentImageUrl">
         <div class="col-xs-12">
-          <div class="form-group text-center">
-            <img [src]="currentImageUrl" alt="Current Route Image" style="width: 400px; height: 300px; margin-bottom: 20px;">
+          <div class="form-group text-center img-responsive">
+            <img [src]="currentImageUrl" alt="Current Route Image" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
           </div>
         </div>
       </div>
