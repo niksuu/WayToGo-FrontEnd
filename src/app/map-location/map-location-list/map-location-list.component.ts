@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {MapLocationService} from "../map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {Route} from "../../route/route.model";
@@ -34,7 +44,7 @@ import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
   templateUrl: './map-location-list.component.html',
   styleUrl: './map-location-list.component.css'
 })
-export class MapLocationListComponent implements OnInit {
+export class MapLocationListComponent implements OnInit, OnChanges {
 
   @Input() route: Route;
   mapLocations: MapLocation[];
@@ -72,7 +82,15 @@ export class MapLocationListComponent implements OnInit {
       this.scrollToInfoWrapper();
     });
 
-    this.fetchMapLocations();
+    if (this.route) {
+      this.fetchMapLocations();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['route'] && changes['route'].currentValue) {
+      this.fetchMapLocations();
+    }
   }
 
   onMapLocationSelected(mapLocation: MapLocation) {

@@ -8,6 +8,7 @@ import { MapLocationService } from "../../map-location/map-location.service";
 import { Location, NgForOf, NgIf } from "@angular/common";
 import { maxPageSize } from "../../shared/http.config";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
 
 @Component({
   selector: 'app-route-edit',
@@ -15,7 +16,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   imports: [
     ReactiveFormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    MapLocationListComponent
   ],
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
