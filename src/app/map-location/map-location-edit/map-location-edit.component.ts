@@ -8,6 +8,8 @@ import {PointSelectMapService} from "../point-select-map/point-select-map.servic
 import {MapLocationService} from "../map-location.service";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {Audio} from "../../audio/audio.model";
+import {AudioService} from "../../audio/audio.service";
 
 @Component({
   selector: 'app-points-edit',
@@ -27,6 +29,8 @@ export class MapLocationEditComponent implements OnInit {
   lat: number | undefined;
   lng: number | undefined;
   selectedFile: File = null;
+  selectedAudioFile: File = null;
+  audioFiles: Audio[] = [];
   editMode = false;
   mapLocation: MapLocation;
   currentImageUrl: SafeUrl = null;
@@ -34,6 +38,7 @@ export class MapLocationEditComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private mapService: PointSelectMapService,
+              private audioService: AudioService,
               private mapLocationService: MapLocationService,
               private routeMapLocationService: RouteMapLocationService,
               private sanitizer: DomSanitizer) {
@@ -71,11 +76,59 @@ export class MapLocationEditComponent implements OnInit {
   }
 
 
+
+
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
+  }
+
+  uploadAudio(): void {
+    // Przygotowanie danych audio (bez pliku)
+    const newAudio: Audio = {
+      id: null, // Jeśli backend generuje id, zostaw null
+      name: this.mapLocationForm.get('name').value, // Pobierz nazwę z formularza
+      description: this.mapLocationForm.get('description').value, // Pobierz opis z formularza
+      user: null, // Ustaw odpowiedniego użytkownika, jeśli jest wymagane
+      mapLocation: this.mapLocation, // Ustaw odpowiednią lokalizację, jeśli jest wymagane
+      audioFilename: null // Nazwa pliku będzie ustawiona po przesłaniu pliku
+    };
+
+    // Wywołanie metody serwisowej do dodawania audio
+    this.audioService.postAudio(newAudio).subscribe(
+      (audio: Audio) => {
+        if (this.selectedAudioFile) {
+          this.audioService.uploadAudioFile(audio.id, this.selectedAudioFile).subscribe(
+            () => {
+              this.audioFiles.push(audio);
+              this.selectedAudioFile = null; // Zresetuj wybrany plik
+            },
+            (error) => {
+              console.error('Error uploading audio file:', error);
+            }
+          );
+        } else {
+          this.audioFiles.push(audio);
+        }
+      },
+      (error) => {
+        console.error('Error adding audio:', error);
+      }
+    );
+  }
+
+  deleteAudio(audioId: string) {
+    this.audioService.deleteAudio(audioId).subscribe(
+      () => {
+        this.audioFiles = this.audioFiles.filter(audio => audio.id !== audioId);
+      },
+      (error) => {
+        console.error('Error deleting audio:', error);
+      }
+    );
   }
 
   onSubmit() {

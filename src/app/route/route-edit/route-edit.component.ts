@@ -108,6 +108,9 @@ export class RouteEditComponent implements OnInit {
     }
   }
 
+
+
+
   onAddPoint() {
     this.router.navigate(['../../../point/new/' + this.id], { relativeTo: this.activatedRoute });
   }
