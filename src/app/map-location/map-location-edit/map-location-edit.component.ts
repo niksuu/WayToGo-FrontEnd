@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {NgIf, NgFor, CommonModule} from "@angular/common";
 import {MapLocation} from "../map-location.model";
 import {PointSelectMapComponent} from "../point-select-map/point-select-map.component";
 import {PointSelectMapService} from "../point-select-map/point-select-map.service";
@@ -10,6 +10,7 @@ import {RouteMapLocationService} from "../../route-map-location/route-map-locati
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Audio} from "../../audio/audio.model";
 import {AudioService} from "../../audio/audio.service";
+import {Page} from "../../shared/page.model";
 
 @Component({
   selector: 'app-points-edit',
@@ -17,10 +18,12 @@ import {AudioService} from "../../audio/audio.service";
   imports: [
     ReactiveFormsModule,
     NgIf,
+    NgFor,
+    CommonModule,
     PointSelectMapComponent,
   ],
   templateUrl: './map-location-edit.component.html',
-  styleUrl: './map-location-edit.component.css'
+  styleUrls: ['./map-location-edit.component.css']
 })
 export class MapLocationEditComponent implements OnInit {
   routeId: string;
@@ -49,35 +52,45 @@ export class MapLocationEditComponent implements OnInit {
       this.editMode = urlSegments.some(segment => segment.path === 'edit');
     });
 
-    if (!this.editMode) {
-      this.activatedRoute.params.subscribe(
-        (params: Params) => {
+    this.activatedRoute.params.subscribe(
+      (params: Params) => {
+        if (this.editMode) {
+          this.mapLocationId = params['pointId'];
+          this.initForm();
+          this.loadMapLocation(this.mapLocationId);
+          this.loadAudioFiles(this.mapLocationId);
+        } else {
           this.routeId = params['routeId'];
           this.initForm();
         }
-      )
-    } else {
-      this.activatedRoute.params.subscribe(
-        (params: Params) => {
-          this.mapLocationId = params['pointId'];
-          this.initForm();
-        }
-      )
-      this.initForm();
-    }
-
+      }
+    );
 
     this.mapService.markerSelectedEmitter.subscribe((position: { lat: number, lng: number }) => {
       this.mapLocationForm.patchValue({
         lat: position.lat,
         lng: position.lng
       });
-    })
+    });
   }
 
+  onAudioFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedAudioFile = input.files[0];
+    }
+  }
 
-
-
+  loadAudioFiles(mapLocationId: string) {
+    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, 10).subscribe(
+      (page: Page<Audio>) => {
+        this.audioFiles = page.content;
+      },
+      (error) => {
+        console.error('Error loading audio files:', error);
+      }
+    );
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -87,24 +100,22 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   uploadAudio(): void {
-    // Przygotowanie danych audio (bez pliku)
     const newAudio: Audio = {
-      id: null, // Jeśli backend generuje id, zostaw null
-      name: this.mapLocationForm.get('name').value, // Pobierz nazwę z formularza
-      description: this.mapLocationForm.get('description').value, // Pobierz opis z formularza
-      user: null, // Ustaw odpowiedniego użytkownika, jeśli jest wymagane
-      mapLocation: this.mapLocation, // Ustaw odpowiednią lokalizację, jeśli jest wymagane
-      audioFilename: null // Nazwa pliku będzie ustawiona po przesłaniu pliku
+      id: null,
+      name: this.mapLocationForm.get('name').value,
+      description: this.mapLocationForm.get('description').value,
+      user: null,
+      mapLocation: this.mapLocation,
+      audioFilename: null
     };
 
-    // Wywołanie metody serwisowej do dodawania audio
     this.audioService.postAudio(newAudio).subscribe(
       (audio: Audio) => {
         if (this.selectedAudioFile) {
           this.audioService.uploadAudioFile(audio.id, this.selectedAudioFile).subscribe(
             () => {
               this.audioFiles.push(audio);
-              this.selectedAudioFile = null; // Zresetuj wybrany plik
+              this.selectedAudioFile = null;
             },
             (error) => {
               console.error('Error uploading audio file:', error);
@@ -132,15 +143,14 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   onSubmit() {
-    let newMapLocation = {
+    const newMapLocation = {
       name: this.mapLocationForm.value.name,
       description: this.mapLocationForm.value.description,
       coordinates: {
         type: "Point",
         coordinates: [this.mapLocationForm.value.lat, this.mapLocationForm.value.lng]
       },
-    }
-
+    };
 
     if (this.editMode) {
       this.mapLocationService.putMapLocation(newMapLocation, this.mapLocationId)
@@ -153,7 +163,6 @@ export class MapLocationEditComponent implements OnInit {
           } else {
             this.goBack();
           }
-          //this.goBack();
         });
     } else {
       this.mapLocationService.postMapLocation(newMapLocation, this.routeId)
@@ -174,8 +183,6 @@ export class MapLocationEditComponent implements OnInit {
           }
         });
     }
-
-
   }
 
   goBack() {
@@ -184,7 +191,6 @@ export class MapLocationEditComponent implements OnInit {
     } else {
       this.router.navigate(['routes/' + this.routeId + '/edit']);
     }
-
   }
 
   private initForm() {
@@ -227,8 +233,28 @@ export class MapLocationEditComponent implements OnInit {
             console.error('Error fetching current image:', error);
             this.currentImageUrl = null;
           }
-        })
+        });
       });
     }
   }
+
+  private loadMapLocation(mapLocationId: string) {
+    this.mapLocationService.getMapLocationsById(mapLocationId).subscribe(
+      (response: MapLocation) => {
+        this.mapLocation = response;
+        this.mapLocationForm.patchValue({
+          name: this.mapLocation.name,
+          description: this.mapLocation.description,
+          lat: this.mapLocation.coordinates.coordinates[0],
+          lng: this.mapLocation.coordinates.coordinates[1]
+        });
+      },
+      (error) => {
+        console.error('Error loading map location:', error);
+      }
+    );
+  }
+
+
+
 }

@@ -83,19 +83,24 @@
             <app-point-select-map></app-point-select-map>
           </div>
         </div>
-        <form [formGroup]="mapLocationForm">
-          <!-- Formularz do dodawania nowego audio -->
-          <input type="file" (change)="onFileSelected($event)" accept=".mp3">
-          <button type="button" (click)="uploadAudio()">Upload Audio</button>
-        </form>
+        <div class="audio-list">
+          <div *ngFor="let audioItem of audioData">
+            <!--<audio controls *ngIf="audioItem.url">-->
+            <audio class="audio-file" controls>
+              <source [src]="audioItem.url" type="audio/mpeg"/>
+              Your browser does not support the audio element.
+            </audio>
+            <p>{{audioItem.audio.name}}
+            </p>
+          </div>
+        </div>
 
-        <!-- Lista audio z przyciskami do usuwania -->
-        <ul>
-          <li *ngFor="let audio of audioFiles">
-            {{ audio.name }}
-            <button type="button" (click)="deleteAudio(audio.id)">Delete</button>
-          </li>
-        </ul>
+        <!-- File input for audio -->
+        <label for="audioFile">Select audio file</label>
+        <input id="audioFile" type="file" (change)="onAudioFileSelected($event)">
+        <button type="button" (click)="uploadAudio()">Upload Audio</button>
+
+        <button type="submit" [disabled]="!mapLocationForm.valid">Save</button>
       </form>
     </div>
   </div>
