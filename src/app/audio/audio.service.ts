@@ -3,7 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/c
 import {backendUrl, maxPageSize} from "../shared/http.config";
 import {Page} from "../shared/page.model";
 import {MapLocation} from "../map-location/map-location.model";
-import {catchError, of, throwError} from "rxjs";
+import {catchError, Observable, of, throwError} from "rxjs";
 import {Audio} from "./audio.model";
 
 @Injectable({providedIn: 'root'})
@@ -21,6 +21,12 @@ export class AudioService {
     //get audio entries
     const url = `${backendUrl}/mapLocations/${mapLocation.id}/audios`;
     return this.http.get<Page<Audio>>(url, { params });
+  }
+
+
+  getAudioById(audioId: string): Observable<Audio> {
+    const url = `${backendUrl}/audios/${audioId}`;
+    return this.http.get<Audio>(url);
   }
 
 
@@ -65,6 +71,11 @@ export class AudioService {
     return this.http.delete(url).pipe(
       catchError(this.handleError)
     );
+  }
+
+  updateAudio(audio: Audio): Observable<Audio> {
+    const url = `${backendUrl}/audios/${audio.id}`;
+    return this.http.put<Audio>(url, audio);
   }
 
   private handleError(error: HttpErrorResponse) {

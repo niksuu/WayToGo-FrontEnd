@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router, RouterLink} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf, NgFor, CommonModule} from "@angular/common";
 import {MapLocation} from "../map-location.model";
@@ -22,6 +22,7 @@ import {maxPageSize} from "../../shared/http.config";
     NgFor,
     CommonModule,
     PointSelectMapComponent,
+    RouterLink,
   ],
   templateUrl: './map-location-edit.component.html',
   styleUrls: ['./map-location-edit.component.css']
@@ -129,7 +130,7 @@ export class MapLocationEditComponent implements OnInit {
       description: this.mapLocationForm.get('audioDescription').value,
       user: null,
       mapLocation: this.mapLocation,
-      audioFilename: null
+      audioFilename: this.mapLocationForm.get('audioName').value
     };
 
     this.audioService.postAudio(newAudio).subscribe(
@@ -154,17 +155,6 @@ export class MapLocationEditComponent implements OnInit {
     );
   }
 
-  deleteAudio(audioId: string) {
-    this.audioService.deleteAudio(audioId).subscribe(
-      () => {
-        this.audiosEntities = this.audiosEntities.filter(audio => audio.id !== audioId);
-        console.log('Audio deleted successfully');
-      },
-      (error) => {
-        console.error('Error deleting audio:', error);
-      }
-    );
-  }
 
   onSubmit() {
     const newMapLocation = {

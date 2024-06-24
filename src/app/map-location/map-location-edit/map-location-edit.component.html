@@ -106,18 +106,16 @@
       </form>
 
       <div class="audio-list">
-        <div *ngFor="let audioEntity of audiosEntities" class="audio-item">
-          <div *ngFor="let audioItem of audioData" class="audio-item">
-            <div class="audio-controls">
+        <div *ngFor="let audioItem of audioData" class="audio-item">
+          <div class="audio-controls">
+            <p>{{ audioItem.audio.name }}</p>
             <audio class="audio-file" controls>
-                <source [src]="audioItem.url" type="audio/mpeg" />
+              <source [src]="audioItem.url" type="audio/mpeg" />
               Your browser does not support the audio element.
-              </audio>
-              <p>{{ audioItem.audio.name }}</p>
-            </div>
-            <div class="delete-button">
-             <button type="button" class="btn btn-danger" (click)="deleteAudio(audioEntity.id)">Delete</button>
-            </div>
+            </audio>
+          </div>
+          <div class="edit-button">
+            <button type="button" class="btn btn-primary" [routerLink]="['/audio', audioItem.audio.id, 'edit']">Edit</button>
           </div>
         </div>
       </div>
