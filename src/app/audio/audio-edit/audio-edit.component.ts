@@ -76,13 +76,6 @@ export class AudioEditComponent implements OnInit {
   }
 
 
-  onAudioFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedAudioFile = input.files[0];
-    }
-  }
-
   loadMapLocation(mapLocationId: string) {
     this.mapLocationService.getMapLocationsById(mapLocationId).subscribe(
       (mapLocation: MapLocation) => {
