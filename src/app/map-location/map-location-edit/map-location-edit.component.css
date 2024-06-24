@@ -7,4 +7,31 @@
     height: 16vh;
   }
 
+  .audio-list {
+    margin-top: 20px;
+  }
+
+
+  .audio-item audio {
+    margin-right: 10px;
+  }
+
+  .audio-item p {
+    margin: 0 10px;
+  }
+
+  .audio-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .audio-controls {
+    flex: 1; /* Aby audio i jego opis zajmowały dostępną przestrzeń */
+  }
+
+  .delete-button {
+    margin-left: 10px; /* Miejsce na odstęp od audio controls */
+  }
+
 }
