@@ -11,6 +11,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Audio} from "../../audio/audio.model";
 import {AudioService} from "../../audio/audio.service";
 import {Page} from "../../shared/page.model";
+import {maxPageSize} from "../../shared/http.config";
 
 @Component({
   selector: 'app-points-edit',
@@ -33,7 +34,8 @@ export class MapLocationEditComponent implements OnInit {
   lng: number | undefined;
   selectedFile: File = null;
   selectedAudioFile: File = null;
-  audioFiles: Audio[] = [];
+  audiosEntities: Audio[] = [];
+  audioData: { audio: Audio, url: SafeUrl }[] = [];
   editMode = false;
   mapLocation: MapLocation;
   currentImageUrl: SafeUrl = null;
@@ -52,13 +54,18 @@ export class MapLocationEditComponent implements OnInit {
       this.editMode = urlSegments.some(segment => segment.path === 'edit');
     });
 
+
+
     this.activatedRoute.params.subscribe(
       (params: Params) => {
         if (this.editMode) {
           this.mapLocationId = params['pointId'];
+          this.mapLocationService.getMapLocationsById(this.mapLocationId).subscribe(response => {
+            this.mapLocation = response;
+          });
           this.initForm();
           this.loadMapLocation(this.mapLocationId);
-          this.loadAudioFiles(this.mapLocationId);
+          this.fetchMapLocationAudio(this.mapLocation);
         } else {
           this.routeId = params['routeId'];
           this.initForm();
@@ -81,15 +88,31 @@ export class MapLocationEditComponent implements OnInit {
     }
   }
 
-  loadAudioFiles(mapLocationId: string) {
-    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, 10).subscribe(
-      (page: Page<Audio>) => {
-        this.audioFiles = page.content;
-      },
-      (error) => {
-        console.error('Error loading audio files:', error);
-      }
-    );
+   fetchMapLocationAudio(mapLocation: MapLocation) {
+
+    this.audioService.getAudiosByMapLocation(mapLocation, 0, maxPageSize).subscribe(response => {
+      this.audiosEntities = response.content;
+
+      const audioPromises = this.audiosEntities.map((audio, index) => {
+        return this.audioService.getAudioFileByAudio(audio).toPromise()
+          .then(response => {
+            let audioUrl: SafeUrl = null;
+            if (response) {
+              const objectURL = URL.createObjectURL(response);
+              audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            }
+            this.audioData[index] = { audio: audio, url: audioUrl };
+          })
+          .catch(error => {
+            console.log("getaudio error", error);
+            this.audioData[index] = { audio: audio, url: null };
+          });
+      });
+
+      Promise.all(audioPromises).then(() => {
+        // All audio files fetched and URLs are set
+      });
+    });
   }
 
   onFileSelected(event: Event) {
@@ -102,8 +125,8 @@ export class MapLocationEditComponent implements OnInit {
   uploadAudio(): void {
     const newAudio: Audio = {
       id: null,
-      name: this.mapLocationForm.get('name').value,
-      description: this.mapLocationForm.get('description').value,
+      name: this.mapLocationForm.get('audioName').value,
+      description: this.mapLocationForm.get('audioDescription').value,
       user: null,
       mapLocation: this.mapLocation,
       audioFilename: null
@@ -114,7 +137,7 @@ export class MapLocationEditComponent implements OnInit {
         if (this.selectedAudioFile) {
           this.audioService.uploadAudioFile(audio.id, this.selectedAudioFile).subscribe(
             () => {
-              this.audioFiles.push(audio);
+              this.audiosEntities.push(audio);
               this.selectedAudioFile = null;
             },
             (error) => {
@@ -122,7 +145,7 @@ export class MapLocationEditComponent implements OnInit {
             }
           );
         } else {
-          this.audioFiles.push(audio);
+          this.audiosEntities.push(audio);
         }
       },
       (error) => {
@@ -134,7 +157,8 @@ export class MapLocationEditComponent implements OnInit {
   deleteAudio(audioId: string) {
     this.audioService.deleteAudio(audioId).subscribe(
       () => {
-        this.audioFiles = this.audioFiles.filter(audio => audio.id !== audioId);
+        this.audiosEntities = this.audiosEntities.filter(audio => audio.id !== audioId);
+        console.log('Audio deleted successfully');
       },
       (error) => {
         console.error('Error deleting audio:', error);
@@ -198,12 +222,16 @@ export class MapLocationEditComponent implements OnInit {
     let mapLocationDescription = '';
     let mapLocationLat = null;
     let mapLocationLng = null;
+    let audioName = '';
+    let audioDescription = '';
 
     this.mapLocationForm = new FormGroup({
       'name': new FormControl(mapLocationName, Validators.required),
       'description': new FormControl(mapLocationDescription),
       'lat': new FormControl(mapLocationLat, Validators.required),
       'lng': new FormControl(mapLocationLng, Validators.required),
+      'audioName': new FormControl(audioName, Validators.required),
+      'audioDescription': new FormControl(audioDescription)
     });
 
     if (this.editMode) {
@@ -234,6 +262,7 @@ export class MapLocationEditComponent implements OnInit {
             this.currentImageUrl = null;
           }
         });
+        this.fetchMapLocationAudio(this.mapLocation);
       });
     }
   }

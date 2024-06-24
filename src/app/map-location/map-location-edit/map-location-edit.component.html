@@ -17,7 +17,7 @@
             <button
               type="submit"
               class="btn btn-success"
-              [disabled]="mapLocationForm.invalid">Save
+              [disabled]="mapLocationForm.invalid" (click)="uploadAudio()">Save
             </button>
             <button
               type="button"
@@ -83,25 +83,44 @@
             <app-point-select-map></app-point-select-map>
           </div>
         </div>
-        <div class="audio-list">
-          <div *ngFor="let audioItem of audioData">
-            <!--<audio controls *ngIf="audioItem.url">-->
+        <div class="form-group">
+          <label for="audioFile">Add Audio File:</label>
+          <input type="file" id="audioFile" (change)="onAudioFileSelected($event)" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="name">Audio Name</label>
+          <input
+            type="text"
+            id="audio_name"
+            formControlName="audioName"
+            class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="description">Audio Description</label>
+          <textarea
+            id="Audio_description"
+            formControlName="audioDescription"
+            class="form-control"
+            rows="6"></textarea>
+        </div>
+      </form>
+
+      <div class="audio-list">
+        <div *ngFor="let audioEntity of audiosEntities" class="audio-item">
+          <div *ngFor="let audioItem of audioData" class="audio-item">
+            <div class="audio-controls">
             <audio class="audio-file" controls>
-              <source [src]="audioItem.url" type="audio/mpeg"/>
+                <source [src]="audioItem.url" type="audio/mpeg" />
               Your browser does not support the audio element.
-            </audio>
-            <p>{{audioItem.audio.name}}
-            </p>
+              </audio>
+              <p>{{ audioItem.audio.name }}</p>
+            </div>
+            <div class="delete-button">
+             <button type="button" class="btn btn-danger" (click)="deleteAudio(audioEntity.id)">Delete</button>
+            </div>
           </div>
         </div>
-
-        <!-- File input for audio -->
-        <label for="audioFile">Select audio file</label>
-        <input id="audioFile" type="file" (change)="onAudioFileSelected($event)">
-        <button type="button" (click)="uploadAudio()">Upload Audio</button>
-
-        <button type="submit" [disabled]="!mapLocationForm.valid">Save</button>
-      </form>
+      </div>
     </div>
   </div>
 </div>
