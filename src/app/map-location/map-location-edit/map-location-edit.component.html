@@ -83,11 +83,12 @@
             <app-point-select-map></app-point-select-map>
           </div>
         </div>
-        <div class="form-group">
+        <h2 class="audio-header">Audios</h2>
+        <div *ngIf="editMode" class="form-group">
           <label for="audioFile">Add Audio File:</label>
           <input type="file" id="audioFile" (change)="onAudioFileSelected($event)" class="form-control">
         </div>
-        <div class="form-group">
+        <div *ngIf="editMode"  class="form-group">
           <label for="name">Audio Name</label>
           <input
             type="text"
@@ -95,7 +96,7 @@
             formControlName="audioName"
             class="form-control">
         </div>
-        <div class="form-group">
+        <div *ngIf="editMode" class="form-group">
           <label for="description">Audio Description</label>
           <textarea
             id="Audio_description"

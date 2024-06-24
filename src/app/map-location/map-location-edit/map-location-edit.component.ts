@@ -220,7 +220,7 @@ export class MapLocationEditComponent implements OnInit {
       'description': new FormControl(mapLocationDescription),
       'lat': new FormControl(mapLocationLat, Validators.required),
       'lng': new FormControl(mapLocationLng, Validators.required),
-      'audioName': new FormControl(audioName, Validators.required),
+      'audioName': new FormControl(audioName),
       'audioDescription': new FormControl(audioDescription)
     });
 
