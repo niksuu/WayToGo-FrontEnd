@@ -24,6 +24,12 @@ export class AudioService {
   }
 
 
+  getAudioById(audioId: string): Observable<Audio> {
+    const url = `${backendUrl}/audios/${audioId}`;
+    return this.http.get<Audio>(url);
+  }
+
+
   getAudioFileByAudio(audio: Audio) {
     const url = `${backendUrl}/audios/${audio.id}/audio`;
     return this.http.get(url, { responseType: 'blob' }).pipe(

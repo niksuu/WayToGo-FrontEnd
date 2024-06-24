@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <form [formGroup]="audioForm" (ngSubmit)="onSubmit()">
+        <div class="col-xs-12">
+          <h2>{{ audio.name }}</h2>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-success" [disabled]="audioForm.invalid">Save</button>
+            <button type="button" class="btn btn-danger" (click)="goBack()">Cancel</button>
+            <button type="button" class="btn btn-danger" (click)="deleteAudio()">Delete</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" formControlName="description" class="form-control" rows="6"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="audioFile">Audio File</label>
+              <input type="file" id="audioFile" (change)="onAudioFileSelected($event)" accept="audio/*" class="form-control">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
