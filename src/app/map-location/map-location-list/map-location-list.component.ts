@@ -207,4 +207,10 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   onMapLocationEdit(mapLocationId: string) {
     this.router.navigate(['point/' + mapLocationId + '/edit'])
   }
+
+  onMapLocationDelete(mapLocationId: string) {
+    this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe( () => {
+      this.router.navigate(['yourRoutes/list'])
+    });
+  }
 }

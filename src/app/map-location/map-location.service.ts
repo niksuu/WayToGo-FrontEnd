@@ -1,14 +1,15 @@
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Page } from "../shared/page.model";
-import { MapLocation } from "./map-location.model";
-import { backendUrl } from "../shared/http.config";
-import {catchError, of} from "rxjs";
+import {Injectable} from "@angular/core";
+import {Page} from "../shared/page.model";
+import {MapLocation} from "./map-location.model";
+import {backendUrl} from "../shared/http.config";
+import {catchError, of, switchMap} from "rxjs";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class MapLocationService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getMapLocationsByRoute(pageNumber: number, pageSize: number, routeId: string) {
     let params = new HttpParams()
@@ -16,10 +17,10 @@ export class MapLocationService {
       .set('pageSize', pageSize.toString());
 
     const url = `${backendUrl}/routes/${routeId}/mapLocations`;
-    return this.http.get<Page<MapLocation>>(url, { params });
+    return this.http.get<Page<MapLocation>>(url, {params});
   }
 
-  getMapLocationsById( mapLocationId: string) {
+  getMapLocationsById(mapLocationId: string) {
     const url = `${backendUrl}/mapLocations/${mapLocationId}`;
     return this.http.get<MapLocation>(url);
   }
@@ -50,6 +51,21 @@ export class MapLocationService {
       })
     );
 
+  }
+
+  deleteMapLocationFromRoute(mapLocationId: string, routeId: string) {
+    let url = `${backendUrl}/mapLocation/${mapLocationId}/routeMapLocations`;
+    return this.http.get<any[]>(url).pipe(
+      switchMap(response => {
+        if (response.length === 1) {
+          url = `${backendUrl}/mapLocations/${mapLocationId}`;
+        } else {
+          const routeMapLocation = response.find(rML => rML.route.id === routeId);
+          url = `${backendUrl}/routeMapLocations/${routeMapLocation.id}`;
+        }
+        return this.http.delete(url);
+      })
+    );
   }
 
 
