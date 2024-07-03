@@ -11,6 +11,7 @@
       {{mapLocationData.mapLocation.name}}
       <p style="flex-grow: 1;"></p>
       <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocationData.mapLocation.id)">edit</button>
+      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocationData.mapLocation.id)">delete</button>
     </li>
 
     <!--https://github.com/filipows/angular-animations-->
