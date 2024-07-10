@@ -86,11 +86,12 @@ export class RouteListComponent {
   }
 
   onGetRoutesByName() {
+    this.currentPageNumber = 1;
     this.router.navigate(
       [],
       {
         relativeTo: this.activatedRoute,
-        queryParams: {routeName: this.routeNameToSearch},
+        queryParams: {page: this.currentPageNumber, routeName: this.routeNameToSearch},
         queryParamsHandling: 'merge',
       }
     );
@@ -99,7 +100,9 @@ export class RouteListComponent {
 
   onClearFilters() {
     this.routeNameToSearch = "";
+    this.currentPageNumber = 1;
     this.getRoutes();
+    this.onPageChanged()
   }
 
   showCurrentPageNumber() {
