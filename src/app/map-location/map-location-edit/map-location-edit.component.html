@@ -9,8 +9,11 @@
         </div>
       </div>
       <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
-        <div class="col-xs-12">
+        <div *ngIf="!editMode" class="col-xs-12">
           <h2>Adding New Point</h2>
+        </div>
+        <div *ngIf="editMode" class="col-xs-12">
+          <h2>Editing map location</h2>
         </div>
         <div class="row">
           <div class="col-xs-12">
