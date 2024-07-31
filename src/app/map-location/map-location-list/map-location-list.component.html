@@ -10,22 +10,38 @@
       <p style="flex-grow: 1; margin-left: 20px"></p>
       {{mapLocationData.mapLocation.name}}
       <p style="flex-grow: 1;"></p>
-      <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocationData.mapLocation.id)">edit</button>
-      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocationData.mapLocation.id)">delete</button>
+      <button class="btn btn-success" (click)="onAddToYourRoute(mapLocationData.mapLocation.id)">Add to your route
+      </button>
+      <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocationData.mapLocation.id)">
+        edit
+      </button>
+      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocationData.mapLocation.id)">
+        delete
+      </button>
     </li>
+
+    <li *ngIf="addingPointToRoute && addingPointToRouteId == mapLocationData.mapLocation.id"
+        class="list-group-item"
+        style="background-color: #c6c7d2;">
+      <app-route-list
+        [addingPointToRoute]=true
+        [addingPointToRouteId]="addingPointToRouteId"
+      ></app-route-list>
+    </li>
+
 
     <!--https://github.com/filipows/angular-animations-->
     <li *ngIf="activeMapLocationId == mapLocationData.mapLocation.id" class="list-group-item"
         style="background-color: #bdf2e9;" #info
         [@headShake]="infoWrapperAnimationState"
-    [ngClass]="{'animation' : infoWrapperAnimationState}">
+        [ngClass]="{'animation' : infoWrapperAnimationState}">
       <div class="map-location-grid-container">
         <div class="photo-wrap">
           <div class="photo">
             <img *ngIf="mapLocationData.url" [src]="mapLocationData.url">
           </div>
         </div>
-        <div class="info-wrap" >
+        <div class="info-wrap">
           <p style="text-align: center"><strong>Map Location info: </strong></p>
           <p>Name: {{mapLocationData.mapLocation.name}}</p>
           <p>Description: {{mapLocationData.mapLocation.description}}</p>

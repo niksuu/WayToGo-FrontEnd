@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf, NgIf} from "@angular/common";
@@ -8,6 +8,7 @@ import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
 import {FormsModule} from "@angular/forms";
+import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 
 
 @Component({
@@ -34,9 +35,13 @@ export class RouteListComponent {
   user = null;
   selectedRoute: Route;
 
+  @Input() addingPointToRoute: boolean = false;
+  @Input() addingPointToRouteId: string;
+
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private routeMapLocationService: RouteMapLocationService) {
   }
 
   ngOnInit() {
@@ -50,7 +55,6 @@ export class RouteListComponent {
         this.getRoutes();
       });
     });
-
 
   }
 
@@ -126,7 +130,7 @@ export class RouteListComponent {
 
   getRoutes() {
     this.validateQueryParams();
-    if (this.userMode) {
+    if (this.userMode || this.addingPointToRoute) {
       this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
         this.routes = response.content;
         this.totalPages = response.totalPages;
@@ -165,7 +169,7 @@ export class RouteListComponent {
 
   onRouteSelected(route: Route) {
     //double click lets you see the detials
-    if(route == this.selectedRoute) {
+    if(route == this.selectedRoute && !this.addingPointToRoute) {
       this.selectedRoute = null;
       this.router.navigate(['/yourRoutes', route.id]);
     }
@@ -173,5 +177,18 @@ export class RouteListComponent {
       this.selectedRoute = route;
     }
 
+    if (this.addingPointToRoute) {
+      this.addPointToRoute()
+    }
+  }
+
+  addPointToRoute() {
+    console.log("in addPointToRoute()")
+    if (confirm("You are about to add point to " + this.selectedRoute.name + " route.")) {
+      this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.addingPointToRouteId)
+        .subscribe( response => {
+          this.router.navigate(['../list'], {relativeTo: this.activatedRoute})
+        });
+    }
   }
 }

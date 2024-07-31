@@ -8,6 +8,7 @@ export class RouteMapLocationService {
   constructor(private http: HttpClient) {}
 
   postRouteMapLocation(routeId: string, mapLocationId: string) {
+    console.log("In postRouteMapLocation")
     let newRouteMapLocation = {
       mapLocation: {
         id: mapLocationId
@@ -17,6 +18,7 @@ export class RouteMapLocationService {
       },
       sequenceNr: 1
     }
+    console.log(newRouteMapLocation)
     const url = `${backendUrl}/routeMapLocations`
     return this.http.post(url, newRouteMapLocation)
   }
