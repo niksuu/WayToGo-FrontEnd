@@ -27,6 +27,7 @@ import { map } from 'rxjs/operators';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
 import {RouteService} from "../../route/route.service";
+import {RouteListComponent} from "../../route/route-list/route-list.component";
 
 @Component({
   selector: 'app-map-location-list',
@@ -37,6 +38,7 @@ import {RouteService} from "../../route/route.service";
     RouterLinkActive,
     NgClass,
     NgIf,
+    RouteListComponent,
 
   ],
   animations: [
@@ -60,6 +62,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   infoWrapperAnimationState: boolean;
 
   userMode = false;
+
+  addingPointToRoute = false;
+  addingPointToRouteId: string;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
@@ -218,5 +223,10 @@ export class MapLocationListComponent implements OnInit, OnChanges {
         );
       });
     }
+  }
+
+  onAddToYourRoute(mapLocationId: string) {
+    this.addingPointToRouteId = mapLocationId;
+    this.addingPointToRoute = true;
   }
 }
