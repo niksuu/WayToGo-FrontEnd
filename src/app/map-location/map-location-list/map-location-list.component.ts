@@ -227,6 +227,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
 
   onAddToYourRoute(mapLocationId: string) {
     this.addingPointToRouteId = mapLocationId;
-    this.addingPointToRoute = true;
+    this.addingPointToRoute = !this.addingPointToRoute;
   }
 }
