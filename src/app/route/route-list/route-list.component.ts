@@ -183,7 +183,6 @@ export class RouteListComponent {
   }
 
   addPointToRoute() {
-    console.log("in addPointToRoute()")
     if (confirm("You are about to add point to " + this.selectedRoute.name + " route.")) {
       this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.addingPointToRouteId)
         .subscribe( response => {
