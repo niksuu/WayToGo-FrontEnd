@@ -9,11 +9,8 @@
         </div>
       </div>
       <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
-        <div *ngIf="!editMode" class="col-xs-12">
+        <div class="col-xs-12">
           <h2>Adding New Point</h2>
-        </div>
-        <div *ngIf="editMode" class="col-xs-12">
-          <h2>Editing map location</h2>
         </div>
         <div class="row">
           <div class="col-xs-12">
@@ -87,23 +84,6 @@
           </div>
         </div>
       </form>
-      <div class="row">
-        <div class="col-xs-12">
-          <h3>Audio Files</h3>
-          <form [formGroup]="audioForm" (ngSubmit)="onSubmitAudio()">
-            <div class="form-group">
-              <label for="audioName">Audio Name</label>
-              <input type="text" id="audioName" formControlName="audioName" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="audioFile">Upload Audio</label>
-              <input type="file" id="audioFile" (change)="onAudioFileSelected($event)" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="audioForm?.invalid">Add Audio</button>
-          </form>
-          <app-audio-list [mapLocation]="mapLocation"></app-audio-list>
-        </div>
-      </div>
     </div>
   </div>
 </div>

@@ -11,6 +11,7 @@ import {RouteListComponent} from "./route/route-list/route-list.component";
 import {RegisterComponent} from "./user/register/register.component";
 import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
 import {AuthGuardService} from "./auth/auth-guard.service";
+import {AudioEditComponent} from "./audio/audio-edit/audio-edit.component";
 
 
 const routes: Routes = [
@@ -108,6 +109,11 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'routes/list', pathMatch: 'full'
+  },
+  {
+    path: 'audio/:id/edit', // Nowa ścieżka dla edycji audio
+    canActivate: [AuthGuardService],
+    component: AudioEditComponent
   },
 ];
 
