@@ -8,6 +8,10 @@ import {PointSelectMapService} from "../point-select-map/point-select-map.servic
 import {MapLocationService} from "../map-location.service";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {Audio} from "../../audio/audio.model";
+import {AudioService} from "../../audio/audio.service";
+import {maxPageSize} from "../../shared/http.config";
+import {AudioListComponent} from "../audio-list/audio-list.component";
 
 @Component({
   selector: 'app-points-edit',
@@ -16,6 +20,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
     ReactiveFormsModule,
     NgIf,
     PointSelectMapComponent,
+    AudioListComponent,
   ],
   templateUrl: './map-location-edit.component.html',
   styleUrl: './map-location-edit.component.css'
@@ -24,18 +29,23 @@ export class MapLocationEditComponent implements OnInit {
   routeId: string;
   mapLocationId: string;
   mapLocationForm: FormGroup;
+  audioForm: FormGroup;
   lat: number | undefined;
   lng: number | undefined;
   selectedFile: File = null;
   editMode = false;
   mapLocation: MapLocation;
   currentImageUrl: SafeUrl = null;
+  audiosEntities: Audio[] = [];
+  audioData: { audio: Audio, url: SafeUrl }[] = [];
+  selectedAudioFile: File = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private mapService: PointSelectMapService,
               private mapLocationService: MapLocationService,
               private routeMapLocationService: RouteMapLocationService,
+              private audioService: AudioService,
               private sanitizer: DomSanitizer) {
   }
 
@@ -43,6 +53,8 @@ export class MapLocationEditComponent implements OnInit {
     this.activatedRoute.url.subscribe(urlSegments => {
       this.editMode = urlSegments.some(segment => segment.path === 'edit');
     });
+
+    this.fetchAudioFiles();
 
     if (!this.editMode) {
       this.activatedRoute.params.subscribe(
@@ -76,6 +88,46 @@ export class MapLocationEditComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
+  }
+
+
+  onAudioFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedAudioFile = input.files[0];
+    }
+  }
+
+
+  uploadAudio(): void {
+    const newAudio: Audio = {
+      id: null,
+      name: this.audioForm.get('audioName').value,
+      user: null,
+      mapLocation: this.mapLocation,
+      audioFilename: this.audioForm.get('audioName').value
+    };
+
+    this.audioService.postAudio(newAudio).subscribe(
+      (audio: Audio) => {
+        if (this.selectedAudioFile) {
+          this.audioService.uploadAudioFile(audio.id, this.selectedAudioFile).subscribe(
+            () => {
+              this.audiosEntities.push(audio);
+              this.selectedAudioFile = null;
+            },
+            (error) => {
+              console.error('Error uploading audio file:', error);
+            }
+          );
+        } else {
+          this.audiosEntities.push(audio);
+        }
+      },
+      (error) => {
+        console.error('Error adding audio:', error);
+      }
+    );
   }
 
   onSubmit() {
@@ -125,6 +177,16 @@ export class MapLocationEditComponent implements OnInit {
 
   }
 
+  onSubmitAudio() {
+    // Obsługuje formularz audio
+    const audioFile = this.selectedAudioFile;
+
+    if (audioFile) {
+      // Upload audio
+      this.uploadAudio();
+    }
+  }
+
   goBack() {
     if (this.editMode) {
       this.router.navigate(['yourRoutes/list'])
@@ -146,6 +208,7 @@ export class MapLocationEditComponent implements OnInit {
       'lat': new FormControl(mapLocationLat, Validators.required),
       'lng': new FormControl(mapLocationLng, Validators.required),
     });
+
 
     if (this.editMode) {
       this.mapLocationService.getMapLocationsById(this.mapLocationId).subscribe(response => {
@@ -177,5 +240,48 @@ export class MapLocationEditComponent implements OnInit {
         })
       });
     }
+
+    this.audioForm = new FormGroup({
+      'audioName': new FormControl(''),
+      'audioFile': new FormControl('')
+    });
+  }
+
+  private fetchAudioFiles() {
+    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
+      this.audiosEntities = response.content;
+
+      const audioPromises = this.audiosEntities.map((audio, index) => {
+        return this.audioService.getAudioFileByAudio(audio).toPromise()
+          .then(response => {
+            let audioUrl: SafeUrl = null;
+            if (response) {
+              const objectURL = URL.createObjectURL(response);
+              audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            }
+            this.audioData[index] = {audio: audio, url: audioUrl};
+          })
+          .catch(error => {
+            console.log("getaudio error", error);
+            this.audioData[index] = {audio: audio, url: null};
+          });
+      });
+
+      Promise.all(audioPromises).then(() => {
+        // All audio files fetched and URLs are set
+      });
+    });
+  }
+
+  deleteAudio(audioId: string) {
+    this.audioService.deleteAudio(audioId).subscribe(
+      () => {
+        this.audiosEntities = this.audiosEntities.filter(audio => audio.id !== audioId);
+        console.log('Audio deleted successfully');
+      },
+      (error) => {
+        console.error('Error deleting audio:', error);
+      }
+    );
   }
 }

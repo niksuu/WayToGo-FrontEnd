@@ -1,0 +1,14 @@
+<ul class="list-group" style="padding: 5px">
+  <div *ngFor="let audioItem of audioData" style="margin-bottom: 5px">
+
+    <li class="list-group-item" style="display: flex; align-items: center; cursor: pointer;">
+      <span aria-hidden="true" class="glyphicon glyphicon-music"></span>
+      <p style="flex-grow: 1; margin-left: 20px">{{audioItem.audio.name}}</p>
+      <audio class="audio-file" controls style="margin-left: 10px;">
+        <source [src]="audioItem.url" type="audio/mpeg"/>
+        Your browser does not support the audio element.
+      </audio>
+      <button *ngIf="userMode" class="btn btn-danger btn-sm" (click)="deleteAudio(audioItem.audio.id)" style="margin-left: 10px;">Delete</button>
+    </li>
+  </div>
+</ul>
