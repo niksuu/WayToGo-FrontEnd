@@ -5,7 +5,6 @@ export class Audio {
   constructor(
     public id: string,
     public name: string,
-    public description: string,
     public user: User,
     public mapLocation: MapLocation,
     public audioFilename: String
