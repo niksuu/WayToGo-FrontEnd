@@ -8,6 +8,7 @@ import {PointSelectMapService} from "../point-select-map/point-select-map.servic
 import {MapLocationService} from "../map-location.service";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {AudioListComponent} from "../audio-list/audio-list.component";
 
 @Component({
   selector: 'app-points-edit',
@@ -16,6 +17,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
     ReactiveFormsModule,
     NgIf,
     PointSelectMapComponent,
+    AudioListComponent,
   ],
   templateUrl: './map-location-edit.component.html',
   styleUrl: './map-location-edit.component.css'

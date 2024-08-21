@@ -7,6 +7,7 @@ import {maxPageSize} from "../../shared/http.config";
 @Component({
   selector: 'app-audio-list',
   templateUrl: './audio-list.component.html',
+  standalone: true,
   styleUrls: ['./audio-list.component.css']
 })
 export class AudioListComponent implements OnInit {
