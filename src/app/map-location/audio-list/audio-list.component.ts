@@ -3,19 +3,17 @@ import { AudioService } from '../../audio/audio.service';
 import { Audio } from '../../audio/audio.model';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import {maxPageSize} from "../../shared/http.config";
-import {MapLocation} from "../map-location.model";
 
 @Component({
   selector: 'app-audio-list',
   templateUrl: './audio-list.component.html',
-  standalone: true,
   styleUrls: ['./audio-list.component.css']
 })
 export class AudioListComponent implements OnInit {
   @Input() mapLocation: any; // Assuming mapLocation is passed as input
   audioData: { audio: Audio, url: SafeUrl }[] = [];
-  userMode: boolean = true; // Assume user mode is enabled for demonstration
   audiosEntities: Audio[] = [];
+  userMode: boolean = true; // Assume user mode is enabled for demonstration
 
   constructor(private audioService: AudioService, private sanitizer: DomSanitizer) {}
 
@@ -23,7 +21,7 @@ export class AudioListComponent implements OnInit {
     this.fetchAudioFiles();
   }
 
-  private fetchAudioFiles() {
+  fetchAudioFiles(): void {
     this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
       this.audiosEntities = response.content;
 
@@ -35,11 +33,11 @@ export class AudioListComponent implements OnInit {
               const objectURL = URL.createObjectURL(response);
               audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
             }
-            this.audioData[index] = {audio: audio, url: audioUrl};
+            this.audioData[index] = { audio: audio, url: audioUrl };
           })
           .catch(error => {
             console.log("getaudio error", error);
-            this.audioData[index] = {audio: audio, url: null};
+            this.audioData[index] = { audio: audio, url: null };
           });
       });
 
