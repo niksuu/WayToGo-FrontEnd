@@ -149,7 +149,7 @@ export class MapComponent implements OnInit, OnDestroy {
         position,
         map: this.map.googleMap,
         icon: {
-          url: 'https://img.icons8.com/?size=100&id=VkCeX4Qax9iH&format=png&color=000000', // Ikona z literą 'M'
+          url: 'https://cdn.prod.website-files.com/62c5e0898dea0b799c5f2210/62e8212acc540f291431bad2_location-icon.png', // Ikona z literą 'M'
           scaledSize: new google.maps.Size(40, 40) // Rozmiar ikony
         }
       });
