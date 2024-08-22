@@ -143,14 +143,13 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-
   updateUserMarker(position: google.maps.LatLngLiteral) {
     if (!this.userMarker) {
       this.userMarker = new google.maps.Marker({
         position,
         map: this.map.googleMap,
         icon: {
-          url: 'https://www.seekpng.com/png/full/171-1716057_light-png-free-download-circle.png', // Ikona z literą 'M'
+          url: 'https://cdn.prod.website-files.com/62c5e0898dea0b799c5f2210/62e8212acc540f291431bad2_location-icon.png', // Ikona z literą 'M'
           scaledSize: new google.maps.Size(40, 40) // Rozmiar ikony
         }
       });
