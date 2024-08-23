@@ -55,6 +55,9 @@ export class MapComponent implements OnInit, OnDestroy {
   userMarker: google.maps.Marker | undefined;
   locationTrackingInterval: any;
 
+  directionsService: google.maps.DirectionsService;
+  directionsRenderer: google.maps.DirectionsRenderer;
+
   constructor(
     private sidePanelService: SidePanelService,
     private mapService: MapService,
@@ -106,6 +109,33 @@ export class MapComponent implements OnInit, OnDestroy {
 
     })
 
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer({
+      map: this.map.googleMap
+    });
+
+  }
+
+
+  calculateRoute(destination: google.maps.LatLngLiteral) {
+    if (this.directionsService && this.userMarker) {
+      const start = this.userMarker.getPosition().toJSON();
+
+      this.directionsService.route(
+        {
+          origin: start,
+          destination: destination,
+          travelMode: google.maps.TravelMode.WALKING, // Możesz zmienić na WALKING, BICYCLING, TRANSIT
+        },
+        (response, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            this.directionsRenderer.setDirections(response);
+          } else {
+            console.error('Błąd przy wyznaczaniu trasy: ' + status);
+          }
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -213,6 +243,17 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
     }
+
+    if (markerMapLocation) {
+      console.log("helo");
+      const destination = {
+        lat: markerMapLocation.coordinates.coordinates[0],
+        lng: markerMapLocation.coordinates.coordinates[1],
+      };
+
+      this.calculateRoute(destination);  // Wywołanie funkcji wyznaczania trasy
+    }
+
   }
 
   //helpers
