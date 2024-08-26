@@ -122,7 +122,6 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
 
   ngAfterViewInit(): void {
-    // Upewnij się, że mapa jest gotowa i przypisz renderer
     if (this.map && this.map.googleMap) {
       this.directionsRenderer.setMap(this.map.googleMap);
     } else {
@@ -132,17 +131,7 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
 
 
-  onCalculateRoute(mapLocation: MapLocation) {
-    if (this.userMarker) {
-      const destination = {
-        lat: mapLocation.coordinates.coordinates[0],
-        lng: mapLocation.coordinates.coordinates[1]
-      };
-      this.calculateRoute(destination);
-    } else {
-      console.error('Brak lokalizacji użytkownika.');
-    }
-  }
+
 
 
   calculateRoute(destination: google.maps.LatLngLiteral) {
