@@ -4,6 +4,8 @@ import {NgForOf, NgIf} from "@angular/common";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {MapService} from "../../shared/map/map.service";
 import {MapLocationService} from "../map-location.service";
+import {ModalService} from "../../shared/modal/modal.service";
+import {MapLocationModalComponent} from "../map-location-modal/map-location-modal.component";
 
 @Component({
   selector: 'app-map-location-info-window',
@@ -23,6 +25,7 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
 
   constructor( private sanitizer: DomSanitizer,
                private mapService: MapService,
+               private modalService: ModalService,
                private mapLocationService: MapLocationService) {
   }
 
@@ -52,5 +55,6 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
 
   onDetailsClick() {
     this.mapService.mapLocationDetailsEventEmitter.emit(this.mapLocation);
+    this.modalService.openModal(MapLocationModalComponent,  { data: 'Hello, World!' });
   }
 }
