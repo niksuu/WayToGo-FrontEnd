@@ -1,26 +1,26 @@
 <ul class="list-group" style="padding: 5px">
-  <div *ngFor="let mapLocationData of mapLocationsAndImages" style="margin-bottom: 5px">
+  <div *ngFor="let mapLocation of mapLocations" style="margin-bottom: 5px">
 
-    <li (click)="onMapLocationSelected(mapLocationData.mapLocation)"
-        [ngClass]="{'active' : activeMapLocationId == mapLocationData.mapLocation.id}"
+    <li (click)="onMapLocationSelected(mapLocation)"
+        [ngClass]="{'active' : activeMapLocationId == mapLocation.id}"
         class="list-group-item"
         style="cursor: pointer; display: flex; justify-content: center; align-items: center;">
 
       <span aria-hidden="true" class="glyphicon glyphicon-map-marker"></span>
       <p style="flex-grow: 1; margin-left: 20px"></p>
-      {{mapLocationData.mapLocation.name}}
+      {{mapLocation.name}}
       <p style="flex-grow: 1;"></p>
-      <button class="btn btn-success" (click)="onAddToYourRoute(mapLocationData.mapLocation.id)">Add to your route
+      <button class="btn btn-success" (click)="onAddToYourRoute(mapLocation.id)">Add to your route
       </button>
-      <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocationData.mapLocation.id)">
+      <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocation.id)">
         edit
       </button>
-      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocationData.mapLocation.id)">
+      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocation.id)">
         delete
       </button>
     </li>
 
-    <li *ngIf="addingPointToRoute && pointIdToBeAdded == mapLocationData.mapLocation.id"
+    <li *ngIf="addingPointToRoute && pointIdToBeAdded == mapLocation.id"
         class="list-group-item"
         style="background-color: #c6c7d2;">
       <app-route-list
@@ -30,34 +30,5 @@
     </li>
 
 
-    <!--https://github.com/filipows/angular-animations-->
-    <li *ngIf="activeMapLocationId == mapLocationData.mapLocation.id" class="list-group-item"
-        style="background-color: #bdf2e9;" #info
-        [@headShake]="infoWrapperAnimationState"
-        [ngClass]="{'animation' : infoWrapperAnimationState}">
-      <div class="map-location-grid-container">
-        <div class="photo-wrap">
-          <div class="photo">
-            <img *ngIf="mapLocationData.url" [src]="mapLocationData.url">
-          </div>
-        </div>
-        <div class="info-wrap">
-          <p style="text-align: center"><strong>Map Location info: </strong></p>
-          <p>Name: {{mapLocationData.mapLocation.name}}</p>
-          <p>Description: {{mapLocationData.mapLocation.description}}</p>
-        </div>
-        <div class="audio-list">
-          <div *ngFor="let audioItem of audioData">
-            <!--<audio controls *ngIf="audioItem.url">-->
-            <audio class="audio-file" controls>
-              <source [src]="audioItem.url" type="audio/mpeg"/>
-              Your browser does not support the audio element.
-            </audio>
-            <p>{{audioItem.audio.name}}
-            </p>
-          </div>
-        </div>
-      </div>
-    </li>
   </div>
 </ul>

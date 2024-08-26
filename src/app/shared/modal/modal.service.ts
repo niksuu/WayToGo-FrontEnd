@@ -21,16 +21,7 @@ export class ModalService {
     // Pass inputs to the content component if provided
     if (inputs) {
       Object.keys(inputs).forEach((key) => {
-
-        console.log(`${key}: ${inputs[key]} efw`);
-        contentComponentRef.instance[key] = inputs[key];
-        console.log(`${key}: ${inputs[key]}`);
-        contentComponentRef.setInput('data', "Hello");
-        if (contentComponentRef.instance[key] !== undefined) {
           contentComponentRef.instance[key] = inputs[key];
-          console.log(`${key}: ${inputs[key]}`);
-          contentComponentRef.setInput('data', "Hello");
-        }
       });
     }
 

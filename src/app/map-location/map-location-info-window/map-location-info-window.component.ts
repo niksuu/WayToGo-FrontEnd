@@ -54,7 +54,6 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
   }
 
   onDetailsClick() {
-    this.mapService.mapLocationDetailsEventEmitter.emit(this.mapLocation);
-    this.modalService.openModal(MapLocationModalComponent,  { data: 'Hello, World!' });
+    this.modalService.openModal(MapLocationModalComponent,  { mapLocation: this.mapLocation });
   }
 }

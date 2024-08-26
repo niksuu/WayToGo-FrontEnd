@@ -51,11 +51,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
 
   @Input() route: Route;
   mapLocations: MapLocation[];
-  mapLocationsAndImages: { mapLocation: MapLocation, url: SafeUrl }[] = [];
   activeMapLocationId: string;
 
-  audiosEntities: Audio[] = [];
-  audioData: { audio: Audio, url: SafeUrl }[] = [];
   mobileVersion: boolean;
 
   @ViewChild('info') infoWrapper: ElementRef;
@@ -69,8 +66,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
               private mapLocationService: MapLocationService,
-              private audioService: AudioService,
-              private sanitizer: DomSanitizer,
               private screenSizeService: ScreenSizeService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -93,7 +88,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
       this.onMapLocationSelected(mapLocation);
       this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
-      this.scrollToInfoWrapper();
+
     });
 
     if (this.route) {
@@ -108,7 +103,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onMapLocationSelected(mapLocation: MapLocation) {
-    //this.infoWrapperAnimationState = false;
+
 
     this.mapService.centerOnMapLocation.emit(mapLocation);
     if(this.activeMapLocationId == mapLocation.id) {
@@ -119,94 +114,16 @@ export class MapLocationListComponent implements OnInit, OnChanges {
       if (this.mobileVersion) {
         this.sidePanelService.togglePanelEventEmitter.emit(false);
       }
-      this.fetchMapLocationAudio(mapLocation);
     }
 
-    //this.scrollToInfoWrapper(); if we want to add animation on list item click
   }
 
-  //scroll to map location info and animate it
-  private scrollToInfoWrapper() {
-    setTimeout(() => {
-      if (this.infoWrapper) {
-        this.infoWrapper.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        this.infoWrapperAnimationState = false;
-        setTimeout(() => {
-          this.infoWrapperAnimationState = true;
-        }, 1);
-      } else {
-        console.error('infoWrapper  not available');
-      }
-    }, 1);
-  }
-
-  //fetch map locations and their images
   private fetchMapLocations() {
     this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
       .subscribe(response => {
         this.mapLocations = response.content;
-        this.loadImagesForMapLocations();
         this.mapService.routeSelectedEventEmitter.emit(this.mapLocations);
       });
-  }
-
-  //fetch images for map locations
-  private loadImagesForMapLocations() {
-    const imageRequests = this.mapLocations.map(ml => {
-      return this.mapLocationService.getMapLocationImageById(ml.id).pipe(
-        map(response => {
-          if (response) {
-            const objectURL = URL.createObjectURL(response);
-            const imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            return { mapLocation: ml, url: imageUrl };
-          } else {
-            return { mapLocation: ml, url: null };
-          }
-        })
-      );
-    });
-
-    //execute all requests concurrently and wait for their execution
-    forkJoin(imageRequests).subscribe({
-      next: (results) => {
-        this.mapLocationsAndImages = results;
-      },
-      error: (error) => {
-        console.error('Error loading images:', error);
-      }
-    });
-  }
-
-
-
-  private fetchMapLocationAudio(mapLocation: MapLocation) {
-    this.audiosEntities = [];
-    this.audioData = [];
-
-    this.audioService.getAudiosByMapLocation(mapLocation, 0, maxPageSize).subscribe(response => {
-      this.audiosEntities = response.content;
-
-      const audioPromises = this.audiosEntities.map((audio, index) => {
-        return this.audioService.getAudioFileByAudio(audio).toPromise()
-          .then(response => {
-            let audioUrl: SafeUrl = null;
-            if (response) {
-              const objectURL = URL.createObjectURL(response);
-              audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            }
-            this.audioData[index] = { audio: audio, url: audioUrl };
-          })
-          .catch(error => {
-            console.log("getaudio error", error);
-            this.audioData[index] = { audio: audio, url: null };
-          });
-      });
-
-      Promise.all(audioPromises).then(() => {
-        // All audio files fetched and URLs are set
-      });
-    });
   }
 
   onMapLocationEdit(mapLocationId: string) {
@@ -216,10 +133,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   onMapLocationDelete(mapLocationId: string) {
     if (confirm("You are about to delete map location. Do you want to continue?")) {
       this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe( () => {
-        this.mapLocations = this.mapLocations.filter(location => location.id !== mapLocationId);
-        this.mapLocationsAndImages = this.mapLocationsAndImages.filter(
-          locationData => locationData.mapLocation.id !== mapLocationId
-        );
+        this.fetchMapLocations();
       });
     }
   }
