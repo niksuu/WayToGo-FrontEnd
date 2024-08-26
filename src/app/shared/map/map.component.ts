@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, HostListener} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, HostListener, AfterViewInit} from '@angular/core';
 import { GoogleMapsModule, MapInfoWindow, MapMarker, MapDirectionsRenderer } from "@angular/google-maps";
 import { CommonModule } from "@angular/common";
 import { MapService } from "./map.service";
@@ -25,7 +25,7 @@ import {ScreenSizeService} from "../screen-size.service";
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
@@ -65,7 +65,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private router: Router,
     private screenSizeService: ScreenSizeService
   ) {
-
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
   }
 
   ngOnInit(): void {
@@ -109,27 +110,41 @@ export class MapComponent implements OnInit, OnDestroy {
 
     })
 
-    this.directionsService = new google.maps.DirectionsService();
-    this.directionsRenderer = new google.maps.DirectionsRenderer({
-      map: this.map.googleMap
-    });
+  }
 
+
+  ngAfterViewInit(): void {
+    // Upewnij się, że mapa jest gotowa i przypisz renderer
+    if (this.map && this.map.googleMap) {
+      this.directionsRenderer.setMap(this.map.googleMap);
+    } else {
+      console.error('Mapa nie jest gotowa, sprawdź inicjalizację mapy.');
+    }
   }
 
 
   calculateRoute(destination: google.maps.LatLngLiteral) {
-    if (this.directionsService && this.userMarker) {
-      const start = this.userMarker.getPosition().toJSON();
+    if (this.directionsService && this.map && this.map.googleMap) {
+      const start = { lat: this.userMarker.getPosition().lat(), lng: this.userMarker.getPosition().lng() };
 
       this.directionsService.route(
         {
           origin: start,
           destination: destination,
-          travelMode: google.maps.TravelMode.WALKING, // Możesz zmienić na WALKING, BICYCLING, TRANSIT
+          travelMode: google.maps.TravelMode.WALKING,
         },
         (response, status) => {
           if (status === google.maps.DirectionsStatus.OK) {
-            this.directionsRenderer.setDirections(response);
+            this.directionsRenderer.setOptions({
+              suppressMarkers: true,
+              polylineOptions: {
+                strokeColor: "#0000FF",
+                strokeOpacity: 0.5,
+                strokeWeight: 4
+              }
+            });
+            this.directionsRenderer.setDirections(response)
+
           } else {
             console.error('Błąd przy wyznaczaniu trasy: ' + status);
           }
