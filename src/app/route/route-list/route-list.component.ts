@@ -36,7 +36,7 @@ export class RouteListComponent {
   selectedRoute: Route;
 
   @Input() addingPointToRoute: boolean = false;
-  @Input() addingPointToRouteId: string;
+  @Input() pointIdToBeAdded: string;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
@@ -184,7 +184,7 @@ export class RouteListComponent {
 
   addPointToRoute() {
     if (confirm("You are about to add point to " + this.selectedRoute.name + " route.")) {
-      this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.addingPointToRouteId)
+      this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.pointIdToBeAdded)
         .subscribe( response => {
           this.router.navigate(['../list'], {relativeTo: this.activatedRoute})
         });

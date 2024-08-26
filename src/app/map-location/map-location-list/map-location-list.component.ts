@@ -64,7 +64,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   userMode = false;
 
   addingPointToRoute = false;
-  addingPointToRouteId: string;
+  pointIdToBeAdded: string;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
@@ -225,7 +225,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onAddToYourRoute(mapLocationId: string) {
-    this.addingPointToRouteId = mapLocationId;
+    this.pointIdToBeAdded = mapLocationId;
     this.addingPointToRoute = !this.addingPointToRoute;
   }
 }

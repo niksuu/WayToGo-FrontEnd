@@ -27,7 +27,7 @@ export class RouteMapLocationService {
           return this.http.post(url, newRouteMapLocation);
         } else {
           alert('This map Location is already in your route!')
-          return of(null); // Zwraca Observable z wartością `null`, gdy rekord już istnieje
+          return of(null);
         }
       })
     );

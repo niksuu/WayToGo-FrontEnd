@@ -20,12 +20,12 @@
       </button>
     </li>
 
-    <li *ngIf="addingPointToRoute && addingPointToRouteId == mapLocationData.mapLocation.id"
+    <li *ngIf="addingPointToRoute && pointIdToBeAdded == mapLocationData.mapLocation.id"
         class="list-group-item"
         style="background-color: #c6c7d2;">
       <app-route-list
         [addingPointToRoute]=true
-        [addingPointToRouteId]="addingPointToRouteId"
+        [pointIdToBeAdded]="pointIdToBeAdded"
       ></app-route-list>
     </li>
 
