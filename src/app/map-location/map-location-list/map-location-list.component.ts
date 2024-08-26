@@ -27,6 +27,7 @@ import { map } from 'rxjs/operators';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
 import {RouteService} from "../../route/route.service";
+import {RouteListComponent} from "../../route/route-list/route-list.component";
 
 @Component({
   selector: 'app-map-location-list',
@@ -37,6 +38,7 @@ import {RouteService} from "../../route/route.service";
     RouterLinkActive,
     NgClass,
     NgIf,
+    RouteListComponent,
 
   ],
   animations: [
@@ -60,6 +62,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   infoWrapperAnimationState: boolean;
 
   userMode = false;
+
+  addingPointToRoute = false;
+  pointIdToBeAdded: string;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
@@ -211,12 +216,16 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   onMapLocationDelete(mapLocationId: string) {
     if (confirm("You are about to delete map location. Do you want to continue?")) {
       this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe( () => {
-        //this.router.navigate(['yourRoutes/list'])
         this.mapLocations = this.mapLocations.filter(location => location.id !== mapLocationId);
         this.mapLocationsAndImages = this.mapLocationsAndImages.filter(
           locationData => locationData.mapLocation.id !== mapLocationId
         );
       });
     }
+  }
+
+  onAddToYourRoute(mapLocationId: string) {
+    this.pointIdToBeAdded = mapLocationId;
+    this.addingPointToRoute = !this.addingPointToRoute;
   }
 }
