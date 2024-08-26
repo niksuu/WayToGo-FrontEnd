@@ -41,6 +41,9 @@
             </p>
           </div>
         </div>
+        <div *ngIf="activeMapLocationId == mapLocationData.mapLocation.id" class="route-button-container">
+          <button *ngIf="mapLocations.length > 0" (click)="onCalculateRoute()">Wyznacz Trasę</button>
+        </div>
       </div>
     </li>
   </div>

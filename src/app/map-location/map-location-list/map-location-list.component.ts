@@ -219,4 +219,20 @@ export class MapLocationListComponent implements OnInit, OnChanges {
       });
     }
   }
+
+  onCalculateRoute() {
+    if (this.activeMapLocationId) {
+      // Znajdź lokalizację na podstawie activeMapLocationId
+      const selectedLocation = this.mapLocations.find(location => location.id === this.activeMapLocationId);
+      if (selectedLocation) {
+        const destination = selectedLocation.coordinates; // Zakładam, że używasz współrzędnych
+        this.mapService.mapLocationDetailsEventEmitter.emit(selectedLocation);
+      } else {
+        console.error('Selected location not found');
+      }
+    } else {
+      console.error('No active map location selected');
+    }
+  }
+
 }

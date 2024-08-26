@@ -87,6 +87,14 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
       this.handleRouteSelected(mapLocations);
     });
 
+    this.mapService.mapLocationDetailsEventEmitter.subscribe(mapLocation =>{
+      let trace: google.maps.LatLngLiteral = {
+        lat: mapLocation.coordinates.coordinates[0],
+        lng: mapLocation.coordinates.coordinates[1]
+      };
+      this.calculateRoute(trace)
+    })
+
     this.mapService.closeInfoWindow.subscribe(()=> {
       if(this.infoWindow != undefined) {
         this.infoWindow.close();
@@ -119,6 +127,20 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
       this.directionsRenderer.setMap(this.map.googleMap);
     } else {
       console.error('Mapa nie jest gotowa, sprawdź inicjalizację mapy.');
+    }
+  }
+
+
+
+  onCalculateRoute(mapLocation: MapLocation) {
+    if (this.userMarker) {
+      const destination = {
+        lat: mapLocation.coordinates.coordinates[0],
+        lng: mapLocation.coordinates.coordinates[1]
+      };
+      this.calculateRoute(destination);
+    } else {
+      console.error('Brak lokalizacji użytkownika.');
     }
   }
 

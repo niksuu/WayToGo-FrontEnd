@@ -8,4 +8,6 @@ export class MapService  {
   centerOnMapLocation = new EventEmitter<MapLocation>();
   mapLocationDetailsEventEmitter = new EventEmitter<MapLocation>();
   closeInfoWindow = new EventEmitter();
+
+
 }
