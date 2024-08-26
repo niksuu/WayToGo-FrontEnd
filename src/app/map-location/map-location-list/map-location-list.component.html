@@ -7,17 +7,34 @@
         style="cursor: pointer; display: flex; justify-content: center; align-items: center;">
 
       <span aria-hidden="true" class="glyphicon glyphicon-map-marker"></span>
+      <span> &nbsp; point: </span>
       <p style="flex-grow: 1; margin-left: 20px"></p>
       {{mapLocation.name}}
       <p style="flex-grow: 1;"></p>
-      <button class="btn btn-success" (click)="onAddToYourRoute(mapLocation.id)">Add to your route
+    </li>
+
+    <li class="list-group-item"
+        style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 20px;
+flex-wrap: wrap; background-color: #bdf2e9"
+        *ngIf="activeMapLocationId == mapLocation.id">
+
+      <button class="btn icon-button" (click)="onAddToYourRoute(mapLocation.id)">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+        <p>Add to your route</p>
       </button>
-      <button *ngIf="userMode" class="btn btn-primary" (click)="onMapLocationEdit(mapLocation.id)">
-        edit
+      <button class="btn icon-button" (click)="onMapLocationDetails(mapLocation)">
+        <span class="glyphicon glyphicon-info-sign"></span>
+        <p>details</p>
       </button>
-      <button *ngIf="userMode" class="btn btn-danger" (click)="onMapLocationDelete(mapLocation.id)">
-        delete
+      <button *ngIf="userMode" class="btn icon-button" (click)="onMapLocationEdit(mapLocation.id)">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <p>edit</p>
       </button>
+      <button *ngIf="userMode" class="btn icon-button" (click)="onMapLocationDelete(mapLocation.id)">
+        <span class="glyphicon glyphicon-trash"></span>
+        <p>delete</p>
+      </button>
+
     </li>
 
     <li *ngIf="addingPointToRoute && pointIdToBeAdded == mapLocation.id"

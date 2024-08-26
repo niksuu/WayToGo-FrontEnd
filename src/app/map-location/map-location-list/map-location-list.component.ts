@@ -28,6 +28,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
 import {RouteService} from "../../route/route.service";
 import {RouteListComponent} from "../../route/route-list/route-list.component";
+import {MapLocationModalComponent} from "../map-location-modal/map-location-modal.component";
+import {ModalService} from "../../shared/modal/modal.service";
 
 @Component({
   selector: 'app-map-location-list',
@@ -68,6 +70,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
               private mapLocationService: MapLocationService,
               private screenSizeService: ScreenSizeService,
               private router: Router,
+              private modalService: ModalService,
               private activatedRoute: ActivatedRoute,
               private routeService: RouteService) { }
 
@@ -141,5 +144,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   onAddToYourRoute(mapLocationId: string) {
     this.pointIdToBeAdded = mapLocationId;
     this.addingPointToRoute = !this.addingPointToRoute;
+  }
+
+  onMapLocationDetails(mapLocation: MapLocation) {
+    this.modalService.openModal(MapLocationModalComponent,  { mapLocation: mapLocation });
   }
 }
