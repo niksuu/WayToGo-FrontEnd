@@ -33,7 +33,7 @@
     <ul class="list-group">
       <li *ngFor="let routeIt of routes"
           [routerLinkActiveOptions]="{exact: true}"
-          [routerLink]="[routeIt.id]"
+          [routerLink]="!addingPointToRoute ? [ routeIt.id] : null"
           [queryParams]="{ page: currentPageNumber }"
           class="list-group-item"
           routerLinkActive="active"
