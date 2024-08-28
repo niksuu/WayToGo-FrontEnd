@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {MapLocation} from "../map-location.model";
 import {NgForOf, NgIf} from "@angular/common";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {MapService} from "../../shared/map/map.service";
 import {MapLocationService} from "../map-location.service";
 import {ModalService} from "../../shared/modal/modal.service";
 import {MapLocationModalComponent} from "../map-location-modal/map-location-modal.component";
@@ -23,10 +22,9 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
   imageUrl: SafeUrl = null;
 
 
-  constructor( private sanitizer: DomSanitizer,
-               private mapService: MapService,
-               private modalService: ModalService,
-               private mapLocationService: MapLocationService) {
+  constructor(private sanitizer: DomSanitizer,
+              private modalService: ModalService,
+              private mapLocationService: MapLocationService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,6 +52,6 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
   }
 
   onDetailsClick() {
-    this.modalService.openModal(MapLocationModalComponent,  { mapLocation: this.mapLocation });
+    this.modalService.openModal(MapLocationModalComponent, {mapLocation: this.mapLocation});
   }
 }

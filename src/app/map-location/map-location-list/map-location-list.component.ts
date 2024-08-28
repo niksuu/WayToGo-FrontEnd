@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Renderer2,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {MapLocationService} from "../map-location.service";
 import {maxPageSize} from "../../shared/http.config";
 import {Route} from "../../route/route.model";
@@ -18,14 +8,8 @@ import {RouteItemComponent} from "../../route/route-list/route-item/route-item.c
 import {ActivatedRoute, Router, RouterLinkActive} from "@angular/router";
 import {SidePanelService} from "../../shared/side-panel.service";
 import {MapService} from "../../shared/map/map.service";
-import {AudioService} from "../../audio/audio.service";
-import {Audio} from "../../audio/audio.model";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ScreenSizeService} from "../../shared/screen-size.service";
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {bounceInDownAnimation, headShakeAnimation} from "angular-animations";
+import {headShakeAnimation} from "angular-animations";
 import {RouteService} from "../../route/route.service";
 import {RouteListComponent} from "../../route/route-list/route-list.component";
 import {MapLocationModalComponent} from "../map-location-modal/map-location-modal.component";
@@ -41,7 +25,6 @@ import {ModalService} from "../../shared/modal/modal.service";
     NgClass,
     NgIf,
     RouteListComponent,
-
   ],
   animations: [
     headShakeAnimation()
@@ -72,8 +55,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
               private router: Router,
               private modalService: ModalService,
               private activatedRoute: ActivatedRoute,
-              private routeService: RouteService) { }
-
+              private routeService: RouteService) {
+  }
 
 
   ngOnInit(): void {
@@ -91,7 +74,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
       this.onMapLocationSelected(mapLocation);
       this.activeMapLocationId = mapLocation.id;
       this.sidePanelService.togglePanelEventEmitter.emit(true);
-
     });
 
     if (this.route) {
@@ -106,27 +88,15 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onMapLocationSelected(mapLocation: MapLocation) {
-
-
     this.mapService.centerOnMapLocation.emit(mapLocation);
-    if(this.activeMapLocationId == mapLocation.id) {
+    if (this.activeMapLocationId == mapLocation.id) {
       this.activeMapLocationId = null;
-    }
-    else {
+    } else {
       this.activeMapLocationId = mapLocation.id;
       if (this.mobileVersion) {
         this.sidePanelService.togglePanelEventEmitter.emit(false);
       }
     }
-
-  }
-
-  private fetchMapLocations() {
-    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
-      .subscribe(response => {
-        this.mapLocations = response.content;
-        this.mapService.routeSelectedEventEmitter.emit(this.mapLocations);
-      });
   }
 
   onMapLocationEdit(mapLocationId: string) {
@@ -135,7 +105,7 @@ export class MapLocationListComponent implements OnInit, OnChanges {
 
   onMapLocationDelete(mapLocationId: string) {
     if (confirm("You are about to delete map location. Do you want to continue?")) {
-      this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe( () => {
+      this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe(() => {
         this.fetchMapLocations();
       });
     }
@@ -147,6 +117,14 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onMapLocationDetails(mapLocation: MapLocation) {
-    this.modalService.openModal(MapLocationModalComponent,  { mapLocation: mapLocation });
+    this.modalService.openModal(MapLocationModalComponent, {mapLocation: mapLocation});
+  }
+
+  private fetchMapLocations() {
+    this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
+      .subscribe(response => {
+        this.mapLocations = response.content;
+        this.mapService.routeSelectedEventEmitter.emit(this.mapLocations);
+      });
   }
 }

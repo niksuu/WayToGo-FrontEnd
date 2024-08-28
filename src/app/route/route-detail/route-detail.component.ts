@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router, RouterLinkActive} from "@angular/router";
 import {RouteService} from "../route.service";
 import {Route} from "../route.model";
@@ -62,7 +62,6 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
       }
     );
   }
-
 
   ngOnDestroy() {
     this.mapService.clearAllMarkers.emit();

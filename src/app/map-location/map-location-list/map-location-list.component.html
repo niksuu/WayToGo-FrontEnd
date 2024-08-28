@@ -13,24 +13,24 @@
       <p style="flex-grow: 1;"></p>
     </li>
 
-    <li class="list-group-item"
+    <li *ngIf="activeMapLocationId == mapLocation.id"
+        class="list-group-item"
         style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 20px;
-flex-wrap: wrap; background-color: #bdf2e9"
-        *ngIf="activeMapLocationId == mapLocation.id">
+flex-wrap: wrap; background-color: #bdf2e9">
 
-      <button class="btn icon-button" (click)="onAddToYourRoute(mapLocation.id)">
+      <button (click)="onAddToYourRoute(mapLocation.id)" class="btn icon-button">
         <span class="glyphicon glyphicon-plus-sign"></span>
         <p>Add to your route</p>
       </button>
-      <button class="btn icon-button" (click)="onMapLocationDetails(mapLocation)">
+      <button (click)="onMapLocationDetails(mapLocation)" class="btn icon-button">
         <span class="glyphicon glyphicon-info-sign"></span>
         <p>details</p>
       </button>
-      <button *ngIf="userMode" class="btn icon-button" (click)="onMapLocationEdit(mapLocation.id)">
+      <button (click)="onMapLocationEdit(mapLocation.id)" *ngIf="userMode" class="btn icon-button">
         <span class="glyphicon glyphicon-pencil"></span>
         <p>edit</p>
       </button>
-      <button *ngIf="userMode" class="btn icon-button" (click)="onMapLocationDelete(mapLocation.id)">
+      <button (click)="onMapLocationDelete(mapLocation.id)" *ngIf="userMode" class="btn icon-button">
         <span class="glyphicon glyphicon-trash"></span>
         <p>delete</p>
       </button>

@@ -1,8 +1,6 @@
-import {Component, ElementRef, Input, OnInit, Renderer2} from "@angular/core";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {Component, Input, OnInit} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
-import {tadaAnimation} from "angular-animations";
-import {ModalService} from "../../shared/modal/modal.service";
 import {MapLocation} from "../map-location.model";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Audio} from "../../audio/audio.model";
@@ -21,8 +19,7 @@ import {maxPageSize} from "../../shared/http.config";
     NgForOf,
     NgIf
   ],
-  animations: [
-  ],
+  animations: [],
   templateUrl: './map-location-modal.component.html',
   styleUrl: './map-location-modal.component.css'
 })
@@ -44,7 +41,8 @@ export class MapLocationModalComponent implements OnInit {
               private screenSizeService: ScreenSizeService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
-              private routeService: RouteService) { }
+              private routeService: RouteService) {
+  }
 
   ngOnInit(): void {
 
@@ -90,11 +88,11 @@ export class MapLocationModalComponent implements OnInit {
               const objectURL = URL.createObjectURL(response);
               audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
             }
-            this.audioData[index] = { audio: audio, url: audioUrl };
+            this.audioData[index] = {audio: audio, url: audioUrl};
           })
           .catch(error => {
             console.log("getaudio error", error);
-            this.audioData[index] = { audio: audio, url: null };
+            this.audioData[index] = {audio: audio, url: null};
           });
       });
 

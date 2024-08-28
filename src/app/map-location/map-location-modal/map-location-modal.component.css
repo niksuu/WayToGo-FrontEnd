@@ -1,4 +1,4 @@
-.map-location-grid-container{
+.map-location-grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
@@ -15,7 +15,7 @@
 }
 
 .photo {
-  width:200px;
+  width: 200px;
   height: 200px;
   background-color: cadetblue;
   overflow: hidden;
