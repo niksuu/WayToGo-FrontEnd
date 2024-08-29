@@ -11,10 +11,11 @@
     <span *ngIf="!collapsed" aria-hidden="true" class="icon glyphicon glyphicon-menu-hamburger"></span>
   </div>-->
 
-  <i (click)="collapsed = !collapsed" *ngIf="!collapsed && mobileVersion" aria-hidden="true"
-     class="fa fa-close"></i>
-  <i (click)="collapsed = !collapsed" *ngIf="collapsed && mobileVersion" aria-hidden="true"
-     class="fa fa-hamburger"></i>
+
+  <i (click)="collapsed = !collapsed" *ngIf="!collapsed && mobileVersion"
+     class="fa fa-remove mobile-collapse-btn"></i>
+  <i (click)="collapsed = !collapsed" *ngIf="collapsed && mobileVersion"
+     class="fa fa-bars mobile-collapse-btn"></i>
 
 
   <ng-template #repeatableContent>

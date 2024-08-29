@@ -1,4 +1,3 @@
-
 .container {
   width: 100%;
   height: 100%;
@@ -78,10 +77,12 @@
 .area{
   background: #10898d;
   background: -webkit-linear-gradient(to left, #89ecda, #10898d);
-  width: 100%;
-  height:100%;
-
-
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
 }
 
 .circles{
