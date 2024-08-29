@@ -3,7 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {LogInComponent} from "./user/log-in/log-in.component";
 import {UserProfileComponent} from "./user/user-profile/user-profile.component";
 import {RoutesComponent} from "./route/routes/routes.component";
-import {UserRoutesComponent} from "./route/user-routes/user-routes.component";
 import {RouteDetailComponent} from "./route/route-detail/route-detail.component";
 import {RouteEditComponent} from "./route/route-edit/route-edit.component";
 import {RouteInfoComponent} from "./route/route-info/route-info.component";
