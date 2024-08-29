@@ -129,7 +129,7 @@ export class MapLocationEditComponent implements OnInit {
     if (this.editMode) {
       this.router.navigate(['yourRoutes/list'])
     } else {
-      this.router.navigate(['routes/' + this.routeId + '/edit']);
+      this.router.navigate(['yourRoutes/' + this.routeId + '/edit']);
     }
 
   }
