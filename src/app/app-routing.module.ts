@@ -69,11 +69,11 @@ const routes: Routes = [
       }
     ]
   },
-  {
-    path: 'routes/:id/edit',
-    canActivate: [AuthGuardService],
-    component: RouteEditComponent
-  },
+  // {
+  //   path: 'routes/:id/edit',
+  //   canActivate: [AuthGuardService],
+  //   component: RouteEditComponent
+  // },
   // {
   //   path: 'users/:id/routes',
   //   canActivate: [AuthGuardService],
