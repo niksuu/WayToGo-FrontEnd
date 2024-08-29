@@ -9,6 +9,7 @@ import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
 import {FormsModule} from "@angular/forms";
 import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
+import {tadaAnimation} from "angular-animations";
 
 
 @Component({
@@ -23,6 +24,9 @@ import {RouteMapLocationService} from "../../route-map-location/route-map-locati
     FormsModule,
     NgIf
   ],
+  animations: [
+    tadaAnimation()
+  ],
   templateUrl: './route-list.component.html',
   styleUrl: './route-list.component.css'
 })
@@ -34,6 +38,7 @@ export class RouteListComponent {
   public userMode: boolean;
   user = null;
   selectedRoute: Route;
+  animationState: boolean = true;
 
   @Input() addingPointToRoute: boolean = false;
   @Input() pointIdToBeAdded: string;
@@ -47,6 +52,10 @@ export class RouteListComponent {
   ngOnInit() {
     this.selectedRoute = null;
     this.activatedRoute.queryParams.subscribe(params => {
+
+
+
+
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
       this.routeNameToSearch = params['routeName'] ? params['routeName'] : null;
 
@@ -54,6 +63,10 @@ export class RouteListComponent {
         this.userMode = userMode;
         this.getRoutes();
       });
+
+
+
+
     });
 
   }
@@ -168,10 +181,18 @@ export class RouteListComponent {
   }
 
   onRouteSelected(route: Route) {
+
+    //animate icon
+    this.animationState = false;
+    setTimeout(() => {
+      this.animationState = true;
+    }, 1);
+
     //double click lets you see the detials
     if(route == this.selectedRoute && !this.addingPointToRoute) {
       this.selectedRoute = null;
-      this.router.navigate(['/yourRoutes', route.id]);
+      this.navigateToRoute(route);
+
     }
     else {
       this.selectedRoute = route;
@@ -179,6 +200,16 @@ export class RouteListComponent {
 
     if (this.addingPointToRoute) {
       this.addPointToRoute()
+    }
+
+
+  }
+
+  navigateToRoute(route:Route) {
+    if (this.userMode) {
+      this.router.navigate(['/yourRoutes/', route.id]);
+    } else {
+      this.router.navigate(['/routes/', route.id]);
     }
   }
 

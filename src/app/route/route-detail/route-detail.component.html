@@ -1,11 +1,9 @@
 <div
   style="height: 100%; width: 100%; padding: 2%; display: flex; flex-direction: column; justify-content: space-between">
 
-  <button (click)="goBack()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
-    go back
-  </button>
-  <button *ngIf="userMode" (click)="onEditRoute()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
-    edit route
+  <button *ngIf="userMode" (click)="onEditRoute()" class="btn icon-button" style="margin-left: auto;">
+    <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+    <p>edit route</p>
   </button>
 
   <div *ngIf="route" class="panel panel-default" style="flex-grow: 1; margin-top: 1.5rem; overflow: auto">
@@ -22,10 +20,12 @@
         <div class="card">
           <div class="card-body">
             <div style="text-align: center">
-              <h5 class="card-title">{{ route.name }}</h5>
+              <h5 class="card-title">route: {{ route.name }}</h5>
               <div class="user-container">
+
                 <span class="glyphicon glyphicon-user"></span>
-                {{route.user.username}}
+                author: &nbsp;
+                 {{route.user.username}}
               </div>
             </div>
             <div style=" overflow: auto; max-height: 70%">

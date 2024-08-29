@@ -37,10 +37,10 @@
 .user-property {
   color: white;
   font-weight: 600;
-  text-shadow: -2px 2px 0 #046169,
-  2px 2px 0 #046169,
-  2px -2px 0 #046169,
-  -2px -2px 0 #046169;
+  text-shadow: -1px 1px 0 #046169,
+  1px 1px 0 #046169,
+  1px -1px 0 #046169,
+  -1px -1px 0 #046169;
 }
 
 .glyphicon {

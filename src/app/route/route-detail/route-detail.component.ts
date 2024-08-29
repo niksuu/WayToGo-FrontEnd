@@ -1,14 +1,11 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router, RouterLinkActive} from "@angular/router";
 import {RouteService} from "../route.service";
 import {Route} from "../route.model";
-import {NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {RouteItemComponent} from "../route-list/route-item/route-item.component";
-import {MapLocationService} from "../../map-location/map-location.service";
-import {maxPageSize} from "../../shared/http.config";
 import {MapService} from "../../shared/map/map.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {Location} from '@angular/common';
 import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
 
 
@@ -35,7 +32,7 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
   userMode: boolean = false;
 
   constructor(private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private routeService: RouteService,
-              private mapService: MapService, private location: Location, private router: Router) {
+              private mapService: MapService, private router: Router) {
   }
 
   ngOnInit() {
@@ -64,10 +61,6 @@ export class RouteDetailComponent implements OnInit, OnDestroy {
         });
       }
     );
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 
   ngOnDestroy() {

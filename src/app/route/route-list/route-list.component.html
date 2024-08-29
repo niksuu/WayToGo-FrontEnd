@@ -39,11 +39,12 @@
           routerLinkActive="active"
           (click)="onRouteSelected(routeIt)"
           #rla="routerLinkActive">
-        <app-route-item [route]="routeIt"></app-route-item>
+        <app-route-item [route]="routeIt">
+        </app-route-item>
         <div *ngIf="rla.isActive">
-          <button class="btn route-button"
-                  [routerLink]="['/yourRoutes', routeIt.id]">
-            <span class="glyphicon glyphicon-info-sign"></span>
+          <button  [@tada]="animationState" class="btn route-button"
+                  (click)="navigateToRoute(routeIt)">
+            <span  class="glyphicon glyphicon-info-sign"></span>
           </button>
         </div>
       </li>

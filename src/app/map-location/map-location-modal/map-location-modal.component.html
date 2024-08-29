@@ -1,0 +1,23 @@
+<div class="map-location-grid-container">
+  <div class="photo-wrap">
+    <div class="photo">
+      <img *ngIf="mapLocationImageUrl" [src]="mapLocationImageUrl">
+    </div>
+  </div>
+  <div class="info-wrap">
+    <p style="text-align: center"><strong>Map Location info: </strong></p>
+    <p>Name: {{mapLocation.name}}</p>
+    <p>Description: {{mapLocation.description}}</p>
+  </div>
+  <div class="audio-list">
+    <div *ngFor="let audioItem of audioData">
+      <!--<audio controls *ngIf="audioItem.url">-->
+      <audio class="audio-file" controls>
+        <source [src]="audioItem.url" type="audio/mpeg"/>
+        Your browser does not support the audio element.
+      </audio>
+      <p>{{audioItem.audio.name}}
+      </p>
+    </div>
+  </div>
+</div>

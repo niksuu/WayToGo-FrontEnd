@@ -9,10 +9,6 @@ import {Route} from "../../route.model";
   templateUrl: './route-item.component.html',
   styleUrl: './route-item.component.css'
 })
-export class RouteItemComponent {
+export class RouteItemComponent{
   @Input() route: Route;
-
-  constructor() {
-  }
-
 }

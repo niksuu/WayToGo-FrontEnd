@@ -2,3 +2,24 @@
 html, body {
   height: 100%;
 }
+
+.icon-button {
+  height: 30px;
+  width: auto;
+  background-color: white;
+  color: #10898d;
+  margin-left: 10px;
+  font-size: 2.0rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #046169 1px solid;
+}
+
+.icon-button > p {
+  margin-left: 5px;
+  align-self: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
