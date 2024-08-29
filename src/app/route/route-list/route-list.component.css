@@ -2,7 +2,7 @@
 .list-group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 1rem 1rem
+  grid-gap: 1rem 1rem;
 }
 
 .list-group-item {
@@ -12,6 +12,19 @@
   align-items: center;
   height: 7dvh;
   cursor: pointer;
+
+}
+
+.list-group-item.active {
+  background-color: #10898d;
+  color: azure;
+  border: #046169 2px solid;
+}
+
+.list-group-item:focus {
+  outline: none;
+  background-color: #10898d;
+  color: azure;
 }
 
 .filter-btn {
@@ -50,23 +63,15 @@
 
 .page-nr {
   background-color: #10898d;
-  border: 2px solid #046169
+  border: 2px solid #046169;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .page-nr span {
   color: azure
-}
-
-
-.list-group-item.active {
-  background-color: #10898d;
-  color: azure;
-}
-
-.list-group-item:focus {
-  outline: none;
-  background-color: #10898d;
-  color: azure;
 }
 
 .route-button {
@@ -75,15 +80,34 @@
   background-color: white;
   color: #10898d;
   margin-left: 10px;
-  font-size: 2.5rem;
+  font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #046169 2px solid;
+  border-radius: 8px;
+}
+
+.searchbar-button {
+  background-color: #10898d;
+  height: 30px;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.searchbar-button > i {
+  margin-right: 10px;
+}
+
+* {
+  font-size: 0.8rem;
+}
+
 @media (max-width: 900px) {
   * {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .route-button span {

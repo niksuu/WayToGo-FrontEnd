@@ -43,7 +43,8 @@
   -1px -1px 0 #046169;
 }
 
-.glyphicon {
+.icon {
+  color: white;
   text-shadow: -2px 2px 0 #046169,
   2px 2px 0 #046169,
   2px -2px 0 #046169,
