@@ -17,8 +17,8 @@
             [ngClass]="{ 'left-panel-btn': !toggleSidePanel, 'right-panel-btn': toggleSidePanel }"
             class="panel-button">
       <strong> {{panelButtonContent}} </strong>
-      <i [ngClass]="{ 'arrow-right': !toggleSidePanel, 'arrow-left': toggleSidePanel }" class="arrow"></i>
-      <i [ngClass]="{ 'arrow-right': !toggleSidePanel, 'arrow-left': toggleSidePanel }" class="arrow"></i>
+      <i *ngIf="!toggleSidePanel" class="fa fa-angle-double-right" style="margin-left: 20px"></i>
+      <i *ngIf="toggleSidePanel" class="fa fa-angle-double-left"></i>
     </button>
   </div>
 </div>

@@ -6,7 +6,7 @@
         class="list-group-item"
         style="cursor: pointer; display: flex; justify-content: center; align-items: center;">
 
-      <span aria-hidden="true" class="glyphicon glyphicon-map-marker"></span>
+      <i class="fa fa-map-marker"></i>
       <span> &nbsp; point: </span>
       <p style="flex-grow: 1; margin-left: 20px"></p>
       {{mapLocation.name}}
@@ -18,20 +18,20 @@
         style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 20px;
 flex-wrap: wrap; background-color: #bdf2e9">
 
-      <button (click)="onAddToYourRoute(mapLocation.id)" class="btn icon-button">
-        <span class="glyphicon glyphicon-plus-sign"></span>
+      <button (click)="onAddToYourRoute(mapLocation.id)" class="icon-button">
+        <i class="fa fa-plus"></i>
         <p>Add to your route</p>
       </button>
-      <button (click)="onMapLocationDetails(mapLocation)" class="btn icon-button">
-        <span class="glyphicon glyphicon-info-sign"></span>
+      <button (click)="onMapLocationDetails(mapLocation)" class="icon-button">
+        <i class="fa fa-info-circle"></i>
         <p>details</p>
       </button>
-      <button (click)="onMapLocationEdit(mapLocation.id)" *ngIf="userMode" class="btn icon-button">
-        <span class="glyphicon glyphicon-pencil"></span>
+      <button (click)="onMapLocationEdit(mapLocation.id)" *ngIf="userMode" class="icon-button">
+        <i class="fa fa-pencil"></i>
         <p>edit</p>
       </button>
-      <button (click)="onMapLocationDelete(mapLocation.id)" *ngIf="userMode" class="btn icon-button">
-        <span class="glyphicon glyphicon-trash"></span>
+      <button (click)="onMapLocationDelete(mapLocation.id)" *ngIf="userMode" class="icon-button">
+        <i class="fa fa-trash"> </i>
         <p>delete</p>
       </button>
 

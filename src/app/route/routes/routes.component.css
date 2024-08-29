@@ -32,16 +32,18 @@
   background-color: #10898d;
   border: #046169 3px solid;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .right-panel-btn {
   left: -3px;
-  width: 50px;
 }
 
 .left-panel-btn {
   left: -3px;
-  width: 100px;
 }
 
 .side-panel-visible {

@@ -1,10 +1,10 @@
 <div [routerLink]="['/routes', routeId]"
      class="panel panel-default wrapper background-animation"
-     style="color: azure; background-color: #046169; cursor: pointer">
+     style="color: azure; background-color: #046169; cursor: pointer; margin-bottom: 20px;
+padding: 10px">
   <div class="panel-body">
     <div class="flex-container" >
       <div *ngIf="route" class="flex-item">{{route.name}}</div>
     </div>
-
   </div>
 </div>
