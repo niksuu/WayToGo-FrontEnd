@@ -1,0 +1,16 @@
+<div [@bounceInDown]="appearAnimationState"
+     [@bounceOutUp]="disappearAnimationState"
+     class="snackbar-container alert "
+     [ngClass]="type"
+     role="alert"
+     [ngStyle]="{'visibility': hideSnackbar ? 'hidden' : 'visible'}">
+  <div class="snackbar-message">
+    {{message}}
+  </div>
+  <div>
+    <button (click)="closeSnackbar()">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+</div>
+

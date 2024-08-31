@@ -59,4 +59,11 @@ export class RouteInfoComponent  implements OnInit{
   }
 
 
+  onRouteInfoClick() {
+    if (this.userMode) {
+      this.router.navigate(['/yourRoutes/', this.route.id]);
+    } else {
+      this.router.navigate(['/routes/', this.route.id]);
+    }
+  }
 }

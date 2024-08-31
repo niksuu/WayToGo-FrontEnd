@@ -1,0 +1,15 @@
+.snackbar-container {
+    position: absolute;
+    left: 25vw;
+    width: 50vw;
+    top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 7;
+}
+
+.snackbar-message {
+    flex-grow: 1;
+    text-align: center;
+}
