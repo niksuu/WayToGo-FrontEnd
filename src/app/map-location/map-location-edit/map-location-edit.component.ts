@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule, NgIf} from "@angular/common";
@@ -26,6 +26,7 @@ import {maxPageSize} from "../../shared/http.config";
   styleUrl: './map-location-edit.component.css'
 })
 export class MapLocationEditComponent implements OnInit {
+  @ViewChild('audioFileInput') audioFileInput: ElementRef;
   routeId: string;
   mapLocationId: string;
   mapLocationForm: FormGroup;
@@ -38,7 +39,7 @@ export class MapLocationEditComponent implements OnInit {
   currentImageUrl: SafeUrl = null;
   audiosEntities: Audio[] = [];
   audioData: { audio: Audio, url: SafeUrl }[] = [];
-  selectedAudioFile: File = null;
+  selectedAudioFile: File | null = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -190,12 +191,15 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   onSubmitAudio() {
-    if (this.selectedAudioFile!=null) {
+    const audioFile = this.selectedAudioFile;
+    if (audioFile) {
       this.uploadAudio();
-    }
-    else{
+    } else {
       alert('Please select an audio file to upload.');
     }
+
+    // Resetowanie inputa
+    this.audioFileInput.nativeElement.value = '';
   }
 
   goBack() {

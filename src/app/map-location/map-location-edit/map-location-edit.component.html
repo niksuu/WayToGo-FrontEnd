@@ -113,7 +113,7 @@
         </div>
         <div class="form-group">
           <label for="audioFile">Upload Audio</label>
-          <input type="file" id="audioFile" (change)="onAudioFileSelected($event)" class="form-control">
+          <input type="file" id="audioFile" #audioFileInput (change)="onAudioFileSelected($event)" class="form-control">
         </div>
           <button type="submit" class="btn btn-primary" [disabled]="audioForm.invalid">Add Audio</button>
       </form>
