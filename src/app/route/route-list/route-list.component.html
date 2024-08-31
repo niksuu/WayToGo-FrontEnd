@@ -4,14 +4,14 @@
     <button
       (click)="onAddNewRoute()" class="filter-btn">
       <i class="fa fa-plus filter-btn"></i>
-      new route
+      &nbsp; new route
     </button>
     <div style="display: flex; flex-grow: 1">
       <input
         type="text"
         [(ngModel)]="routeNameToSearch"
         class="input-sm"
-        style="flex: 1 1;">
+        style="flex: 1 1; border: #046169 2px solid">
 
       <button class="filter-btn" (click)="onClearFilters()">
         <i class="fa fa-remove"></i>
@@ -20,7 +20,7 @@
     <button
       class="filter-btn" (click)="onGetRoutesByName()">
       <i class="fa fa-search"></i>
-      search
+      &nbsp; search
     </button>
 
   </div>

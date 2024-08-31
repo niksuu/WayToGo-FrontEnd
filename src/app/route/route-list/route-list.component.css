@@ -12,7 +12,7 @@
   align-items: center;
   height: 7dvh;
   cursor: pointer;
-
+  border: grey 1px solid;
 }
 
 .list-group-item.active {
@@ -34,11 +34,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 0px
-}
-
-.filter-btn > i {
-  margin-right: 10px
 }
 
 .flex-container {
