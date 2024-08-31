@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {CommonModule, NgIf} from "@angular/common";
 import {MapLocation} from "../map-location.model";
 import {PointSelectMapComponent} from "../point-select-map/point-select-map.component";
 import {PointSelectMapService} from "../point-select-map/point-select-map.service";
@@ -11,16 +11,16 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Audio} from "../../audio/audio.model";
 import {AudioService} from "../../audio/audio.service";
 import {maxPageSize} from "../../shared/http.config";
-import {AudioListComponent} from "../audio-list/audio-list.component";
+
 
 @Component({
   selector: 'app-points-edit',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     NgIf,
     PointSelectMapComponent,
-    AudioListComponent,
   ],
   templateUrl: './map-location-edit.component.html',
   styleUrl: './map-location-edit.component.css'
@@ -54,13 +54,14 @@ export class MapLocationEditComponent implements OnInit {
       this.editMode = urlSegments.some(segment => segment.path === 'edit');
     });
 
-    this.fetchAudioFiles();
+
 
     if (!this.editMode) {
       this.activatedRoute.params.subscribe(
         (params: Params) => {
           this.routeId = params['routeId'];
           this.initForm();
+          this.initForm2();
         }
       )
     } else {
@@ -68,11 +69,14 @@ export class MapLocationEditComponent implements OnInit {
         (params: Params) => {
           this.mapLocationId = params['pointId'];
           this.initForm();
+          this.initForm2();
         }
       )
       this.initForm();
+      this.initForm2();
     }
 
+    this.fetchMapLocationAudio();
 
     this.mapService.markerSelectedEmitter.subscribe((position: { lat: number, lng: number }) => {
       this.mapLocationForm.patchValue({
@@ -80,6 +84,9 @@ export class MapLocationEditComponent implements OnInit {
         lng: position.lng
       });
     })
+
+
+
   }
 
 
@@ -115,6 +122,7 @@ export class MapLocationEditComponent implements OnInit {
             () => {
               this.audiosEntities.push(audio);
               this.selectedAudioFile = null;
+              this.ngOnInit();
             },
             (error) => {
               console.error('Error uploading audio file:', error);
@@ -122,12 +130,15 @@ export class MapLocationEditComponent implements OnInit {
           );
         } else {
           this.audiosEntities.push(audio);
+          this.ngOnInit();
         }
       },
       (error) => {
         console.error('Error adding audio:', error);
       }
     );
+
+    this.fetchMapLocationAudio();
   }
 
   onSubmit() {
@@ -178,12 +189,12 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   onSubmitAudio() {
-    // Obsługuje formularz audio
     const audioFile = this.selectedAudioFile;
-
     if (audioFile) {
-      // Upload audio
       this.uploadAudio();
+    }
+    else{
+      alert('Please select an audio file to upload.');
     }
   }
 
@@ -241,34 +252,48 @@ export class MapLocationEditComponent implements OnInit {
       });
     }
 
+  }
+
+  private initForm2(){
+
+    let audioName = '';
+
     this.audioForm = new FormGroup({
-      'audioName': new FormControl(''),
-      'audioFile': new FormControl('')
+      'audioName': new FormControl(audioName,Validators.required),
     });
   }
 
-  private fetchAudioFiles() {
-    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
-      this.audiosEntities = response.content;
+  private fetchMapLocationAudio() {
 
-      const audioPromises = this.audiosEntities.map((audio, index) => {
-        return this.audioService.getAudioFileByAudio(audio).toPromise()
-          .then(response => {
-            let audioUrl: SafeUrl = null;
-            if (response) {
-              const objectURL = URL.createObjectURL(response);
-              audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            }
-            this.audioData[index] = {audio: audio, url: audioUrl};
-          })
-          .catch(error => {
-            console.log("getaudio error", error);
-            this.audioData[index] = {audio: audio, url: null};
-          });
-      });
 
-      Promise.all(audioPromises).then(() => {
-        // All audio files fetched and URLs are set
+    this.mapLocationService.getMapLocationsById(this.mapLocationId).subscribe(response => {
+      this.mapLocation = response;
+
+      this.audiosEntities = [];
+      this.audioData = [];
+
+      this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
+        this.audiosEntities = response.content;
+
+        const audioPromises = this.audiosEntities.map((audio, index) => {
+          return this.audioService.getAudioFileByAudio(audio).toPromise()
+            .then(response => {
+              let audioUrl: SafeUrl = null;
+              if (response) {
+                const objectURL = URL.createObjectURL(response);
+                audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+              }
+              this.audioData[index] = {audio: audio, url: audioUrl};
+            })
+            .catch(error => {
+              console.log("getaudio error", error);
+              this.audioData[index] = {audio: audio, url: null};
+            });
+        });
+
+        Promise.all(audioPromises).then(() => {
+          // All audio files fetched and URLs are set
+        });
       });
     });
   }
@@ -277,10 +302,25 @@ export class MapLocationEditComponent implements OnInit {
     this.audioService.deleteAudio(audioId).subscribe(
       () => {
         this.audiosEntities = this.audiosEntities.filter(audio => audio.id !== audioId);
+        this.audioData = this.audioData.filter(item => item.audio.id !== audioId);
         console.log('Audio deleted successfully');
+        this.fetchMapLocationAudio();
       },
       (error) => {
         console.error('Error deleting audio:', error);
+      }
+    );
+  }
+
+  saveAudioName(audioItem: any) {
+
+    this.audioService.updateAudio(audioItem.audio).subscribe(
+      () => {
+        console.log('Audio name updated successfully');
+        this.fetchMapLocationAudio();
+      },
+      (error) => {
+        console.error('Error updating audio name:', error);
       }
     );
   }

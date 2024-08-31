@@ -40,11 +40,6 @@ export class AudioService {
     );
   }
 
-  getAudioById(audioId: string): Observable<Audio> {
-    const url = `${backendUrl}/audios/${audioId}`;
-    return this.http.get<Audio>(url);
-  }
-
   postAudio(audio: Audio) {
     const url = `${backendUrl}/audios`;
     return this.http.post<Audio>(url, audio).pipe(
