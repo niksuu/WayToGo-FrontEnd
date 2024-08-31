@@ -1,9 +1,7 @@
-<div [@bounceInDown]="appearAnimationState"
-     [@bounceOutUp]="disappearAnimationState"
+<div [@moveDiv]="animationState"
      class="snackbar-container alert "
      [ngClass]="type"
-     role="alert"
-     [ngStyle]="{'visibility': hideSnackbar ? 'hidden' : 'visible'}">
+     role="alert">
   <div class="snackbar-message">
     {{message}}
   </div>
