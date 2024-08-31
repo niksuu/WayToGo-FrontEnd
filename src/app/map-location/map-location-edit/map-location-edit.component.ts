@@ -130,6 +130,7 @@ export class MapLocationEditComponent implements OnInit {
           );
         } else {
           this.audiosEntities.push(audio);
+          this.selectedAudioFile = null;
           this.ngOnInit();
         }
       },
@@ -189,8 +190,7 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   onSubmitAudio() {
-    const audioFile = this.selectedAudioFile;
-    if (audioFile) {
+    if (this.selectedAudioFile!=null) {
       this.uploadAudio();
     }
     else{
