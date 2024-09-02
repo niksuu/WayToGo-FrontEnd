@@ -40,6 +40,7 @@ export class MapLocationEditComponent implements OnInit {
   audiosEntities: Audio[] = [];
   audioData: { audio: Audio, url: SafeUrl }[] = [];
   selectedAudioFile: File | null = null;
+  temporaryAudioData: { audio: Audio, url: SafeUrl,file: File }[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -73,8 +74,6 @@ export class MapLocationEditComponent implements OnInit {
           this.initForm2();
         }
       )
-      this.initForm();
-      this.initForm2();
     }
 
     this.fetchMapLocationAudio();
@@ -184,6 +183,7 @@ export class MapLocationEditComponent implements OnInit {
                 this.goBack();
               });
           }
+          this.uploadTemporaryAudios(response);
         });
     }
 
@@ -193,14 +193,30 @@ export class MapLocationEditComponent implements OnInit {
   onSubmitAudio() {
     const audioFile = this.selectedAudioFile;
     if (audioFile) {
-      this.uploadAudio();
+      if(this.editMode) {
+        this.uploadAudio();
+      } else {
+        const objectURL = URL.createObjectURL(this.selectedAudioFile);
+        const safeUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+
+        const newTempAudio: Audio = {
+          id: null,
+          name: this.audioForm.get('audioName').value,
+          user: null,
+          mapLocation: null,  // MapLocation jeszcze nie istnieje
+          audioFilename: this.selectedAudioFile.name
+        };
+
+        this.temporaryAudioData.push({ audio: newTempAudio, url: safeUrl,file:audioFile});
+        this.selectedAudioFile = null;
+      }
     } else {
       alert('Please select an audio file to upload.');
     }
 
-    // Resetowanie inputa
     this.audioFileInput.nativeElement.value = '';
   }
+
 
   goBack() {
     if (this.editMode) {
@@ -259,9 +275,7 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   private initForm2(){
-
     let audioName = '';
-
     this.audioForm = new FormGroup({
       'audioName': new FormControl(audioName,Validators.required),
     });
@@ -296,10 +310,39 @@ export class MapLocationEditComponent implements OnInit {
         });
 
         Promise.all(audioPromises).then(() => {
-          // All audio files fetched and URLs are set
         });
       });
     });
+  }
+
+
+  uploadTemporaryAudios(mapLocation: MapLocation) {
+    this.temporaryAudioData.forEach((audioItem) => {
+      const audioToSave = { ...audioItem.audio, mapLocation: mapLocation };
+      this.audioService.postAudio(audioToSave).subscribe(
+        (audio: Audio) => {
+          if (audioItem.url) {
+            this.audioService.uploadAudioFile(audio.id, audioItem.file).subscribe(
+              () => {
+                console.log('Audio file uploaded successfully.');
+              },
+              (error) => {
+                console.error('Error uploading audio file:', error);
+              }
+            );
+          }
+        },
+        (error) => {
+          console.error('Error saving audio:', error);
+        }
+      );
+    });
+
+    this.temporaryAudioData = [];
+  }
+
+  deleteTemporaryAudio(audioItem: { audio: Audio, url: SafeUrl }) {
+    this.temporaryAudioData = this.temporaryAudioData.filter(item => item !== audioItem);
   }
 
   deleteAudio(audioId: string) {
@@ -316,16 +359,4 @@ export class MapLocationEditComponent implements OnInit {
     );
   }
 
-  saveAudioName(audioItem: any) {
-
-    this.audioService.updateAudio(audioItem.audio).subscribe(
-      () => {
-        console.log('Audio name updated successfully');
-        this.fetchMapLocationAudio();
-      },
-      (error) => {
-        console.error('Error updating audio name:', error);
-      }
-    );
-  }
 }

@@ -91,8 +91,8 @@
         <div class="row">
           <div class="col-xs-12">
             <h3 class="mb-4">Audio Files</h3>
-            <div class="audio-list">
-              <div *ngFor="let audioItem of audioData" class="audio-item mb-3 p-3 border rounded shadow-sm">
+            <div *ngIf="editMode" class="audio-list">
+              <div  *ngFor="let audioItem of audioData" class="audio-item mb-3 p-3 border rounded shadow-sm">
                 <h6 class="audio-name text-dark mb-2">
                   {{ audioItem.audio.name }}
                 </h6>
@@ -101,6 +101,20 @@
                   Your browser does not support the audio element.
                 </audio>
                 <button type="button" class="btn btn-danger btn-sm" (click)="deleteAudio(audioItem.audio.id)">
+                  Delete
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!editMode" class="audio-list">
+              <div *ngFor="let audioItem of temporaryAudioData" class="audio-item mb-3 p-3 border rounded shadow-sm">
+                <h6 class="audio-name text-dark mb-2">
+                  {{ audioItem.audio.name }}
+                </h6>
+                <audio class="audio-file w-100 mb-2" controls>
+                  <source [src]="audioItem.url" type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+                <button type="button" class="btn btn-danger btn-sm" (click)="deleteTemporaryAudio(audioItem)">
                   Delete
                 </button>
               </div>

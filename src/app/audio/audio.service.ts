@@ -45,7 +45,7 @@ export class AudioService {
     return this.http.post<Audio>(url, audio).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error adding audio:', error);
-        throw error; // Przekaż dalej błąd do obsługi w komponencie
+        throw error;
       })
     );
   }
