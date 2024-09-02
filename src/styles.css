@@ -2,3 +2,44 @@
 html, body {
   height: 100%;
 }
+
+
+@media (max-width: 1000px) {
+  * {
+    font-size: 0.9rem;
+  }
+}
+
+
+@media (min-width: 1001px) and (max-width: 2000px) {
+  * {
+    font-size: 0.9rem;
+  }
+}
+
+
+@media (min-width: 2001px) {
+  * {
+    font-size: 1.5rem;
+  }
+}
+
+.icon-button {
+  width: auto;
+  background-color: white;
+  color: #10898d;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #046169 1px solid;
+}
+
+.icon-button > p {
+  margin-left: 5px;
+  align-self: center;
+  margin-top: 0;
+  margin-bottom: 0;
+
+}
+

@@ -1,31 +1,37 @@
 <div
   style="height: 100%; width: 100%; padding: 2%; display: flex; flex-direction: column; justify-content: space-between">
 
-  <button (click)="goBack()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
-    go back
-  </button>
-  <button *ngIf="userMode" (click)="onEditRoute()" class="btn btn-primary" style="width: 100%; background-color: #10898d">
-    edit route
+  <button *ngIf="userMode" (click)="onEditRoute()" class="icon-button" style="margin-left: auto;">
+    <i class="fa fa-pencil"></i>
+    <p>edit route</p>
   </button>
 
   <div *ngIf="route" class="panel panel-default" style="flex-grow: 1; margin-top: 1.5rem; overflow: auto">
     <div class="panel-body">
-      <div class="col-md-offset-3 col-md-6">
-        <img *ngIf="routeImage" [src]="routeImage" class="img-rounded"
-             style="object-fit: contain; width: 100%; height: 100%;"/>
-        <img *ngIf="!routeImage" class="img-rounded"
-             src="https://beckers.pl/sites/default/files/styles/scale_crop_extra_large_800_800/public/color_resources/%23B1B1AF.png?itok=tP2DjoTr"
-             style="object-fit: contain; width: 100%; height: 100%;"/>
+
+      <div class="row" style="width: 100%">
+        <div class="col-md-6 offset-md-3">
+
+          <img *ngIf="routeImage" [src]="routeImage" class="img-rounded"
+               style="object-fit: contain; width: 100%; height: 100%;"/>
+          <img *ngIf="!routeImage" class="img-rounded"
+               src="https://beckers.pl/sites/default/files/styles/scale_crop_extra_large_800_800/public/color_resources/%23B1B1AF.png?itok=tP2DjoTr"
+               style="object-fit: contain; width: 100%; height: 100%;"/>
+
+        </div>
       </div>
+
 
       <div class="col-md-12 info-card" style="margin-top:10px; height: 50%">
         <div class="card">
           <div class="card-body">
             <div style="text-align: center">
-              <h5 class="card-title">{{ route.name }}</h5>
+              <h5 class="card-title">route: {{ route.name }}</h5>
               <div class="user-container">
-                <span class="glyphicon glyphicon-user"></span>
-                {{route.user.username}}
+
+                <i class="fa fa-user"> </i>
+                &nbsp;&nbsp; author: &nbsp;
+                 {{route.user.username}}
               </div>
             </div>
             <div style=" overflow: auto; max-height: 70%">

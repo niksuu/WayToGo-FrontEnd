@@ -1,2 +1,22 @@
+.center-button {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
 
+  background-color: white;
+  color: dimgrey;
+  border: none;
+  border-radius: 2px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  cursor: pointer;
+}
+
+.center-button:hover {
+  color: black;
+}

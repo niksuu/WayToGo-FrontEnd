@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
 import {NgForOf, NgIf} from "@angular/common";
@@ -8,6 +8,8 @@ import {MapLocationService} from "../../map-location/map-location.service";
 import {MapService} from "../../shared/map/map.service";
 import {defaultPageSize} from "../../shared/http.config";
 import {FormsModule} from "@angular/forms";
+import {RouteMapLocationService} from "../../route-map-location/route-map-location.service";
+import {tadaAnimation} from "angular-animations";
 
 
 @Component({
@@ -22,6 +24,9 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     NgIf
   ],
+  animations: [
+    tadaAnimation()
+  ],
   templateUrl: './route-list.component.html',
   styleUrl: './route-list.component.css'
 })
@@ -33,15 +38,24 @@ export class RouteListComponent {
   public userMode: boolean;
   user = null;
   selectedRoute: Route;
+  animationState: boolean = true;
+
+  @Input() addingPointToRoute: boolean = false;
+  @Input() pointIdToBeAdded: string;
 
   constructor(private routeService: RouteService, private mapLocationService: MapLocationService,
               private mapService: MapService, private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private routeMapLocationService: RouteMapLocationService) {
   }
 
   ngOnInit() {
     this.selectedRoute = null;
     this.activatedRoute.queryParams.subscribe(params => {
+
+
+
+
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
       this.routeNameToSearch = params['routeName'] ? params['routeName'] : null;
 
@@ -49,8 +63,11 @@ export class RouteListComponent {
         this.userMode = userMode;
         this.getRoutes();
       });
-    });
 
+
+
+
+    });
 
   }
 
@@ -126,7 +143,7 @@ export class RouteListComponent {
 
   getRoutes() {
     this.validateQueryParams();
-    if (this.userMode) {
+    if (this.userMode || this.addingPointToRoute) {
       this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
         this.routes = response.content;
         this.totalPages = response.totalPages;
@@ -164,14 +181,44 @@ export class RouteListComponent {
   }
 
   onRouteSelected(route: Route) {
+
+    //animate icon
+    this.animationState = false;
+    setTimeout(() => {
+      this.animationState = true;
+    }, 1);
+
     //double click lets you see the detials
-    if(route == this.selectedRoute) {
+    if(route == this.selectedRoute && !this.addingPointToRoute) {
       this.selectedRoute = null;
-      this.router.navigate(['/yourRoutes', route.id]);
+      this.navigateToRoute(route);
+
     }
     else {
       this.selectedRoute = route;
     }
 
+    if (this.addingPointToRoute) {
+      this.addPointToRoute()
+    }
+
+
+  }
+
+  navigateToRoute(route:Route) {
+    if (this.userMode) {
+      this.router.navigate(['/yourRoutes/', route.id]);
+    } else {
+      this.router.navigate(['/routes/', route.id]);
+    }
+  }
+
+  addPointToRoute() {
+    if (confirm("You are about to add point to " + this.selectedRoute.name + " route.")) {
+      this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.pointIdToBeAdded)
+        .subscribe( response => {
+          this.router.navigate(['../list'], {relativeTo: this.activatedRoute})
+        });
+    }
   }
 }
