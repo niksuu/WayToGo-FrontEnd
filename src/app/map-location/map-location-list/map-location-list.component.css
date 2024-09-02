@@ -15,15 +15,7 @@
     "info-wrap audio-list";
 
 
-  .route-button-container {
-    margin-top: 10px;
-    text-align: center;
-  }
 
-  .route-button-container .btn {
-    background-color: #28a745; /* Zielony kolor dla przycisku */
-    color: white;
-  }
 }
 
 .photo-wrap {

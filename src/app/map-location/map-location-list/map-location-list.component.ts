@@ -221,17 +221,19 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onCalculateRoute() {
-    if (this.activeMapLocationId) {
-      const selectedLocation = this.mapLocations.find(location => location.id === this.activeMapLocationId);
-      if (selectedLocation) {
-        const destination = selectedLocation.coordinates;
-        this.mapService.mapLocationDetailsEventEmitter.emit(selectedLocation);
-      } else {
-        console.error('Selected location not found');
-      }
-    } else {
+    if (!this.activeMapLocationId) {
       console.error('No active map location selected');
+      return;
     }
+
+    const selectedLocation = this.mapLocations.find(location => location.id === this.activeMapLocationId);
+    if (!selectedLocation) {
+      console.error('Selected location not found');
+      return;
+    }
+
+    const destination = selectedLocation.coordinates;
+    this.mapService.mapLocationDetailsEventEmitter.emit(selectedLocation);
   }
 
 }

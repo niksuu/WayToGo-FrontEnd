@@ -58,6 +58,10 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
 
+  routeUpdateInterval: any;
+  selectedDestination: google.maps.LatLngLiteral;
+
+
   constructor(
     private sidePanelService: SidePanelService,
     private mapService: MapService,
@@ -122,11 +126,12 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
 
   ngAfterViewInit(): void {
-    if (this.map && this.map.googleMap) {
-      this.directionsRenderer.setMap(this.map.googleMap);
-    } else {
-      console.error('Mapa nie jest gotowa, sprawdź inicjalizację mapy.');
+    if (!this.map && !this.map.googleMap) {
+      console.error('Map is not ready,check the initialization');
+      return;
     }
+
+    this.directionsRenderer.setMap(this.map.googleMap);
   }
 
 
@@ -148,6 +153,7 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
           if (status === google.maps.DirectionsStatus.OK) {
             this.directionsRenderer.setOptions({
               suppressMarkers: true,
+              preserveViewport: true,   //keeping actual user zoom on map
               polylineOptions: {
                 strokeColor: "#0000FF",
                 strokeOpacity: 0.5,
@@ -156,11 +162,35 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
             });
             this.directionsRenderer.setDirections(response)
 
+
+            this.startRouteUpdateInterval(destination);
           } else {
-            console.error('Błąd przy wyznaczaniu trasy: ' + status);
+            console.error('Trace error: ' + status);
           }
         }
       );
+    }
+  }
+
+  updateRoute() {
+    if (!this.selectedDestination) return;
+    console.log("Trace update");
+    this.calculateRoute(this.selectedDestination);
+  }
+
+  startRouteUpdateInterval(destination: google.maps.LatLngLiteral) {
+    this.clearRouteUpdateInterval();
+
+    this.selectedDestination = destination;
+    this.routeUpdateInterval = setInterval(() => {
+      this.updateRoute();
+    }, 15000); // 15 sec actualization
+  }
+
+  clearRouteUpdateInterval() {
+    if (this.routeUpdateInterval) {
+      clearInterval(this.routeUpdateInterval);
+      this.routeUpdateInterval = null;
     }
   }
 
@@ -171,7 +201,7 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
   startLocationTracking() {
     this.locationTrackingInterval = setInterval(() => {
       this.getCurrentLocation(false); // Update location without centering
-    }, 5000); // Aktualizacja co 5 sekund
+    }, 5000); // 5 sec actualization
   }
 
   stopLocationTracking() {
@@ -270,15 +300,6 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
     }
 
-    if (markerMapLocation) {
-      console.log("helo");
-      const destination = {
-        lat: markerMapLocation.coordinates.coordinates[0],
-        lng: markerMapLocation.coordinates.coordinates[1],
-      };
-
-      this.calculateRoute(destination);  // Wywołanie funkcji wyznaczania trasy
-    }
 
   }
 
