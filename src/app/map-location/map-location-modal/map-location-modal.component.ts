@@ -9,6 +9,7 @@ import {ScreenSizeService} from "../../shared/screen-size.service";
 import {maxPageSize} from "../../shared/http.config";
 import {SnackbarService} from "../../shared/snackbar/snackbar.service";
 import {SnackbarType} from "../../shared/snackbar/snackbar-type";
+import {MapService} from "../../shared/map/map.service";
 
 @Component({
   selector: 'app-modal',
@@ -34,6 +35,7 @@ export class MapLocationModalComponent implements OnInit {
   constructor(
               private mapLocationService: MapLocationService,
               private audioService: AudioService,
+              private mapService: MapService,
               private sanitizer: DomSanitizer,
               private screenSizeService: ScreenSizeService,
               private snackbarService: SnackbarService) {
@@ -99,5 +101,16 @@ export class MapLocationModalComponent implements OnInit {
 
   tmpOnClick() {
     this.snackbarService.displaySnackbar("This is my message to the world", SnackbarType.DARK);
+  }
+
+  onCalculateRoute() {
+
+    const selectedLocation: MapLocation = {
+      name: this.mapLocation.name,
+      id: this.mapLocation.id,
+      coordinates: this.mapLocation.coordinates
+    };
+
+    this.mapService.mapLocationDetailsEventEmitter.emit(selectedLocation);
   }
 }

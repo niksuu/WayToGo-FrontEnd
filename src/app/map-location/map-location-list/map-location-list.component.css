@@ -17,6 +17,9 @@
   grid-template-areas:
     "photo-wrap audio-list"
     "info-wrap audio-list";
+
+
+
 }
 
 .photo-wrap {
@@ -109,3 +112,5 @@
   }
 
 }
+
+

@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, HostListener} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, HostListener, AfterViewInit} from '@angular/core';
 import { GoogleMapsModule, MapInfoWindow, MapMarker, MapDirectionsRenderer } from "@angular/google-maps";
 import { CommonModule } from "@angular/common";
 import { MapService } from "./map.service";
@@ -25,7 +25,7 @@ import {ScreenSizeService} from "../screen-size.service";
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
@@ -55,6 +55,13 @@ export class MapComponent implements OnInit, OnDestroy {
   userMarker: google.maps.Marker | undefined;
   locationTrackingInterval: any;
 
+  directionsService: google.maps.DirectionsService;
+  directionsRenderer: google.maps.DirectionsRenderer;
+
+  routeUpdateInterval: any;
+  selectedDestination: google.maps.LatLngLiteral;
+
+
   constructor(
     private sidePanelService: SidePanelService,
     private mapService: MapService,
@@ -62,7 +69,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private router: Router,
     private screenSizeService: ScreenSizeService
   ) {
-
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
   }
 
   ngOnInit(): void {
@@ -82,6 +90,14 @@ export class MapComponent implements OnInit, OnDestroy {
     this.mapService.routeSelectedEventEmitter.subscribe(mapLocations => {
       this.handleRouteSelected(mapLocations);
     });
+
+    this.mapService.mapLocationDetailsEventEmitter.subscribe(mapLocation =>{
+      let trace: google.maps.LatLngLiteral = {
+        lat: mapLocation.coordinates.coordinates[0],
+        lng: mapLocation.coordinates.coordinates[1]
+      };
+      this.calculateRoute(trace)
+    })
 
     this.mapService.closeInfoWindow.subscribe(()=> {
       if(this.infoWindow != undefined) {
@@ -108,6 +124,76 @@ export class MapComponent implements OnInit, OnDestroy {
 
   }
 
+
+  ngAfterViewInit(): void {
+    if (!this.map && !this.map.googleMap) {
+      console.error('Map is not ready,check the initialization');
+      return;
+    }
+
+    this.directionsRenderer.setMap(this.map.googleMap);
+  }
+
+
+
+
+
+
+  calculateRoute(destination: google.maps.LatLngLiteral) {
+    if (this.directionsService && this.map && this.map.googleMap) {
+      const start = { lat: this.userMarker.getPosition().lat(), lng: this.userMarker.getPosition().lng() };
+
+      this.directionsService.route(
+        {
+          origin: start,
+          destination: destination,
+          travelMode: google.maps.TravelMode.WALKING,
+        },
+        (response, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            this.directionsRenderer.setOptions({
+              suppressMarkers: true,
+              preserveViewport: true,   //keeping actual user zoom on map
+              polylineOptions: {
+                strokeColor: "#0000FF",
+                strokeOpacity: 0.5,
+                strokeWeight: 4
+              }
+            });
+            this.directionsRenderer.setDirections(response)
+
+
+            this.startRouteUpdateInterval(destination);
+          } else {
+            console.error('Trace error: ' + status);
+          }
+        }
+      );
+    }
+  }
+
+  updateRoute() {
+    if (!this.selectedDestination) return;
+    console.log("Trace update");
+    this.calculateRoute(this.selectedDestination);
+  }
+
+  startRouteUpdateInterval(destination: google.maps.LatLngLiteral) {
+    this.clearRouteUpdateInterval();
+
+    this.selectedDestination = destination;
+    this.routeUpdateInterval = setInterval(() => {
+      this.updateRoute();
+    }, 15000); // 15 sec actualization
+  }
+
+  clearRouteUpdateInterval() {
+    if (this.routeUpdateInterval) {
+      clearInterval(this.routeUpdateInterval);
+      this.routeUpdateInterval = null;
+    }
+  }
+
   ngOnDestroy(): void {
     this.stopLocationTracking();
   }
@@ -115,7 +201,7 @@ export class MapComponent implements OnInit, OnDestroy {
   startLocationTracking() {
     this.locationTrackingInterval = setInterval(() => {
       this.getCurrentLocation(false); // Update location without centering
-    }, 5000); // Aktualizacja co 5 sekund
+    }, 5000); // 5 sec actualization
   }
 
   stopLocationTracking() {
@@ -213,6 +299,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
     }
+
+
   }
 
   //helpers
