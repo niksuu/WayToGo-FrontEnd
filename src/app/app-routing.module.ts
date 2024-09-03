@@ -12,6 +12,8 @@ import {MapLocationEditComponent} from "./map-location/map-location-edit/map-loc
 import {AuthGuardService} from "./auth/auth-guard.service";
 
 
+
+
 const routes: Routes = [
   {
     path: 'log-in',

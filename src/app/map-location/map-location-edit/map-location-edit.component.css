@@ -7,4 +7,30 @@
     height: 16vh;
   }
 
+  .audio-list {
+    margin-top: 20px;
+  }
+
+
+  .audio-item audio {
+    margin-right: 10px;
+  }
+
+  .audio-item p {
+    margin: 0 10px;
+  }
+
+  .audio-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+}
+.audio-header {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #321;
+
 }
