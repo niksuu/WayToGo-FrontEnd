@@ -6,9 +6,7 @@ import {catchError, throwError} from "rxjs";
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const router = inject(Router);
 
-  // Sprawdzanie, czy token jest dostępny
   const token = authService.getToken();
 
   if (token) {
@@ -19,12 +17,5 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     });
   }
 
-  return next(req).pipe(
-    catchError((error) => {
-      if (error.status === 403) {
-        authService.logout();
-      }
-      return throwError(() => error);
-    })
-  );
+  return next(req);
 };
