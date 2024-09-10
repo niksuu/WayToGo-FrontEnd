@@ -95,7 +95,11 @@ export class RouteEditComponent implements OnInit {
     if (this.editMode) {
       this.router.navigate(['../../../yourRoutes/' + this.id], { relativeTo: this.activatedRoute });
     } else {
-      this.router.navigate(['../' + this.id], { relativeTo: this.activatedRoute });
+      if (this.router.url.startsWith('/yourRoutes/new')) {
+        this.router.navigate(['/yourRoutes/list']);
+      } else {
+        this.router.navigate(['/routes/list']);
+      }
     }
   }
 
