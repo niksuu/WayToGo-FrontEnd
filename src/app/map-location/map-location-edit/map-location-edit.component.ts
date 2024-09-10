@@ -269,6 +269,8 @@ export class MapLocationEditComponent implements OnInit {
             this.currentImageUrl = null;
           }
         })
+
+        this.mapService.markerSelectedEmitter.emit({lat: mapLocationLat, lng: mapLocationLng});
       });
     }
 

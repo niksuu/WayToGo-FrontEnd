@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker} from "@angular/google-maps";
 import {CommonModule, NgForOf} from "@angular/common";
 import {PointSelectMapService} from "./point-select-map.service";
@@ -17,7 +17,7 @@ import {PointSelectMapService} from "./point-select-map.service";
   templateUrl: './point-select-map.component.html',
   styleUrl: './point-select-map.component.css'
 })
-export class PointSelectMapComponent {
+export class PointSelectMapComponent implements OnInit{
   cursorLatLng: google.maps.LatLngLiteral | undefined;
   center: google.maps.LatLngLiteral = {
     lat: 53.69671,
@@ -31,10 +31,24 @@ export class PointSelectMapComponent {
   };
   //selected route's markers positions
   markerPosition: google.maps.LatLngLiteral;
+  centerSet = false;
 
   constructor(private mapSerivce: PointSelectMapService) {
   }
 
+
+
+  ngOnInit() {
+    this.mapSerivce.markerSelectedEmitter.subscribe(position => {
+      this.markerPosition = { lat: position.lat, lng: position.lng };
+
+      if (!this.centerSet) {
+        this.center = this.markerPosition;
+        this.centerSet = true;
+      }
+    });
+
+  }
 
   onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
     if ($event.latLng) {
@@ -56,4 +70,5 @@ export class PointSelectMapComponent {
   getCursorLatLng(event: google.maps.MapMouseEvent) {
     this.cursorLatLng = event.latLng ? event.latLng.toJSON() : undefined;
   }
+
 }
