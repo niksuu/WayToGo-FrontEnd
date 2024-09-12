@@ -69,7 +69,6 @@ export class MapLocationEditComponent implements OnInit {
     } else {
       this.activatedRoute.queryParams.subscribe(params => {
         this.routeId = params['routeId'];
-        console.log(this.routeId)
       });
       this.activatedRoute.params.subscribe(
         (params: Params) => {
