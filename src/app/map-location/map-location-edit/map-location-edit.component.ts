@@ -67,6 +67,10 @@ export class MapLocationEditComponent implements OnInit {
         }
       )
     } else {
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.routeId = params['routeId'];
+        console.log(this.routeId)
+      });
       this.activatedRoute.params.subscribe(
         (params: Params) => {
           this.mapLocationId = params['pointId'];
@@ -220,7 +224,7 @@ export class MapLocationEditComponent implements OnInit {
 
   goBack() {
     if (this.editMode) {
-      this.router.navigate(['yourRoutes/list'])
+      this.router.navigate(['yourRoutes/' + this.routeId])
     } else {
       this.router.navigate(['yourRoutes/' + this.routeId + '/edit']);
     }
