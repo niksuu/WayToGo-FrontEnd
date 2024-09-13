@@ -89,7 +89,6 @@ export class RouteService {
     const url = `${backendUrl}/routes/${id}/image`;
     return this.http.get(url, {responseType: 'blob'}).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('Error fetching image:', error);
         return of(null);
       })
     );
