@@ -41,6 +41,7 @@ export class MapLocationEditComponent implements OnInit {
   audioData: { audio: Audio, url: SafeUrl }[] = [];
   selectedAudioFile: File | null = null;
   temporaryAudioData: { audio: Audio, url: SafeUrl,file: File }[] = [];
+  returnUrl: string | null = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -57,6 +58,9 @@ export class MapLocationEditComponent implements OnInit {
     });
 
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.returnUrl = params['returnUrl'];
+    });
 
     if (!this.editMode) {
       this.activatedRoute.params.subscribe(
@@ -220,7 +224,7 @@ export class MapLocationEditComponent implements OnInit {
 
   goBack() {
     if (this.editMode) {
-      this.router.navigate(['yourRoutes/list'])
+      this.router.navigate([this.returnUrl])
     } else {
       this.router.navigate(['yourRoutes/' + this.routeId + '/edit']);
     }
