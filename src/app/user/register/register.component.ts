@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {AuthService} from "../../auth/auth.service";
+import {SnackbarService} from "../../shared/snackbar/snackbar.service";
+import {SnackbarType} from "../../shared/snackbar/snackbar-type";
 
 @Component({
   selector: 'app-register',
@@ -18,11 +20,14 @@ export class RegisterComponent {
   confirmPassword: string = '';
   login: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router,
+              private authService: AuthService,
+              private snackbarService: SnackbarService,
+  ) {}
 
   onSubmit() {
     if (this.password !== this.confirmPassword) {
-      console.error('Passwords do not match');
+      this.snackbarService.displaySnackbar('Passwords do not match',SnackbarType.DARK);
       return;
     }
 
@@ -34,11 +39,11 @@ export class RegisterComponent {
 
     this.authService.register(user).subscribe({
       next: response => {
+        this.snackbarService.displaySnackbar('Your registration was successful!',SnackbarType.DARK);
         this.router.navigate(['/log-in']);
       },
       error: err => {
-        console.error('Registration failed', err);
-        // handle error (show message to user, etc.)
+        this.snackbarService.displaySnackbar('Username already exist',SnackbarType.DARK);
       }
     });
   }
