@@ -10,6 +10,7 @@ import {RouteListComponent} from "./route/route-list/route-list.component";
 import {RegisterComponent} from "./user/register/register.component";
 import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
 import {AuthGuardService} from "./auth/auth-guard.service";
+import {CanEditService} from "./auth/can-edit.service";
 
 
 
@@ -98,7 +99,7 @@ const routes: Routes = [
   },
   {
     path: 'yourRoutes/:id/edit',
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService,CanEditService],
     component: RouteEditComponent
   },
   {
