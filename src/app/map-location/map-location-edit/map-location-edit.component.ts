@@ -34,6 +34,7 @@ export class MapLocationEditComponent implements OnInit {
   lat: number | undefined;
   lng: number | undefined;
   selectedFile: File = null;
+  imagePreview: string | ArrayBuffer | null = null;
   editMode = false;
   mapLocation: MapLocation;
   currentImageUrl: SafeUrl = null;
@@ -98,6 +99,12 @@ export class MapLocationEditComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
 
 
