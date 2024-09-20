@@ -1,39 +1,41 @@
-<div class="container" style="padding-top: 10px">
+<div class="container" style="padding-top: 10px;">
   <div class="row">
     <div class="col-xs-12">
-
-      <div class="mb-4" *ngIf="currentImageUrl">
-        <div class="text-center">
-          <img [src]="currentImageUrl" alt="Current Route Image" class="img-fluid" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
-        </div>
-      </div>
-
       <div class="card mb-4">
-        <div class="card-body">
-          <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
-            <h2 *ngIf="!editMode" class="card-title">Adding New Point</h2>
-            <h2 *ngIf="editMode" class="card-title">Editing map location</h2>
+        <div class="card-header">
+          <h2 *ngIf="!editMode" class="card-title">Adding New Point</h2>
+          <h2 *ngIf="editMode" class="card-title">Editing map location</h2>
+        </div>
+        <form (ngSubmit)="onSubmit()" [formGroup]="mapLocationForm">
+          <div class="card-body">
+            <div class="container">
+              <div class="col-12 col-md-6 offset-md-3 text-center">
+                <div class="mb-3">
+                  <img *ngIf="!selectedFile && currentImageUrl" [src]="currentImageUrl" alt="Current Route Image"
+                       class="img-fluid w-100">
+                  <img *ngIf="selectedFile" [src]="imagePreview" alt="Current Route Image" class="img-fluid w-100">
+                  <img *ngIf="!selectedFile && !currentImageUrl" alt="Current Route Image" class="img-fluid w-100"
+                       src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png">
 
-            <div class="row">
-              <div class="col-xs-12">
-                <button type="submit" class="btn btn-success mr-2" [disabled]="mapLocationForm.invalid">Save</button>
-                <button type="button" class="btn btn-danger" (click)="goBack()">Cancel</button>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                  <div class="w-100 text-start">
+                    <label class="card-text" for="image">Image</label>
+                  </div>
+                  <input (change)="onFileSelected($event)" class="form-control" id="image" type="file">
+                </div>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="name" class="card-text">Name</label>
-              <input type="text" id="name" formControlName="name" class="form-control">
+              <label class="card-text" for="name">Name</label>
+              <input class="form-control" formControlName="name" id="name" type="text">
             </div>
 
             <div class="form-group">
-              <label for="description" class="card-text">Description</label>
-              <textarea id="description" formControlName="description" class="form-control card-text" rows="6"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="image" class="card-text">Image</label>
-              <input type="file" id="image" (change)="onFileSelected($event)" class="form-control">
+              <label class="card-text" for="description">Description</label>
+              <textarea class="form-control card-text" formControlName="description" id="description"
+                        rows="6"></textarea>
             </div>
 
             <div class="row" style="padding-top: 10px">
@@ -45,48 +47,61 @@
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+
+          </div>
+          <div class="card-footer d-flex justify-content-end">
+            <button [disabled]="mapLocationForm.invalid" class="btn btn-success mr-2" type="submit">Save</button>
+            <button (click)="goBack()" class="btn btn-danger" type="button">Cancel</button>
+          </div>
+        </form>
       </div>
 
-      <div class="card mb-4">
+      <div class="card mb-4" style="margin-top: 80px">
+        <div class="card-header">
+          <h2 class="card-title">Audio Files</h2>
+        </div>
         <div class="card-body">
-          <form [formGroup]="audioForm" (ngSubmit)="onSubmitAudio()">
-            <h2 class="card-title mb-4">Audio Files</h2>
+          <form (ngSubmit)="onSubmitAudio()" [formGroup]="audioForm">
+            <div class="form-group card mb-3 ">
+              <div class="card-header">
+                New Audio
+              </div>
+              <div class="card-body d-flex justify-content-center align-items-center">
+                <div class="col-12 col-md-6">
+                  <label class="card-text" for="audioName">New Audio Name</label>
+                  <input class="form-control" formControlName="audioName" id="audioName" type="text">
 
-            <div class="form-group">
-              <label for="audioName" class="card-text">New Audio Name</label>
-              <input type="text" id="audioName" formControlName="audioName" class="form-control">
+                  <label class="mt-3 card-text" for="audioFile">Upload Audio</label>
+                  <div>
+                    <input #audioFileInput (change)="onAudioFileSelected($event)" class="form-control mr-2" id="audioFile"
+                           type="file">
+                  </div>
+                </div>
 
-              <label for="audioFile" class="mt-3 card-text">Upload Audio</label>
-              <div class="d-flex align-items-center file-input-wrapper">
-                <input type="file" id="audioFile" #audioFileInput (change)="onAudioFileSelected($event)" class="form-control mr-2">
-                <button type="submit" class="btn btn-primary" [disabled]="audioForm.invalid">Add Audio</button>
+              </div>
+              <div class="card-footer d-flex justify-content-end">
+                <button [disabled]="audioForm.invalid" class="btn btn-primary" type="submit">Add Audio</button>
               </div>
             </div>
 
             <div *ngIf="editMode" class="audio-list">
-              <div *ngFor="let audioItem of audioData" class="card mb-3">
-                <div class="card-body">
-                  <h6 class="card-title">{{ audioItem.audio.name }}</h6>
-                  <audio class="w-100 mb-2" controls>
-                    <source [src]="audioItem.url" type="audio/mpeg"/>
-                    Your browser does not support the audio element.
-                  </audio>
-                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteAudio(audioItem.audio.id)">Delete</button>
+              <div *ngFor="let audioItem of audioData" class="card mb-3" style="margin-top: 40px">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  {{ audioItem.audio.name }}
+                  <button (click)="deleteAudio(audioItem.audio.id)" *ngIf="editMode" class="btn btn-danger btn-sm"
+                          type="button">Delete
+                  </button>
+                  <button (click)="deleteTemporaryAudio(audioItem)" *ngIf="!editMode" class="btn btn-danger btn-sm"
+                          type="button">Delete
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            <div *ngIf="!editMode" class="audio-list">
-              <div *ngFor="let audioItem of temporaryAudioData" class="card mb-3">
-                <div class="card-body">
-                  <h6 class="card-title">{{ audioItem.audio.name }}</h6>
-                  <audio class="w-100 mb-2" controls>
-                    <source [src]="audioItem.url" type="audio/mpeg"/>
-                    Your browser does not support the audio element.
-                  </audio>
-                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteTemporaryAudio(audioItem)">Delete</button>
+                <div class="card-body d-flex justify-content-center">
+                  <div class="col-12 col-md-6">
+                    <audio class="w-100" controls>
+                      <source [src]="audioItem.url" type="audio/mpeg"/>
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
                 </div>
               </div>
             </div>
