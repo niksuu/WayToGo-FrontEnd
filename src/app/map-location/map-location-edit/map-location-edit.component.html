@@ -1,136 +1,99 @@
-<div class="container">
+<div class="container" style="padding-top: 10px">
   <div class="row">
     <div class="col-xs-12">
-      <div class="row" *ngIf="currentImageUrl">
-        <div class="col-xs-12">
-          <div class="form-group text-center img-responsive">
-            <img [src]="currentImageUrl" alt="Current Route Image" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
-          </div>
+
+      <div class="mb-4" *ngIf="currentImageUrl">
+        <div class="text-center">
+          <img [src]="currentImageUrl" alt="Current Route Image" class="img-fluid" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
         </div>
       </div>
-      <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
-        <div *ngIf="!editMode" class="col-xs-12">
-          <h2>Adding New Point</h2>
-        </div>
-        <div *ngIf="editMode" class="col-xs-12">
-          <h2>Editing map location</h2>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <button
-              type="submit"
-              class="btn btn-success"
-              [disabled]="mapLocationForm.invalid">Save
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="goBack()">Cancel
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                formControlName="name"
-                class="form-control">
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <form [formGroup]="mapLocationForm" (ngSubmit)="onSubmit()">
+            <h2 *ngIf="!editMode" class="card-title">Adding New Point</h2>
+            <h2 *ngIf="editMode" class="card-title">Editing map location</h2>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <button type="submit" class="btn btn-success mr-2" [disabled]="mapLocationForm.invalid">Save</button>
+                <button type="button" class="btn btn-danger" (click)="goBack()">Cancel</button>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
+
             <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                formControlName="description"
-                class="form-control"
-                rows="6"></textarea>
+              <label for="name" class="card-text">Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control">
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
+
             <div class="form-group">
-              <label for="image">Image</label>
-              <input
-                type="file"
-                id="image"
-                (change)="onFileSelected($event)"
-                class="form-control">
+              <label for="description" class="card-text">Description</label>
+              <textarea id="description" formControlName="description" class="form-control card-text" rows="6"></textarea>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-md-6">
+
             <div class="form-group">
-              <label for="lat">Latitude</label>
-              <input
-                id="lat"
-                formControlName="lat"
-                class="form-control"
-              readonly>
-              <label for="lng">Longitude</label>
-              <input
-                id="lng"
-                formControlName="lng"
-                class="form-control"
-                readonly>
+              <label for="image" class="card-text">Image</label>
+              <input type="file" id="image" (change)="onFileSelected($event)" class="form-control">
             </div>
-          </div>
-          <div class="col-xs-12 col-md-6 my-map-wrapper">
-            <app-point-select-map></app-point-select-map>
-          </div>
+
+            <div class="row" style="padding-top: 10px">
+              <div class="col-xs-12 col-md-12">
+                <div class="card">
+                  <div class=" my-map-wrapper">
+                    <app-point-select-map></app-point-select-map>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-      <form [formGroup]="audioForm" (ngSubmit)="onSubmitAudio()">
-        <div class="row">
-          <div class="col-xs-12">
-            <h3 class="mb-4">Audio Files</h3>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <form [formGroup]="audioForm" (ngSubmit)="onSubmitAudio()">
+            <h2 class="card-title mb-4">Audio Files</h2>
+
+            <div class="form-group">
+              <label for="audioName" class="card-text">New Audio Name</label>
+              <input type="text" id="audioName" formControlName="audioName" class="form-control">
+
+              <label for="audioFile" class="mt-3 card-text">Upload Audio</label>
+              <div class="d-flex align-items-center file-input-wrapper">
+                <input type="file" id="audioFile" #audioFileInput (change)="onAudioFileSelected($event)" class="form-control mr-2">
+                <button type="submit" class="btn btn-primary" [disabled]="audioForm.invalid">Add Audio</button>
+              </div>
+            </div>
+
             <div *ngIf="editMode" class="audio-list">
-              <div  *ngFor="let audioItem of audioData" class="audio-item mb-3 p-3 border rounded shadow-sm">
-                <h6 class="audio-name text-dark mb-2">
-                  {{ audioItem.audio.name }}
-                </h6>
-                <audio class="audio-file w-100 mb-2" controls>
-                  <source [src]="audioItem.url" type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-                <button type="button" class="btn btn-danger btn-sm" (click)="deleteAudio(audioItem.audio.id)">
-                  Delete
-                </button>
+              <div *ngFor="let audioItem of audioData" class="card mb-3">
+                <div class="card-body">
+                  <h6 class="card-title">{{ audioItem.audio.name }}</h6>
+                  <audio class="w-100 mb-2" controls>
+                    <source [src]="audioItem.url" type="audio/mpeg"/>
+                    Your browser does not support the audio element.
+                  </audio>
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteAudio(audioItem.audio.id)">Delete</button>
+                </div>
               </div>
             </div>
+
             <div *ngIf="!editMode" class="audio-list">
-              <div *ngFor="let audioItem of temporaryAudioData" class="audio-item mb-3 p-3 border rounded shadow-sm">
-                <h6 class="audio-name text-dark mb-2">
-                  {{ audioItem.audio.name }}
-                </h6>
-                <audio class="audio-file w-100 mb-2" controls>
-                  <source [src]="audioItem.url" type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-                <button type="button" class="btn btn-danger btn-sm" (click)="deleteTemporaryAudio(audioItem)">
-                  Delete
-                </button>
+              <div *ngFor="let audioItem of temporaryAudioData" class="card mb-3">
+                <div class="card-body">
+                  <h6 class="card-title">{{ audioItem.audio.name }}</h6>
+                  <audio class="w-100 mb-2" controls>
+                    <source [src]="audioItem.url" type="audio/mpeg"/>
+                    Your browser does not support the audio element.
+                  </audio>
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteTemporaryAudio(audioItem)">Delete</button>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="audioName">New Audio Name</label>
-          <input type="text" id="audioName" formControlName="audioName" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="audioFile">Upload Audio</label>
-          <input type="file" id="audioFile" #audioFileInput (change)="onAudioFileSelected($event)" class="form-control">
-        </div>
-          <button type="submit" class="btn btn-primary" [disabled]="audioForm.invalid">Add Audio</button>
-      </form>
+      </div>
+
     </div>
   </div>
 </div>

@@ -1,5 +1,13 @@
+input, textarea{
+  border-color: #046169;
+}
+
 .my-map-wrapper {
   height:40vh;
+}
+
+.audio-list {
+  margin-top: 10px;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -8,7 +16,7 @@
   }
 
   .audio-list {
-    margin-top: 20px;
+    margin-top: 1%;
   }
 
 
@@ -34,3 +42,17 @@
   color: #321;
 
 }
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.file-input-wrapper input[type="file"] {
+  margin-right: 1%;
+}
+
+.file-input-wrapper button {
+  white-space: nowrap;
+}
+
