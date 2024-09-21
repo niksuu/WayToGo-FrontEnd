@@ -16,9 +16,12 @@
   </map-marker>
 
   <map-info-window>
-    <app-map-location-info-window [mapLocation]="infoWindowMapLocation" >
+    <div style="overflow: hidden">
+      <app-map-location-info-window [mapLocation]="infoWindowMapLocation" >
 
-    </app-map-location-info-window>
+      </app-map-location-info-window>
+    </div>
+
   </map-info-window>
 
   <map-directions-renderer></map-directions-renderer>
