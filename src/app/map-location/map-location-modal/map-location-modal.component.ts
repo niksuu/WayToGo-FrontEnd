@@ -16,7 +16,7 @@ import {MapService} from "../../shared/map/map.service";
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
   ],
   animations: [],
   templateUrl: './map-location-modal.component.html',

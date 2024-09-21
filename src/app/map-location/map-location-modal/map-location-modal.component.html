@@ -1,27 +1,34 @@
-<div class="map-location-grid-container">
-  <div class="photo-wrap">
-    <div class="photo">
-      <img *ngIf="mapLocationImageUrl" [src]="mapLocationImageUrl">
+<div class="container">
+  <div class="row"  >
+    <div class="col-xs-12 col-md-6">
+      <div class="row" style="">
+
+
+        <div class="card"  >
+          <img *ngIf="mapLocationImageUrl" [src]="mapLocationImageUrl" class="card-img-top" alt="Card image cap" style="margin-top: 10px">
+          <img *ngIf="!mapLocationImageUrl" src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png" class="card-img-top" alt="Card image cap" style="margin-top: 10px">
+          <div class="card-body">
+            <h5 class="card-title">Name: {{mapLocation.name}}</h5>
+            <p class="card-text">{{mapLocation.description}}</p>
+            <a (click)="onCalculateRoute()" class="btn btn-primary" style="background-color: #10898d"><i class="fa fa-location-arrow"></i> Navigate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6" >
+
+      <div class="d-flex flex-column align-items-center">
+        <div *ngFor="let audioItem of audioData">
+          <!-- <audio controls *ngIf="audioItem.url"> -->
+          <audio class="audio-file" controls>
+            <source [src]="audioItem.url" type="audio/mpeg"/>
+            Your browser does not support the audio element.
+          </audio>
+          <p class="d-flex flex-column align-items-center">
+            {{audioItem.audio.name}}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="info-wrap">
-    <p style="text-align: center"><strong>Map Location info: </strong></p>
-    <p>Name: {{mapLocation.name}}</p>
-    <p>Description: {{mapLocation.description}}</p>
-  </div>
-  <div class="audio-list">
-    <div *ngFor="let audioItem of audioData">
-      <!--<audio controls *ngIf="audioItem.url">-->
-      <audio class="audio-file" controls>
-        <source [src]="audioItem.url" type="audio/mpeg"/>
-        Your browser does not support the audio element.
-      </audio>
-      <p>{{audioItem.audio.name}}
-      </p>
-    </div>
-  </div>
-  <div  class="route-button-container">
-    <button (click)="onCalculateRoute()">Trace</button>
-  </div>
-  <button (click)="tmpOnClick()">snackbar</button>
 </div>
