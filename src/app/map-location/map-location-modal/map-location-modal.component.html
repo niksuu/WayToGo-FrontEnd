@@ -1,27 +1,31 @@
-<div class="map-location-grid-container">
-  <div class="photo-wrap">
-    <div class="photo">
-      <img *ngIf="mapLocationImageUrl" [src]="mapLocationImageUrl">
+<div>
+  <div class="card">
+    <div class="card-header">
+      <h2>Map location details</h2>
     </div>
-  </div>
-  <div class="info-wrap">
-    <p style="text-align: center"><strong>Map Location info: </strong></p>
-    <p>Name: {{mapLocation.name}}</p>
-    <p>Description: {{mapLocation.description}}</p>
-  </div>
-  <div class="audio-list">
-    <div *ngFor="let audioItem of audioData">
-      <!--<audio controls *ngIf="audioItem.url">-->
-      <audio class="audio-file" controls>
-        <source [src]="audioItem.url" type="audio/mpeg"/>
-        Your browser does not support the audio element.
-      </audio>
-      <p>{{audioItem.audio.name}}
-      </p>
+    <div class="card-body d-flex flex-column align-items-center">
+      <img *ngIf="mapLocationImageUrl" [src]="mapLocationImageUrl" class="card-img-top map-location-modal-image" alt="map location image">
+      <img *ngIf="!mapLocationImageUrl" src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png" class="card-img-top map-location-modal-image" alt="map location image">
+      <h5 class="card-title">{{mapLocation.name}}</h5>
+      <p class="card-text">{{mapLocation.description}}</p>
+      <a (click)="onCalculateRoute()" class="btn btn-primary" style="background-color: #10898d"><i class="fa fa-location-arrow"></i> Navigate</a>
     </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" *ngFor="let audioItem of audioData">
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            {{ audioItem.audio.name }}
+          </div>
+          <div class="card-body d-flex justify-content-center">
+            <div class="col-12 col-md-6">
+              <audio class="w-100" controls>
+                <source [src]="audioItem.url" type="audio/mpeg"/>
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
-  <div  class="route-button-container">
-    <button (click)="onCalculateRoute()">Trace</button>
-  </div>
-  <button (click)="tmpOnClick()">snackbar</button>
 </div>

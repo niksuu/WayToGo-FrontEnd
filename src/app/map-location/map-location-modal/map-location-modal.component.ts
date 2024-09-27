@@ -16,7 +16,7 @@ import {MapService} from "../../shared/map/map.service";
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
   ],
   animations: [],
   templateUrl: './map-location-modal.component.html',
@@ -99,9 +99,6 @@ export class MapLocationModalComponent implements OnInit {
     });
   }
 
-  tmpOnClick() {
-    this.snackbarService.displaySnackbar("This is my message to the world", SnackbarType.DARK);
-  }
 
   onCalculateRoute() {
 
