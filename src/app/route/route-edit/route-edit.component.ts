@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RouteService } from "../route.service";
 import { Route } from "../route.model";
 import { MapLocation } from "../../map-location/map-location.model";
@@ -31,6 +31,7 @@ export class RouteEditComponent implements OnInit {
   route: Route;
   selectedFile: File = null;
   currentImageUrl: SafeUrl = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
@@ -60,6 +61,12 @@ export class RouteEditComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
 
   onSubmit() {
