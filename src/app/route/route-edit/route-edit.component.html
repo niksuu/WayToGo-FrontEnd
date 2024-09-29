@@ -14,8 +14,8 @@
                   <img *ngIf="!selectedFile && currentImageUrl" [src]="currentImageUrl" alt="Current Route Image"
                        class="img-fluid w-100">
                   <img *ngIf="selectedFile" [src]="imagePreview" alt="Current Route Image" class="img-fluid w-100">
-                  <img *ngIf="!currentImageUrl" alt="Current Route Image"
-                       class="img-fluid w-100 mb-3" src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png">
+                  <img *ngIf="!selectedFile && !currentImageUrl" alt="Current Route Image" class="img-fluid w-100"
+                       src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png">
                 </div>
                 <div class="d-flex flex-column align-items-center">
                   <div class="w-100 text-start">
@@ -33,7 +33,8 @@
 
             <div class="form-group">
               <label class="card-text" for="description">Description</label>
-              <textarea class="form-control card-text" formControlName="description" id="description" rows="6"></textarea>
+              <textarea class="form-control card-text" formControlName="description" id="description"
+                        rows="6"></textarea>
             </div>
           </div>
 
