@@ -100,8 +100,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onMapLocationEdit(mapLocationId: string) {
-    this.router.navigate(['point/' + mapLocationId + '/edit'], {
-      queryParams: { routeId: this.route.id }
+    this.router.navigate(['point', mapLocationId, 'edit'], {
+      queryParams: { returnUrl: this.router.url }
     });
   }
 
