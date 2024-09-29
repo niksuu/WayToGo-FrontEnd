@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { backendUrl } from "../shared/http.config";
-import {Observable, of, switchMap} from "rxjs";
+import {Observable, switchMap, throwError} from "rxjs";
 import { map } from "rxjs/operators";
+import {MapLocationConflictError} from "../shared/errors/route-map-location-conflict.error";
 
 @Injectable({ providedIn: 'root' })
 export class RouteMapLocationService {
@@ -26,8 +27,7 @@ export class RouteMapLocationService {
           const url = `${backendUrl}/routeMapLocations`;
           return this.http.post(url, newRouteMapLocation);
         } else {
-          alert('This map Location is already in your route!')
-          return of(null);
+          return throwError(() => new MapLocationConflictError('This map location is already in your route!'));
         }
       })
     );

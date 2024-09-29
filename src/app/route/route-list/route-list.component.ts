@@ -11,6 +11,8 @@ import {tadaAnimation} from "angular-animations";
 import {ConfirmationDialogService} from "../../shared/confirmation-dialog/confirmation-dialog.service";
 import {SnackbarType} from "../../shared/snackbar/snackbar-type";
 import {SnackbarService} from "../../shared/snackbar/snackbar.service";
+import {catchError, of} from "rxjs";
+import {MapLocationConflictError} from "../../shared/errors/route-map-location-conflict.error";
 
 
 @Component({
@@ -217,10 +219,23 @@ export class RouteListComponent implements OnInit{
       )
       .subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.routeMapLocationService.postRouteMapLocation(this.selectedRoute.id, this.pointIdToBeAdded)
-            .subscribe( response => {
-              this.router.navigate(['../list'], {relativeTo: this.activatedRoute})
-              this.snackbarService.displaySnackbar('Map location added',SnackbarType.SUCCESS);
+          this.routeMapLocationService
+            .postRouteMapLocation(this.selectedRoute.id, this.pointIdToBeAdded)
+            .pipe(
+              catchError((error) => {
+                if (error instanceof MapLocationConflictError) {
+                  this.snackbarService.displaySnackbar(error.message, SnackbarType.WARNING);
+                } else {
+                  this.snackbarService.displaySnackbar('An error occurred while adding the map location.', SnackbarType.DANGER);
+                }
+                return of(null);
+              })
+            )
+            .subscribe((response) => {
+              if (response) {
+                this.router.navigate(['../list'], { relativeTo: this.activatedRoute });
+                this.snackbarService.displaySnackbar('Map location added', SnackbarType.SUCCESS);
+              }
             });
         }
       });
