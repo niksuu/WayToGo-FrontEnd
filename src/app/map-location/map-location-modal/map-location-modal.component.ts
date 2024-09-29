@@ -7,12 +7,10 @@ import {MapLocationService} from "../map-location.service";
 import {AudioService} from "../../audio/audio.service";
 import {ScreenSizeService} from "../../shared/screen-size.service";
 import {maxPageSize} from "../../shared/http.config";
-import {SnackbarService} from "../../shared/snackbar/snackbar.service";
-import {SnackbarType} from "../../shared/snackbar/snackbar-type";
 import {MapService} from "../../shared/map/map.service";
 
 @Component({
-  selector: 'app-modal',
+  selector: 'app-map-location-modal',
   standalone: true,
   imports: [
     NgForOf,
@@ -37,8 +35,7 @@ export class MapLocationModalComponent implements OnInit {
               private audioService: AudioService,
               private mapService: MapService,
               private sanitizer: DomSanitizer,
-              private screenSizeService: ScreenSizeService,
-              private snackbarService: SnackbarService) {
+              private screenSizeService: ScreenSizeService) {
   }
 
   ngOnInit(): void {

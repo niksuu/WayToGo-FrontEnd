@@ -27,8 +27,8 @@
 
 
   <div style="flex-grow: 1">
-    <div>
-      <router-outlet></router-outlet>
+    <div *ngIf="!addingPointToRoute">
+     <router-outlet></router-outlet>
     </div>
     <ul class="list-group">
       <li *ngFor="let routeIt of routes"
