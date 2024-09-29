@@ -4,11 +4,10 @@
   flex-direction: column;
   align-items: center;
   grid-area: photo-wrap;
-  width: 15vw;
-  min-height: 10vw;
+  width: 200px;
+  height: 200px;
+
 }
-
-
 
 .details-button {
   display: flex;
@@ -38,16 +37,18 @@
 }
 
 .photo {
-  height: 100%;
-  width: 15vw;
-  overflow: hidden;
+
+  height: 85%;
+  width: 100%;
+  object-fit: cover;
+
 }
 
-.photo img {
-  height: 100%;
-  width: 100%;
-}
 
 .info {
   text-align: center;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -10,7 +10,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
     animations: [
         trigger('moveDiv', [
             state('initial', style({ top: '-200px' })),
-            state('final', style({ top: '20px' })),
+            state('final', style({ top: '10%' })),
             transition('initial => final', [
                 animate('0.7s ease')
             ]),

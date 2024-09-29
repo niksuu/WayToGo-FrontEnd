@@ -1,85 +1,60 @@
-<div class="container">
+<div class="container" style="padding-top: 10px;">
   <div class="row">
     <div class="col-xs-12">
-      <!-- Wyświetlanie aktualnego zdjęcia na górze -->
-      <div class="row" *ngIf="currentImageUrl">
-        <div class="col-xs-12">
-          <div class="form-group text-center img-responsive">
-            <img [src]="currentImageUrl" alt="Current Route Image" style="max-width: 80%; max-height: 40vh; margin-bottom: 20px;">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 *ngIf="!editMode" class="card-title">Adding New Route</h2>
+          <h2 *ngIf="editMode" class="card-title">Editing Route</h2>
+        </div>
+        <form (ngSubmit)="onSubmit()" [formGroup]="routeForm">
+          <div class="card-body">
+            <div class="container">
+              <div class="col-12 col-md-6 offset-md-3 text-center">
+                <div class="mb-3">
+                  <img *ngIf="!selectedFile && currentImageUrl" [src]="currentImageUrl" alt="Current Route Image"
+                       class="img-fluid w-100">
+                  <img *ngIf="selectedFile" [src]="imagePreview" alt="Current Route Image" class="img-fluid w-100">
+                  <img *ngIf="!selectedFile && !currentImageUrl" alt="Current Route Image" class="img-fluid w-100"
+                       src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png">
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                  <div class="w-100 text-start">
+                    <label class="card-text" for="image">Upload Image</label>
+                  </div>
+                  <input (change)="onFileSelected($event)" class="form-control" id="image" type="file">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="card-text" for="name">Name</label>
+              <input class="form-control" formControlName="name" id="name" type="text">
+            </div>
+
+            <div class="form-group">
+              <label class="card-text" for="description">Description</label>
+              <textarea class="form-control card-text" formControlName="description" id="description"
+                        rows="6"></textarea>
+            </div>
           </div>
+
+          <div class="card-footer d-flex justify-content-end">
+            <button [disabled]="routeForm.invalid" class="btn btn-success mr-2" type="submit">Save</button>
+            <button (click)="goBack()" class="btn btn-danger" type="button">Cancel</button>
+            <button *ngIf="editMode" (click)="onDelete()" class="btn btn-danger ml-2" type="button">Delete</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card mb-4" style="margin-top: 40px;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h2 class="card-title">Points</h2>
+          <button *ngIf="editMode" class="btn btn-primary" (click)="onAddPoint()">Add Point</button>
+        </div>
+        <div class="card-body">
+          <app-map-location-list *ngIf="editMode" [route]="route"></app-map-location-list>
         </div>
       </div>
-      <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-        <div class="row">
-          <div class="col-xs-12" *ngIf="editMode">
-            <h2>ID: {{ id }}</h2>
-            <h4>User: {{ userLogin }}</h4>
-          </div>
-          <div class="col-xs-12" *ngIf="!editMode">
-            <h2>Adding new Route</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <button
-              type="submit"
-              class="btn btn-success"
-              [disabled]="routeForm.invalid">Save
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="goBack()">Cancel
-            </button>
-            <button
-              *ngIf="editMode"
-              type="button"
-              class="btn btn-danger"
-              (click)="onDelete()">Delete
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                formControlName="name"
-                class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                formControlName="description"
-                class="form-control"
-                rows="6"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="image">Image</label>
-              <input
-                type="file"
-                id="image"
-                (change)="onFileSelected($event)"
-                class="form-control">
-            </div>
-          </div>
-        </div>
-      </form>
-      <hr>
-      <label>Points</label>
-      <button *ngIf="editMode" class="btn btn-primary" (click)="onAddPoint()">Add Point</button>
-      <app-map-location-list *ngIf="editMode" [route]="route"></app-map-location-list>
     </div>
   </div>
 </div>

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import {UserService} from "../user.service";
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {AuthService} from "../../auth/auth.service";
+import {SnackbarService} from "../../shared/snackbar/snackbar.service";
+import {SnackbarType} from "../../shared/snackbar/snackbar-type";
 
 @Component({
   selector: 'app-log-in',
@@ -17,7 +18,10 @@ export class LogInComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router,
+              private authService: AuthService,
+              private snackbarService: SnackbarService,
+  ) {}
 
   onSubmit() {
     this.authService.login(this.username, this.password).subscribe({
@@ -25,8 +29,7 @@ export class LogInComponent {
         this.router.navigate(['/']);
       },
       error: err => {
-        console.error('Login failed', err);
-        // handle error (show message to user, etc.)
+        this.snackbarService.displaySnackbar("Wrong username or password", SnackbarType.DARK);
       }
     });
   }

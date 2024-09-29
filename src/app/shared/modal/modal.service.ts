@@ -30,7 +30,7 @@ export class ModalService {
     const modalElement = (modalComponentRef.hostView as any).rootNodes[0] as HTMLElement;
     const contentElement = (contentComponentRef.hostView as any).rootNodes[0] as HTMLElement;
 
-    modalElement.querySelector('.modal-content')?.appendChild(contentElement);
+    modalElement.querySelector('.modal-filling')?.appendChild(contentElement);
 
     //attach modal to the DOM
     this.appRef.attachView(modalComponentRef.hostView);

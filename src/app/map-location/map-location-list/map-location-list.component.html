@@ -18,7 +18,7 @@
         style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 20px;
 flex-wrap: wrap; background-color: #bdf2e9">
 
-      <button (click)="onAddToYourRoute(mapLocation.id)" class="icon-button">
+      <button (click)="onAddToYourRoute(mapLocation)" class="icon-button">
         <i class="fa fa-plus"></i>
         <p>Add to your route</p>
       </button>
@@ -36,16 +36,5 @@ flex-wrap: wrap; background-color: #bdf2e9">
       </button>
 
     </li>
-
-    <li *ngIf="addingPointToRoute && pointIdToBeAdded == mapLocation.id"
-        class="list-group-item"
-        style="background-color: #c6c7d2;">
-      <app-route-list
-        [addingPointToRoute]=true
-        [pointIdToBeAdded]="pointIdToBeAdded"
-      ></app-route-list>
-    </li>
-
-
   </div>
 </ul>

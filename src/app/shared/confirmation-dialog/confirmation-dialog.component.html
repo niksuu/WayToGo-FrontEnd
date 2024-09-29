@@ -1,0 +1,17 @@
+<div class="modal fade" tabindex="-1" [ngClass]="{'show': isVisible}" [style.display]="isVisible ? 'block' : 'none'" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog" >
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color: #046169; border: 1px solid white;">
+        <h5 class="modal-title" style="color: white;">{{ title }}</h5>
+        <button type="button" class="btn-close" style="filter: invert(1);" (click)="cancel()"></button>
+      </div>
+      <div class="modal-body" >
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " style="background-color: #10898d" (click)="cancel()">{{ cancelText }}</button>
+        <button type="button" class="btn btn-secondary" style="background-color: #10898d" (click)="confirm()">{{ confirmText }}</button>
+      </div>
+    </div>
+  </div>
+</div>

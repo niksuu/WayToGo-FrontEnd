@@ -14,6 +14,9 @@ import {RouteService} from "../../route/route.service";
 import {RouteListComponent} from "../../route/route-list/route-list.component";
 import {MapLocationModalComponent} from "../map-location-modal/map-location-modal.component";
 import {ModalService} from "../../shared/modal/modal.service";
+import {
+  MapLocationAddToYourRouteModalComponent
+} from "../map-location-add-to-your-route-modal/map-location-add-to-your-route-modal.component";
 
 @Component({
   selector: 'app-map-location-list',
@@ -44,9 +47,6 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   infoWrapperAnimationState: boolean;
 
   userMode = false;
-
-  addingPointToRoute = false;
-  pointIdToBeAdded: string;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
@@ -113,9 +113,9 @@ export class MapLocationListComponent implements OnInit, OnChanges {
     }
   }
 
-  onAddToYourRoute(mapLocationId: string) {
-    this.pointIdToBeAdded = mapLocationId;
-    this.addingPointToRoute = !this.addingPointToRoute;
+  onAddToYourRoute(mapLocation : MapLocation) {
+    this.modalService.openModal(MapLocationAddToYourRouteModalComponent, {mapLocation: mapLocation});
+
   }
 
   onMapLocationDetails(mapLocation: MapLocation) {

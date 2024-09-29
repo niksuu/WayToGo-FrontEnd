@@ -6,15 +6,12 @@
   </div>
 
 
-  <div class="photo">
-    <img *ngIf="imageUrl" [src]="imageUrl">
-    <img *ngIf="!imageUrl" src="https://www.elegantthemes.com/blog/wp-content/uploads/2020/02/000-404.png">
-    <!--<img *ngIf="!imageUrl" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dcc3094e-c043-4078-bad1-e65737f5b8e8/dc5b8mp-015b238d-43c6-4f1c-8562-38c98a20017c.jpg/v1/fill/w_1024,h_768,q_75,strp/stock_pohoto_20_for_some_photo_manipulation_by_babine326_dc5b8mp-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvZGNjMzA5NGUtYzA0My00MDc4LWJhZDEtZTY1NzM3ZjViOGU4XC9kYzViOG1wLTAxNWIyMzhkLTQzYzYtNGYxYy04NTYyLTM4Yzk4YTIwMDE3Yy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.l2WC0hFzadetmSbDFvEfb2gyn7SjBGfSdq9kWD4g2kQ" alt="map-location-photo">-->
-  </div>
+
+  <img class="photo" *ngIf="imageUrl" [src]="imageUrl">
+  <img  class="photo" *ngIf="!imageUrl" src="https://loyaltystarter.io/wp-content/themes/unbound/images/No-Image-Found-400x264.png">
 
   <div class="info">
     <strong>{{mapLocation.name}}</strong>
   </div>
-
 
 </div>

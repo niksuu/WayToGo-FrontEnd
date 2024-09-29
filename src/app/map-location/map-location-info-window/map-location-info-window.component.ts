@@ -31,18 +31,20 @@ export class MapLocationInfoWindowComponent implements OnInit, OnChanges {
 
     this.imageUrl = null;
 
-    this.mapLocationService.getMapLocationImageById(this.mapLocation.id).subscribe({
-      next: (response: Blob | null) => {
-        if (response) {
-          //convert Blob (raw byte object) to url to display it in the template
-          const objectURL = URL.createObjectURL(response);
-          this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+    if(this.mapLocation) {
+      this.mapLocationService.getMapLocationImageById(this.mapLocation.id).subscribe({
+        next: (response: Blob | null) => {
+          if (response) {
+            //convert Blob (raw byte object) to url to display it in the template
+            const objectURL = URL.createObjectURL(response);
+            this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          }
+        },
+        error: (error: any) => {
+          //
         }
-      },
-      error: (error: any) => {
-        //
-      }
-    });
+      });
+    }
 
   }
 
