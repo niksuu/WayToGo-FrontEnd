@@ -11,6 +11,7 @@ import {RegisterComponent} from "./user/register/register.component";
 import {MapLocationEditComponent} from "./map-location/map-location-edit/map-location-edit.component";
 import {AuthGuardService} from "./auth/auth-guard.service";
 import {CanEditService} from "./auth/can-edit.service";
+import {CanDeactivateGuard} from "./shared/guards/can-deactivate-guard.service";
 
 
 
@@ -29,21 +30,25 @@ const routes: Routes = [
     path: 'point/new/:routeId',
     canActivate: [AuthGuardService],
     component: MapLocationEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'point/:pointId/edit',
     canActivate: [AuthGuardService],
     component: MapLocationEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'routes/new',
     canActivate: [AuthGuardService],
-    component: RouteEditComponent
+    component: RouteEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'yourRoutes/new',
     canActivate: [AuthGuardService],
-    component: RouteEditComponent
+    component: RouteEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'users/:id',
@@ -100,6 +105,7 @@ const routes: Routes = [
   {
     path: 'yourRoutes/:id/edit',
     canActivate: [AuthGuardService,CanEditService],
+    canDeactivate: [CanDeactivateGuard],
     component: RouteEditComponent
   },
   {
