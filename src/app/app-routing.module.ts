@@ -30,11 +30,13 @@ const routes: Routes = [
     path: 'point/new/:routeId',
     canActivate: [AuthGuardService],
     component: MapLocationEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'point/:pointId/edit',
     canActivate: [AuthGuardService],
     component: MapLocationEditComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'routes/new',
