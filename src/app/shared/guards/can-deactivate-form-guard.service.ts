@@ -1,19 +1,29 @@
-import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
-import { Observable } from 'rxjs';
-import {RouteEditComponent} from "../../route/route-edit/route-edit.component";
+import {Injectable} from "@angular/core";
+import {ConfirmationDialogService} from "../confirmation-dialog/confirmation-dialog.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CanDeactivateFormGuardService implements CanDeactivate<RouteEditComponent> {
-  canDeactivate(
-    component: RouteEditComponent
-  ): Observable<boolean> | boolean {
-    // Check if the form is dirty (meaning it has unsaved changes)
-    if (component.routeForm.dirty && !component.routeForm.pristine) {
-      return confirm('You have unsaved changes. Do you really want to leave?');
+export class CanDeactivateFormGuardService {
+
+  constructor(private confirmationDialogService: ConfirmationDialogService) {}
+
+  canDeactivateForm(isDirty: boolean):Promise<boolean> {
+    if (isDirty) {
+      return new Promise((resolve) => {
+        this.confirmationDialogService
+          .confirm(
+            'Confirm Exiting',
+            `You are about to exit without saving the changes. Do you want to proceed?`,
+            'Yes',
+            'Cancel'
+          )
+          .subscribe((confirmed: boolean) => {
+            resolve(confirmed);
+          });
+      });
+    } else {
+      return Promise.resolve(true);
     }
-    return true;  // No unsaved changes, allow the navigation
   }
 }

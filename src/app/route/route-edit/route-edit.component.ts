@@ -9,6 +9,8 @@ import { Location, NgForOf, NgIf } from "@angular/common";
 import { maxPageSize } from "../../shared/http.config";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
+import {CanComponentDeactivate} from "../../shared/guards/can-deactivate-guard.service";
+import {CanDeactivateFormGuardService} from "../../shared/guards/can-deactivate-form-guard.service";
 
 @Component({
   selector: 'app-route-edit',
@@ -22,7 +24,7 @@ import {MapLocationListComponent} from "../../map-location/map-location-list/map
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
 })
-export class RouteEditComponent implements OnInit {
+export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   id: string;
   routeForm: FormGroup;
   userLogin: string;
@@ -37,8 +39,8 @@ export class RouteEditComponent implements OnInit {
               private mapLocationService: MapLocationService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private location: Location,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private canDeactivateFormGuardService: CanDeactivateFormGuardService,) {
   }
 
   ngOnInit() {
@@ -55,6 +57,11 @@ export class RouteEditComponent implements OnInit {
         })
     }
   }
+
+  canDeactivate(): Promise<boolean> {
+    return this.canDeactivateFormGuardService.canDeactivateForm(this.routeForm.dirty && !this.routeForm.pristine);
+  }
+
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
