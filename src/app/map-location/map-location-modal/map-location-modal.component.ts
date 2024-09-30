@@ -29,6 +29,8 @@ export class MapLocationModalComponent implements OnInit {
   audiosEntities: Audio[] = [];
   audioData: { audio: Audio, url: SafeUrl }[] = [];
   mobileVersion: boolean;
+  isError: boolean;
+  isLoading: boolean;
 
   constructor(
               private mapLocationService: MapLocationService,
@@ -50,49 +52,56 @@ export class MapLocationModalComponent implements OnInit {
     }
   }
 
-  //fetch images for map locations
+
   private fetchMapLocationImage() {
     this.mapLocationService.getMapLocationImageById(this.mapLocation.id).subscribe({
       next: (response: Blob | null) => {
         if (response) {
-          //convert Blob (raw byte object) to url to display it in the template
           const objectURL = URL.createObjectURL(response);
           this.mapLocationImageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-        }
-      },
+        }},
       error: (error: any) => {
-        //
       }
     });
   }
 
 
   private fetchMapLocationAudio() {
+    this.isLoading= true;
+    this.isError = false;
     this.audiosEntities = [];
     this.audioData = [];
+    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe({
+      next: (response) => {
+        this.audiosEntities = response.content;
 
-    this.audioService.getAudiosByMapLocation(this.mapLocation, 0, maxPageSize).subscribe(response => {
-      this.audiosEntities = response.content;
-
-      const audioPromises = this.audiosEntities.map((audio, index) => {
-        return this.audioService.getAudioFileByAudio(audio).toPromise()
-          .then(response => {
-            let audioUrl: SafeUrl = null;
-            if (response) {
-              const objectURL = URL.createObjectURL(response);
-              audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            }
-            this.audioData[index] = {audio: audio, url: audioUrl};
-          })
-          .catch(error => {
-            console.log("getaudio error", error);
-            this.audioData[index] = {audio: audio, url: null};
-          });
-      });
-
-      Promise.all(audioPromises).then(() => {
-        // All audio files fetched and URLs are set
-      });
+        const audioPromises = this.audiosEntities.map((audio, index) => {
+          return this.audioService.getAudioFileByAudio(audio).toPromise()
+            .then((audioBlob) => {
+              let audioUrl: SafeUrl = null;
+              if (audioBlob) {
+                const objectURL = URL.createObjectURL(audioBlob);
+                audioUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+              }
+              this.audioData[index] = {audio, url: audioUrl};
+            })
+            .catch(error => {
+              console.error("Error fetching audio:", error);
+              this.audioData[index] = {audio, url: null};
+            });
+        });
+        Promise.all(audioPromises).then(() => {
+          this.isLoading = false;
+        }).catch(() => {
+          this.isError = true;
+          this.isLoading = false;
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching audio:', error);
+        this.isError = true;
+        this.isLoading= false;
+      }
     });
   }
 

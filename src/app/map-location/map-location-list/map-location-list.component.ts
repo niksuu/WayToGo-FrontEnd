@@ -47,6 +47,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   infoWrapperAnimationState: boolean;
 
   userMode = false;
+  protected isLoading: boolean;
+  protected isError: boolean;
 
   constructor(private mapService: MapService,
               private sidePanelService: SidePanelService,
@@ -123,10 +125,21 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   private fetchMapLocations() {
+    this.isLoading = true;
+    this.isError = false;
+
     this.mapLocationService.getMapLocationsByRoute(0, maxPageSize, this.route.id)
-      .subscribe(response => {
-        this.mapLocations = response.content;
-        this.mapService.routeSelectedEventEmitter.emit(this.mapLocations);
-      });
+      .subscribe(
+        response => {
+          this.mapLocations = response.content;
+          this.mapService.routeSelectedEventEmitter.emit(this.mapLocations);
+          this.isLoading = false;
+        },
+        error => {
+          this.isError = true;
+          this.isLoading = false;
+          console.error('Error fetching map locations:', error);
+        }
+      );
   }
 }

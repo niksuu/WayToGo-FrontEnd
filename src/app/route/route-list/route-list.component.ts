@@ -45,6 +45,8 @@ export class RouteListComponent implements OnInit{
 
   @Input() addingPointToRoute: boolean = false;
   @Input() pointIdToBeAdded: string;
+  protected isLoading: boolean;
+  protected isError: boolean;
 
   constructor(private routeService: RouteService,
               private router: Router,
@@ -138,28 +140,48 @@ export class RouteListComponent implements OnInit{
   }
 
   getRoutes() {
+    this.isLoading = true; // Ustawienie flagi ładowania na true
+    this.isError = false;  // Resetowanie błędu przed nową próbą pobrania danych
+
     this.validateQueryParams();
+
     if (this.userMode || this.addingPointToRoute) {
-      this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
-        this.routes = response.content;
-        this.totalPages = response.totalPages;
-        if (this.currentPageNumber > this.totalPages) {
-          this.currentPageNumber = this.totalPages;
-          this.onPageChanged();
-        }
-      });
+      this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch)
+        .subscribe(
+          response => {
+            this.routes = response.content;
+            this.totalPages = response.totalPages;
+            if (this.currentPageNumber > this.totalPages) {
+              this.currentPageNumber = this.totalPages;
+              this.onPageChanged();
+            }
+            this.isLoading = false;
+          },
+          error => {
+            this.isError = true;
+            this.isLoading = false;
+            console.error('Error fetching user routes:', error);
+          }
+        );
     } else {
-      this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
-        this.routes = response.content;
-        this.totalPages = response.totalPages;
-        if (this.currentPageNumber > this.totalPages) {
-          this.currentPageNumber = this.totalPages;
-          this.onPageChanged();
-
-        }
-      });
+      this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch)
+        .subscribe(
+          response => {
+            this.routes = response.content;
+            this.totalPages = response.totalPages;
+            if (this.currentPageNumber > this.totalPages) {
+              this.currentPageNumber = this.totalPages;
+              this.onPageChanged();
+            }
+            this.isLoading = false;
+          },
+          error => {
+            this.isError = true;
+            this.isLoading = false;
+            console.error('Error fetching routes:', error);
+          }
+        );
     }
-
   }
 
   validateQueryParams() {

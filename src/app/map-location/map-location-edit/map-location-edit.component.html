@@ -85,6 +85,14 @@
               </div>
             </div>
 
+            <div *ngIf="isLoadingAudio" class="loading-indicator">
+              <p>Loading audio files, please wait...</p>
+            </div>
+
+            <div *ngIf="isErrorAudio" class="error-indicator">
+              <p>Error loading audio files. Please try again later.</p>
+            </div>
+
             <div *ngIf="editMode" class="audio-list">
               <div *ngFor="let audioItem of audioData" class="card mb-3" style="margin-top: 40px">
                 <div class="card-header d-flex justify-content-between align-items-center">
