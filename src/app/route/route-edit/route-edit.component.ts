@@ -101,7 +101,7 @@ export class RouteEditComponent implements OnInit, CanComponentDeactivate {
                 this.goBack();
               });
           } else {
-            this.goBack();
+            this.router.navigate(['yourRoutes', 'list']);
           }
         });
     }
