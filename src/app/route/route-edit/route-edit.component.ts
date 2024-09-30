@@ -11,6 +11,10 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
 import {CanComponentDeactivate} from "../../shared/guards/can-deactivate-guard.service";
 import {CanDeactivateFormGuardService} from "../../shared/guards/can-deactivate-form-guard.service";
+import {catchError, of} from "rxjs";
+import {MapLocationConflictError} from "../../shared/errors/route-map-location-conflict.error";
+import {SnackbarType} from "../../shared/snackbar/snackbar-type";
+import {ConfirmationDialogService} from "../../shared/confirmation-dialog/confirmation-dialog.service";
 
 @Component({
   selector: 'app-route-edit',
@@ -34,13 +38,15 @@ export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   selectedFile: File = null;
   currentImageUrl: SafeUrl = null;
   imagePreview: string | ArrayBuffer | null = null;
+  private submittingChangesInProcess: boolean = false;
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private sanitizer: DomSanitizer,
-              private canDeactivateFormGuardService: CanDeactivateFormGuardService,) {
+              private canDeactivateFormGuardService: CanDeactivateFormGuardService,
+              private confirmationDialogService: ConfirmationDialogService,) {
   }
 
   ngOnInit() {
@@ -59,6 +65,9 @@ export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   }
 
   canDeactivate(): Promise<boolean> {
+    if(this.submittingChangesInProcess) {
+      return Promise.resolve(true);
+    }
     return this.canDeactivateFormGuardService.canDeactivateForm(this.routeForm.dirty && !this.routeForm.pristine);
   }
 
@@ -79,6 +88,7 @@ export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   }
 
   onSubmit() {
+    this.submittingChangesInProcess = true;
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
@@ -116,12 +126,23 @@ export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   }
 
   onDelete() {
-    if (confirm("You are about to delete " + this.route.name + " route. Do you want to continue?")) {
-      this.routeService.deleteRouteById(this.id)
-        .subscribe(() => {
-          this.router.navigate(['../../', 'list'], { relativeTo: this.activatedRoute });
-        });
-    }
+    this.submittingChangesInProcess = true;
+
+    this.confirmationDialogService
+      .confirm(
+        'Confirm Deletion',
+        `You are about to delete your route. Do you want to proceed?`,
+        'Yes',
+        'Cancel'
+      )
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.routeService.deleteRouteById(this.id)
+            .subscribe(() => {
+              this.router.navigate(['../../', 'list'], { relativeTo: this.activatedRoute });
+            });
+        }
+      });
   }
 
 
