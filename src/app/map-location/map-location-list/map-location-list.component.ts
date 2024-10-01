@@ -17,6 +17,7 @@ import {ModalService} from "../../shared/modal/modal.service";
 import {
   MapLocationAddToYourRouteModalComponent
 } from "../map-location-add-to-your-route-modal/map-location-add-to-your-route-modal.component";
+import {ConfirmationDialogService} from "../../shared/confirmation-dialog/confirmation-dialog.service";
 
 @Component({
   selector: 'app-map-location-list',
@@ -57,7 +58,8 @@ export class MapLocationListComponent implements OnInit, OnChanges {
               private router: Router,
               private modalService: ModalService,
               private activatedRoute: ActivatedRoute,
-              private routeService: RouteService) {
+              private routeService: RouteService,
+              private confirmationDialogService: ConfirmationDialogService) {
   }
 
 
@@ -108,11 +110,21 @@ export class MapLocationListComponent implements OnInit, OnChanges {
   }
 
   onMapLocationDelete(mapLocationId: string) {
-    if (confirm("You are about to delete map location. Do you want to continue?")) {
-      this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe(() => {
-        this.fetchMapLocations();
+
+    this.confirmationDialogService
+      .confirm(
+        'Confirm Deletion',
+        `You are about to delete your map location. Do you want to proceed?`,
+        'Yes',
+        'Cancel'
+      )
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.mapLocationService.deleteMapLocationFromRoute(mapLocationId, this.route.id).subscribe(() => {
+            this.fetchMapLocations();
+          });
+        }
       });
-    }
   }
 
   onAddToYourRoute(mapLocation : MapLocation) {

@@ -9,6 +9,12 @@ import { Location, NgForOf, NgIf } from "@angular/common";
 import { maxPageSize } from "../../shared/http.config";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {MapLocationListComponent} from "../../map-location/map-location-list/map-location-list.component";
+import {CanComponentDeactivate} from "../../shared/guards/can-deactivate-guard.service";
+import {CanDeactivateFormGuardService} from "../../shared/guards/can-deactivate-form-guard.service";
+import {catchError, of} from "rxjs";
+import {MapLocationConflictError} from "../../shared/errors/route-map-location-conflict.error";
+import {SnackbarType} from "../../shared/snackbar/snackbar-type";
+import {ConfirmationDialogService} from "../../shared/confirmation-dialog/confirmation-dialog.service";
 
 @Component({
   selector: 'app-route-edit',
@@ -22,7 +28,7 @@ import {MapLocationListComponent} from "../../map-location/map-location-list/map
   templateUrl: './route-edit.component.html',
   styleUrl: './route-edit.component.css'
 })
-export class RouteEditComponent implements OnInit {
+export class RouteEditComponent implements OnInit, CanComponentDeactivate {
   id: string;
   routeForm: FormGroup;
   userLogin: string;
@@ -32,13 +38,15 @@ export class RouteEditComponent implements OnInit {
   selectedFile: File = null;
   currentImageUrl: SafeUrl = null;
   imagePreview: string | ArrayBuffer | null = null;
+  private submittingChangesInProcess: boolean = false;
 
   constructor(private routeService: RouteService,
               private mapLocationService: MapLocationService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private location: Location,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private canDeactivateFormGuardService: CanDeactivateFormGuardService,
+              private confirmationDialogService: ConfirmationDialogService,) {
   }
 
   ngOnInit() {
@@ -56,20 +64,31 @@ export class RouteEditComponent implements OnInit {
     }
   }
 
+  canDeactivate(): Promise<boolean> {
+    if(this.submittingChangesInProcess) {
+      return Promise.resolve(true);
+    }
+    return this.canDeactivateFormGuardService.canDeactivateForm(this.routeForm.dirty && !this.routeForm.pristine);
+  }
+
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-    }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result;
-    };
-    reader.readAsDataURL(this.selectedFile);
+      this.routeForm.markAsDirty();
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
   }
 
   onSubmit() {
+    this.submittingChangesInProcess = true;
     if (this.editMode) {
       this.routeService.patchRouteById(this.id, this.routeForm.value)
         .subscribe(() => {
@@ -92,7 +111,7 @@ export class RouteEditComponent implements OnInit {
                 this.goBack();
               });
           } else {
-            this.goBack();
+            this.router.navigate(['yourRoutes', 'list']);
           }
         });
     }
@@ -107,12 +126,23 @@ export class RouteEditComponent implements OnInit {
   }
 
   onDelete() {
-    if (confirm("You are about to delete " + this.route.name + " route. Do you want to continue?")) {
-      this.routeService.deleteRouteById(this.id)
-        .subscribe(() => {
-          this.router.navigate(['../../', 'list'], { relativeTo: this.activatedRoute });
-        });
-    }
+    this.submittingChangesInProcess = true;
+
+    this.confirmationDialogService
+      .confirm(
+        'Confirm Deletion',
+        `You are about to delete your route. Do you want to proceed?`,
+        'Yes',
+        'Cancel'
+      )
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.routeService.deleteRouteById(this.id)
+            .subscribe(() => {
+              this.router.navigate(['../../', 'list'], { relativeTo: this.activatedRoute });
+            });
+        }
+      });
   }
 
 

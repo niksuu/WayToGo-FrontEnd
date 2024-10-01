@@ -11,6 +11,9 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Audio} from "../../audio/audio.model";
 import {AudioService} from "../../audio/audio.service";
 import {maxPageSize} from "../../shared/http.config";
+import {CanComponentDeactivate} from "../../shared/guards/can-deactivate-guard.service";
+import {CanDeactivateFormGuardService} from "../../shared/guards/can-deactivate-form-guard.service";
+import {ConfirmationDialogService} from "../../shared/confirmation-dialog/confirmation-dialog.service";
 
 
 @Component({
@@ -25,7 +28,7 @@ import {maxPageSize} from "../../shared/http.config";
   templateUrl: './map-location-edit.component.html',
   styleUrl: './map-location-edit.component.css'
 })
-export class MapLocationEditComponent implements OnInit {
+export class MapLocationEditComponent implements OnInit, CanComponentDeactivate {
   @ViewChild('audioFileInput') audioFileInput: ElementRef;
   routeId: string;
   mapLocationId: string;
@@ -45,6 +48,7 @@ export class MapLocationEditComponent implements OnInit {
   returnUrl: string | null = null;
   isLoadingAudio = false;
   isErrorAudio = false;
+  private submittingChangesInProcess: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -52,7 +56,9 @@ export class MapLocationEditComponent implements OnInit {
               private mapLocationService: MapLocationService,
               private routeMapLocationService: RouteMapLocationService,
               private audioService: AudioService,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private canDeactivateFormGuardService: CanDeactivateFormGuardService,
+              private confirmationDialogService: ConfirmationDialogService,) {
   }
 
   ngOnInit(): void {
@@ -95,8 +101,13 @@ export class MapLocationEditComponent implements OnInit {
       });
     })
 
+  }
 
-
+  canDeactivate(): Promise<boolean> {
+    if(this.submittingChangesInProcess) {
+      return Promise.resolve(true);
+    }
+    return this.canDeactivateFormGuardService.canDeactivateForm(this.mapLocationForm.dirty && !this.mapLocationForm.pristine);
   }
 
 
@@ -159,6 +170,7 @@ export class MapLocationEditComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submittingChangesInProcess = true;
     let newMapLocation = {
       name: this.mapLocationForm.value.name,
       description: this.mapLocationForm.value.description,
