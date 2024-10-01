@@ -140,8 +140,8 @@ export class RouteListComponent implements OnInit{
   }
 
   getRoutes() {
-    this.isLoading = true; // Ustawienie flagi ładowania na true
-    this.isError = false;  // Resetowanie błędu przed nową próbą pobrania danych
+    this.isLoading = true;
+    this.isError = false;
 
     this.validateQueryParams();
 
