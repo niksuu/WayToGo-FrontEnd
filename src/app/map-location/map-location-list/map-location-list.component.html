@@ -1,4 +1,13 @@
 <ul class="list-group" style="padding: 5px">
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    <p>Loading map locations, please wait...</p>
+  </div>
+
+  <div *ngIf="isError" class="error-indicator">
+    <p>Error loading map locations. Please try again later.</p>
+  </div>
+
   <div *ngFor="let mapLocation of mapLocations" style="margin-bottom: 5px">
 
     <li (click)="onMapLocationSelected(mapLocation)"
