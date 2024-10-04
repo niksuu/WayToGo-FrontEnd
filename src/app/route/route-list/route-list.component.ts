@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Route} from "../route.model";
 import {RouteService} from "../route.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {RouteItemComponent} from "./route-item/route-item.component";
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {defaultPageSize} from "../../shared/http.config";
@@ -13,6 +13,7 @@ import {SnackbarType} from "../../shared/snackbar/snackbar-type";
 import {SnackbarService} from "../../shared/snackbar/snackbar.service";
 import {catchError, of} from "rxjs";
 import {MapLocationConflictError} from "../../shared/errors/route-map-location-conflict.error";
+import {ScreenSizeService} from "../../shared/screen-size.service";
 
 
 @Component({
@@ -25,7 +26,8 @@ import {MapLocationConflictError} from "../../shared/errors/route-map-location-c
     RouterLink,
     RouterOutlet,
     FormsModule,
-    NgIf
+    NgIf,
+    NgClass
   ],
   animations: [
     tadaAnimation()
@@ -42,6 +44,8 @@ export class RouteListComponent implements OnInit{
   user = null;
   selectedRoute: Route;
   animationState: boolean = true;
+  isMobileVersion: boolean;
+  pageSize: number = defaultPageSize;
 
   @Input() addingPointToRoute: boolean = false;
   @Input() pointIdToBeAdded: string;
@@ -51,10 +55,17 @@ export class RouteListComponent implements OnInit{
               private activatedRoute: ActivatedRoute,
               private routeMapLocationService: RouteMapLocationService,
               private confirmationDialogService: ConfirmationDialogService,
-              private snackbarService: SnackbarService,) {
+              private snackbarService: SnackbarService,
+              private screenSizeService: ScreenSizeService,) {
   }
 
   ngOnInit() {
+    this.screenSizeService.isMobileVersion$.subscribe((isMobile) => {
+      this.isMobileVersion = isMobile;
+      this.updatePageSize();
+      this.getRoutes();
+    });
+
     this.selectedRoute = null;
     this.activatedRoute.queryParams.subscribe(params => {
       this.currentPageNumber = params['page'] ? +params['page'] : 1;
@@ -65,6 +76,11 @@ export class RouteListComponent implements OnInit{
         this.getRoutes();
       });
     });
+  }
+
+  updatePageSize() {
+    this.pageSize = this.isMobileVersion ? defaultPageSize / 2 : defaultPageSize;
+    console.log(this.pageSize)
   }
 
   onAddNewRoute() {
@@ -140,7 +156,7 @@ export class RouteListComponent implements OnInit{
   getRoutes() {
     this.validateQueryParams();
     if (this.userMode || this.addingPointToRoute) {
-      this.routeService.getRouteByUserId(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
+      this.routeService.getRouteByUserId(this.currentPageNumber,  this.pageSize, this.routeNameToSearch).subscribe(response => {
         this.routes = response.content;
         this.totalPages = response.totalPages;
         if (this.currentPageNumber > this.totalPages) {
@@ -149,7 +165,7 @@ export class RouteListComponent implements OnInit{
         }
       });
     } else {
-      this.routeService.getRoutes(this.currentPageNumber, defaultPageSize, this.routeNameToSearch).subscribe(response => {
+      this.routeService.getRoutes(this.currentPageNumber,  this.pageSize, this.routeNameToSearch).subscribe(response => {
         this.routes = response.content;
         this.totalPages = response.totalPages;
         if (this.currentPageNumber > this.totalPages) {

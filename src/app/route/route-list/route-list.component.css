@@ -77,6 +77,27 @@
   margin-right: 10px;
 }
 
+.mobile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+}
+
+.desktop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+}
+
+.list-group-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7dvh;
+  cursor: pointer;
+  border: grey 1px solid;
+}
 
 
 
