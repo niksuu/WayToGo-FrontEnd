@@ -1,0 +1,45 @@
+<div style="display: flex; width: 100%; height: 100%; ">
+
+  <div [ngClass]="{'side-panel-visible': toggleSidePanel, 'side-panel-hidden': !toggleSidePanel}"
+       class="side-panel"
+       style="border-right: 3px solid #046169">
+    <div style="height: 100%;">
+      <div class="container">
+        <h2>Enter Range in kilometers</h2>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="range">Range:</label>
+            <input
+              type="number"
+              id="range"
+              name="range"
+              class="form-control"
+              [(ngModel)]="range"
+              required
+              min="0"
+              placeholder="Enter range or default to 30"
+            />
+          </div>
+          <br>
+          <button type="submit" class="btn btn-primary">Find in vicinity</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+  <div *ngIf="!toggleSidePanel"
+       class="panel-stripe">
+
+  </div>
+  <div class=" map-wrapper">
+    <app-map></app-map>
+    <button (click)="onToggleSidePanel()"
+            [ngClass]="{ 'left-panel-btn': !toggleSidePanel, 'right-panel-btn': toggleSidePanel }"
+            class="panel-button">
+      <strong> {{panelButtonContent}} </strong>
+      <i *ngIf="!toggleSidePanel" class="fa fa-angle-double-right" style="margin-left: 20px"></i>
+      <i *ngIf="toggleSidePanel" class="fa fa-angle-double-left"></i>
+    </button>
+  </div>
+</div>

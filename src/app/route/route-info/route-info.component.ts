@@ -40,8 +40,6 @@ export class RouteInfoComponent  implements OnInit{
     this.activatedRoute.params.subscribe (
       (params: Params) => {
 
-
-
         this.routeId = params['id'];
         this.routeService.getRouteById(this.routeId).subscribe(response => {
           this.route = response;
