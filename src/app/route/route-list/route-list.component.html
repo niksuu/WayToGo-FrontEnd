@@ -30,7 +30,7 @@
     <div *ngIf="!addingPointToRoute">
      <router-outlet></router-outlet>
     </div>
-    <ul class="list-group" [ngClass]="{'mobile-grid': isMobileVersion, 'desktop-grid': !isMobileVersion}">
+    <ul [ngClass]="{'mobile-grid': isMobileVersion, 'desktop-grid': !isMobileVersion}">
       <li *ngFor="let routeIt of routes"
           [routerLinkActiveOptions]="{exact: true}"
           [routerLink]="!addingPointToRoute ? [ routeIt.id] : null"

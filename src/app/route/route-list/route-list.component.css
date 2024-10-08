@@ -46,8 +46,8 @@
 }
 
 .flex-item {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   flex-grow: 1;
   text-align: center;
 }
@@ -88,17 +88,6 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem;
 }
-
-.list-group-item {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 7dvh;
-  cursor: pointer;
-  border: grey 1px solid;
-}
-
 
 
 
