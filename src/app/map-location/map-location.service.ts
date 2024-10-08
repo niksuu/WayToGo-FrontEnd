@@ -68,6 +68,22 @@ export class MapLocationService {
     );
   }
 
+  getMapLocations(){
+    const url = `${backendUrl}/mapLocations`;
+    return this.http.get<Page<MapLocation>>(url);
+  }
+
+  getMapLocationsByRange(lat: number, lng: number, range: number) {
+    const url = `${backendUrl}/mapLocations`;
+
+    const params = {
+      lat: lat.toString(),
+      lng: lng.toString(),
+      range: range,
+    };
+
+    return this.http.get<Page<MapLocation>>(url, { params });
+  }
 
 
 }

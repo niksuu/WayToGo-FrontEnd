@@ -9,5 +9,4 @@ export class MapService  {
   mapLocationDetailsEventEmitter = new EventEmitter<MapLocation>();
   closeInfoWindow = new EventEmitter();
 
-
 }

@@ -10,6 +10,7 @@ import {
 } from "../../map-location/map-location-info-window/map-location-info-window.component";
 import {SidePanelService} from "../side-panel.service";
 import {ScreenSizeService} from "../screen-size.service";
+import {Page} from "../page.model";
 
 //google maps api documentation
 //https://developers.google.com/maps/documentation/javascript
@@ -124,6 +125,21 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
   }
 
+  setMapLocationsAndMarkers(mapLocations: Page<MapLocation>){
+    if (mapLocations && mapLocations.content) {
+      mapLocations.content.forEach((mapLocation) => {
+        this.mapLocations.push(mapLocation);
+
+        const markerPosition: google.maps.LatLngLiteral = {
+          lat: mapLocation.coordinates.coordinates[0],
+          lng: mapLocation.coordinates.coordinates[1]
+        };
+        this.markerPositions.push(markerPosition);
+      });
+    } else {
+      console.warn('No locations.');
+    }
+  }
 
   ngAfterViewInit(): void {
     if (!this.map && !this.map.googleMap) {
@@ -133,10 +149,6 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
 
     this.directionsRenderer.setMap(this.map.googleMap);
   }
-
-
-
-
 
 
   calculateRoute(destination: google.maps.LatLngLiteral) {
@@ -228,6 +240,25 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
       console.error('Geolocation is not supported by this browser.');
     }
   }
+  getCurrentLocationPromise(): Promise<google.maps.LatLngLiteral | null> {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const currentLocation: google.maps.LatLngLiteral = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          resolve(currentLocation);
+        }, error => {
+          console.error('Error getting location: ', error);
+          reject(error);
+        });
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        reject('Geolocation not supported');
+      }
+    });
+  }
 
   updateUserMarker(position: google.maps.LatLngLiteral) {
     if (!this.userMarker) {
@@ -258,7 +289,7 @@ export class MapComponent implements OnInit,AfterViewInit ,OnDestroy {
     this.zoom = 17;
   }
 
-  onMapClick($event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
+  onMapClick(event: google.maps.MapMouseEvent | google.maps.IconMouseEvent) {
     if(this.infoWindow != undefined) {
       this.infoWindow.close();
     }

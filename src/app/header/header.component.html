@@ -23,6 +23,10 @@
       <a routerLink="routes/list">Routes</a>
     </div>
 
+    <div [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link">
+      <a routerLink="vicinity">Vicinity</a>
+    </div>
+
     <div *ngIf="isLoggedIn" [ngClass]="mobileVersion ? 'mobile-nav-item' : 'nav-item'" routerLinkActive="active-link">
       <a routerLink="yourRoutes/list">Your Routes</a>
     </div>
